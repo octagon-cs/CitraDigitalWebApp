@@ -1,0 +1,9 @@
+@controller=https://localhost:5001/api/users/authenticate
+
+POST {{controller}} HTTP/1.1
+Content-Type: application/json
+
+{
+    "UserName" : "Ajn26",
+    "Password" : "Sony@77"
+}

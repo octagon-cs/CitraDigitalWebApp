@@ -1,0 +1,20 @@
+@controller=https://localhost:5001/api/administrator
+@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2MDMwOTY0NjUsImV4cCI6MTYwMzcwMTI2NSwiaWF0IjoxNjAzMDk2NDY1fQ._KOZ6J4zFeBz0NVNk7-7aTC9YuZhieFyf0vEV1WfiNs
+
+POST {{controller}}/createuser HTTP/1.1
+Content-Type: application/json
+Authorization: {{auth}}
+
+{
+    "FirstName":"Ajenk",
+    "LastName":"Kungkung",
+    "UserName" : "Ocph23",
+    "Password" : "Sony@77"
+}
+
+###
+
+GET {{controller}}/adduserrole?userid=8&rolename=Company HTTP/1.1
+Content-Type: application/json
+Authorization: {{auth}} 
+

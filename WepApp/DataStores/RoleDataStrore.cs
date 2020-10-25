@@ -16,7 +16,7 @@ namespace WebApp.DataStores
             {
                 using (var connection = DapperContext.Connection)
                 {
-                    var result = await connection.ExecuteAsync("Delete  from Role where id = @id", t.Id);
+                    var result = await connection.ExecuteAsync("Delete  from Roles where id = @id", t.Id);
                     if (result > 0)
                         return true;
                     return false;
@@ -34,7 +34,7 @@ namespace WebApp.DataStores
             {
                 using (var connection = DapperContext.Connection)
                 {
-                    var results = await connection.QueryAsync<Role>($"select * from Role");
+                    var results = await connection.QueryAsync<Role>($"select * from Roles");
                     return results;
                 }
             }
@@ -50,7 +50,7 @@ namespace WebApp.DataStores
             {
                 using (var connection = DapperContext.Connection)
                 {
-                    var result = await connection.QueryAsync<Role>($"select * from Role where id = @id", new { id });
+                    var result = await connection.QueryAsync<Role>($"select * from Roles where id = @id", new { id });
                     return result.FirstOrDefault();
                 }
             }
@@ -66,8 +66,8 @@ namespace WebApp.DataStores
             {
                 using (var connection = DapperContext.Connection)
                 {
-                    var sql = $"insert into Role(...) values(....)";
-                    var result = await connection.ExecuteAsync(sql, new { });
+                    var sql = $"insert into Roles(name) values(@name)";
+                    var result = await connection.ExecuteAsync(sql, t);
                     if (result >= 0)
                     {
                         t.Id = t.Id;
@@ -90,8 +90,8 @@ namespace WebApp.DataStores
             {
                 using (var connection = DapperContext.Connection)
                 {
-                    var sql = $"insert into Role(...) values(....); Select Last;";
-                    var result = await connection.ExecuteAsync(sql, new { });
+                    var sql = $"insert into Roles(name) values(@name);  SELECT LAST_INSERT_ID();";
+                    var result = await connection.ExecuteAsync(sql, t);
                     if (result > 0)
                     {
                         t.Id = t.Id;
@@ -113,8 +113,8 @@ namespace WebApp.DataStores
             {
                 using (var connection = DapperContext.Connection)
                 {
-                    var sql = $"update Role= set ";
-                    var result = await connection.ExecuteAsync(sql, new { });
+                    var sql = $"update Roles= set name=@name ";
+                    var result = await connection.ExecuteAsync(sql, t);
                     if (result > 0)
                         return true;
                     return false;
@@ -133,7 +133,7 @@ namespace WebApp.DataStores
             {
                 using (var connection = DapperContext.Connection)
                 {
-                    var result = await connection.QueryAsync<Role>("select * from role where name = @name", new { name = name });
+                    var result = await connection.QueryAsync<Role>("select * from roles where name = @name", new { name = name });
                     if (result != null)
                         return result.FirstOrDefault();
                     return null;

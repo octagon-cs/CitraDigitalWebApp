@@ -13,6 +13,7 @@ namespace WebApp.Models
 
         [JsonIgnore]
         public byte[] LogoData {get;set;}
+        public int UserId { get; set; }
 
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WebApp.DataStores;
 using WebApp.Models;
 
 namespace WebApp.Proxy.Domains
@@ -10,23 +11,29 @@ namespace WebApp.Proxy.Domains
 
         Task<Truck> AddNewTruck(Truck truck);
 
-        Task<Pengajuan> AddNewPengajuanTruck(Truck truck);
+        Task<Pengajuan> AddNewPengajuanTruck(Pengajuan pengajuan);
 
         Task<IEnumerable<KIM>> GetAllKim(int companyId);
 
         Task<bool> ChangeQRPPejabat(int companyId);
+        Task<IEnumerable<Truck>> GetTrucks(int id);
     }
 
     public class CompanyAdministrator : ICompanyAdministrator
     {
-        public Task<Pengajuan> AddNewPengajuanTruck(Truck truck)
+        public async Task<Pengajuan> AddNewPengajuanTruck(Pengajuan pengajuan)
         {
-            throw new System.NotImplementedException();
+            var pengajuanStore = new PengajuanDataStrore();
+            var result = await pengajuanStore.Insert(pengajuan);
+            return result;
         }
 
-        public Task<Truck> AddNewTruck(Truck truck)
+        public async Task<Truck> AddNewTruck(Truck truck)
         {
-            throw new System.NotImplementedException();
+            var dataStrore = new TruckDataStrore();
+            var result = await dataStrore.InsertAndGetLastId(truck);
+            return result;
+
         }
 
         public Task<bool> ChangeQRPPejabat(int companyId)
@@ -38,12 +45,12 @@ namespace WebApp.Proxy.Domains
         {
             try
             {
-                var dataStrore = new DataStores.CompanyProfileDataStrore();
+                var dataStrore = new CompanyProfileDataStrore();
                 var result = await dataStrore.InsertAndGetLastId(profile);
-                if(result==null)
-                    throw new System.SystemException("Create Profile Invalid..!");  
+                if (result == null)
+                    throw new System.SystemException("Create Profile Invalid..!");
                 return result;
-                           
+
             }
             catch (System.Exception ex)
             {
@@ -55,6 +62,13 @@ namespace WebApp.Proxy.Domains
         public Task<IEnumerable<KIM>> GetAllKim(int companyId)
         {
             throw new System.NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Truck>> GetTrucks(int companyId)
+        {
+            var truckStore = new TruckDataStrore();
+            var result = await truckStore.GetTrucksByCompanyId(companyId);
+            return result;
         }
     }
 }

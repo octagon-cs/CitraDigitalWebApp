@@ -1,5 +1,5 @@
 @controller=https://localhost:5001/api/companyadministrator
-@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgiLCJuYmYiOjE2MDMxNzMwNDUsImV4cCI6MTYwMzc3Nzg0NSwiaWF0IjoxNjAzMTczMDQ1fQ.wLlKn5K4ZXlw2Cyi0AYp0okt5OtlEArftRxrp7L4n9U
+@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE2IiwibmJmIjoxNjAzMjcxMTU5LCJleHAiOjE2MDM4NzU5NTksImlhdCI6MTYwMzI3MTE1OX0.nlQu644_hThJYRH1pBj7JxtVOvdTt2Vh0MejgmhEmvM
 
 POST {{controller}}/createprofile HTTP/1.1
 Content-Type: application/json
@@ -7,9 +7,45 @@ Authorization: {{auth}}
 
 {
     "Name":"Pertamina A",
-    "Address":"Kungkung",
+    "Address":"Jln. Koti II Jayapura",
     "Email" : "pertamina@gmail.com",
     "NPWP" : "Sony@77"
 }
 
 ###
+
+POST {{controller}}/addtruck HTTP/1.1
+Content-Type: application/json
+Authorization: {{auth}}
+
+{
+    "platenumber":"11111", "Merk":"Toyota", "CarCreated":2015, "TruckType":"Truck", "DriverName":"Chandra", 
+    "DriverPhoto":"", "DriverIdCard":"KTP123456","DriverLicense":"SIM1234",
+                    "AssdriverName":"Bagus", "assdriverphoto":"", "assdriveridcard":"KTP23456", 
+                    "assdriverlicense":"SIM23456", "VehicleRegistration":"STNK1234", "KeurDLLAJR":"Kuer123456",
+                    "CompanyId":4
+}
+
+###
+
+
+POST {{controller}}/createsubmission HTTP/1.1
+Content-Type: application/json
+Authorization:  :{{auth}}
+
+{
+    "LetterNumber":"NUMBER12345",
+    "Items":
+    [
+        {"TruckId":1}
+    ]
+
+}
+
+
+
+
+
+
+
+

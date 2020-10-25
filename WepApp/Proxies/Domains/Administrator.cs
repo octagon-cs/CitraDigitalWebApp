@@ -9,13 +9,11 @@ using WebApp.Services;
 
 namespace WebApp.Proxy.Domains
 {
-
-
     public interface IAdministrator
     {
         Task<User> CreateUser(User user);
         Task AddUserRole(int userId, string roleName);
-        Task AddNewItemPemeriksaaan(string item);
+        Task<ItemPemeriksaan> AddNewItemPemeriksaaan(ItemPemeriksaan item);
         Task<List<KIM>> GetAllKIMNotYetApproved();
 
         Task<KIM> CreateNewKIM(KIM kim);
@@ -37,9 +35,21 @@ namespace WebApp.Proxy.Domains
         {
             _userService = userService;
         }
-        public Task AddNewItemPemeriksaaan(string item)
+        public async Task<ItemPemeriksaan> AddNewItemPemeriksaaan(ItemPemeriksaan item)
         {
-            throw new System.NotImplementedException();
+           try
+            {
+                var store = new ItemPemeriksaanDataStrore();
+                var result = await store.Insert(item);
+                if (result == null)
+                    throw new SystemException("Item Can Not Saved !");
+                return result;
+
+            }
+            catch (System.Exception ex)
+            {
+                throw new SystemException(ex.Message);
+            }
         }
 
         public async Task AddUserRole(int userId, string roleName)

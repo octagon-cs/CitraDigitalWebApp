@@ -83,14 +83,37 @@ namespace WebApp.DataStores{
             }
         }
 
+        internal async  Task<IEnumerable<Truck>> GetTrucksByCompanyId(int id)
+        {
+            try
+            {
+                using (var connection = DapperContext.Connection)
+                {
+                    var sql = $"Select & from truck where companyId=@id";
+                    var result = await connection.QueryAsync<Truck>(sql, new {id=id });
+                    if (result !=null && result.Count()>0)
+                        return result;
+                    return null;
+                }
+            }
+            catch (System.Exception ex)
+            {
+
+                throw new SystemException(ex.Message);
+            }
+        }
+
         public async Task<Truck> InsertAndGetLastId(Truck t)
         {
             try
             {
                 using (var connection = DapperContext.Connection)
                 {
-                    var sql = $"insert into Truck(...) values(....); Select Last;";
-                    var result = await connection.ExecuteAsync(sql, new { });
+                    var sql = @"insert into truck(platenumber, Merk, CarCreated, TruckType, DriverName, DriverPhoto, DriverIdCard,DriverLicense,
+                    AssdriverName, assdriverphoto, assdriveridcard, assdriverlicense, VehicleRegistration, KeurDLLAJR, CompanyId ) 
+                    values(@platenumber, @Merk, @CarCreated, @TruckType, @DriverName, @DriverPhoto, @DriverIdCard, @DriverLicense,
+                    @AssdriverName, @Assdriverphoto, @Assdriveridcard, @Assdriverlicense, @VehicleRegistration, @KeurDLLAJR, @CompanyId); SELECT LAST_INSERT_ID();";
+                    var result = Convert.ToInt32(await connection.ExecuteScalarAsync(sql, t));
                     if (result > 0)
                     {
                         t.Id = t.Id;

@@ -19,12 +19,21 @@ namespace WebApp.Controllers
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate(AuthenticateRequest model)
         {
-            var response = await _userService.Authenticate(model);
-
+          try
+          {
+                var response = await _userService.Authenticate(model);
             if (response == null)
+            {
                 return Unauthorized(new { message = "Username or password is incorrect" });
+            }
 
             return Ok(response);
+          }
+          catch (System.Exception ex)
+          {
+              
+              return BadRequest(ex.Message);
+          }
         }
 
     }

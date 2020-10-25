@@ -27,10 +27,12 @@ namespace WebApp.Controllers
         {
             try
             {
-                var user = await administrator.CreateProfile(model);
-                if (user == null)
-                    return BadRequest(new { message = "Username or password is incorrect" });
-                return Ok(user);
+                User user = await Request.GetUser();
+                model.UserId = user.Id;
+                var profile = await administrator.CreateProfile(model);
+                if (profile == null)
+                    return BadRequest(new { message = "Create Company Profile Invalid ..!" });
+                return Ok(profile);
             }
             catch (System.Exception ex)
             {
@@ -38,12 +40,44 @@ namespace WebApp.Controllers
             }
         }
 
-        [HttpGet("addtruck")]
+        [HttpPost("addtruck")]
         public async Task<IActionResult> AddTruck(Truck truck)
         {
             try
             {
                 await administrator.AddNewTruck(truck);
+                return Ok(true);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpGet("trucks")]
+        public async Task<IActionResult> GetTrucks()
+        {
+            try
+            {
+                var adminUser = await Request.GetUser();    
+                var company = await adminUser.GetCompany();
+                var result = await administrator.GetTrucks(company.Id);
+                return Ok(true);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpPost("createsubmission")]
+        public async Task<IActionResult> createsubmission(Pengajuan pengajuan)
+        {
+            try
+            {
+                await administrator.AddNewPengajuanTruck(pengajuan);
                 return Ok(true);
             }
             catch (System.Exception ex)

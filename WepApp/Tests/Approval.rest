@@ -1,0 +1,7 @@
+@controller=https://localhost:5001/api/Approval
+@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE3IiwibmJmIjoxNjAzMzQ5MjA2LCJleHAiOjE2MDM5NTQwMDYsImlhdCI6MTYwMzM0OTIwNn0.sfCFDcvAry876RGUrELu0V8K66sn4BVQJ4WbVCLPrcw
+
+
+GET {{controller}}/GetPersetujuan HTTP/1.1
+Content-Type: application/json
+Authorization: {{auth}}

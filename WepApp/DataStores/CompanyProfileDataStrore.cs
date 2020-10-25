@@ -61,26 +61,7 @@ namespace WebApp.DataStores{
 
         public async Task<CompanyProfile> Insert(CompanyProfile t)
         {
-            try
-            {
-                using (var connection = DapperContext.Connection)
-                {
-                    var sql = $"insert into CompanyProfile(...) values(....)";
-                    var result = await connection.ExecuteAsync(sql, t);
-                    if (result >= 0)
-                    {
-                        t.Id = t.Id;
-                        return t;
-                    }
-
-                    return null;
-                }
-            }
-            catch (System.Exception ex)
-            {
-
-                throw new SystemException(ex.Message);
-            }
+           throw new NotImplementedException();
         }
 
         public async Task<CompanyProfile> InsertAndGetLastId(CompanyProfile t)
@@ -89,7 +70,7 @@ namespace WebApp.DataStores{
             {
                 using (var connection = DapperContext.Connection)
                 {
-                    var sql = $"insert into CompanyProfile(name, address, email,npwp, logo) values(@name, @address, @email,@npwp, @logo); SELECT LAST_INSERT_ID();";
+                    var sql = $"insert into CompanyProfile(name, address, email,npwp, logo, UserId) values(@name, @address, @email,@npwp, @logo, @UserId); SELECT LAST_INSERT_ID();";
                     var result = Convert.ToInt32(await connection.ExecuteScalarAsync(sql, t));
                     if (result > 0)
                     {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebApp.Helpers;
 
 namespace WebApp.Models
@@ -9,6 +10,7 @@ namespace WebApp.Models
         List<KIM> GetInfoPengajuanById(int id);
         List<KIM> Checked(Pengajuan kim);
         bool Approve(Pengajuan pengajuan);
+        Task<List<Pengajuan>> GetPengajuanNotApprove();
     }
 
 
@@ -43,7 +45,7 @@ namespace WebApp.Models
                 case UserType.Approval1:
                     return GetAllKimByApproval1();
 
-                case UserType.Approval2:
+                case UserType.HSE:
                     return GetAllKimByApproval2();
 
                 default:
@@ -69,6 +71,39 @@ namespace WebApp.Models
             throw new NotImplementedException();
         }
 
-       
+        public Task<List<Pengajuan>> GetPengajuanNotApprove()
+        {
+           switch (this.user.UserType)
+            {
+                case UserType.Manager:
+                    return GetPengajuanNotApprovedByManager();
+
+                case UserType.Approval1:
+                    return GetPengajuanNotApprovedByApproval1();
+
+                case UserType.HSE:
+                    return GetPengajuanNotApprovedByHse();
+
+                default:
+                    return null;
+            }
+        }
+
+        private Task<List<Pengajuan>> GetPengajuanNotApprovedByApproval1()
+        {
+            var pengajuanStrore = new DataStores.PengajuanDataStrore();
+
+           return pengajuanStrore.GetPengajuanNotApproved(UserType.Approval1);
+        }
+
+        private Task<List<Pengajuan>> GetPengajuanNotApprovedByHse()
+        {
+            throw new NotImplementedException();
+        }
+
+        private Task<List<Pengajuan>> GetPengajuanNotApprovedByManager()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

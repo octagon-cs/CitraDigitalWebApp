@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using WebApp.DataStores;
 using WebApp.Helpers;
 using WebApp.Models;
+using WebApp.Proxy;
 
 namespace WebApp.Services
 {
@@ -54,16 +55,38 @@ namespace WebApp.Services
 
         public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest model)
         {
+            await Task.Delay(1);
             var dataStore = new UserDataStore();
-            
             var userRoleStrore = new UserRoleDataStore();
             var users = await dataStore.Get();
             var user = users.Where(x => x.UserName == model.UserName && x.Password == MD5Hash.ToMD5Hash(model.Password)).FirstOrDefault();
-            if (user == null) return null;
+           if(users==null || users.Count()<=0)
+           {
+                await RegisterAdmin();
+           }
+           
+            if (user == null)
+            {
+                return null;
+            }
             user.Roles = await user.GetRoles();
             var token = generateJwtToken(user);
 
             return new AuthenticateResponse(user, token);
+        }
+
+        private async Task RegisterAdmin()
+        {
+            var model = new User { UserName = "Administrator", Password = "Admin123", 
+            FirstName="Administrator", Status=true };
+            var userDataStore = new UserDataStore();
+            model.Password = MD5Hash.ToMD5Hash(model.Password);
+            var data = await userDataStore.InsertAndGetLastId(model);
+            if (data.Id > 0)
+            {
+                var userinRole = new UserRoleDataStore();
+                var result = await userinRole.AddUserRole(data.Id,"administrator");
+            }
         }
 
         public async Task<IEnumerable<User>> GetAll()

@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WebApp.DataStores;
 using WebApp.Helpers;
 using WebApp.Models;
 using WebApp.Proxy;
@@ -19,7 +18,7 @@ namespace WebApp.Controllers
 
         public AdministratorController(IUserService userService)
         {
-              administrator = UserProxy.GetAdministratorProxy(userService);
+            administrator = UserProxy.GetAdministratorProxy(userService);
         }
 
         [HttpPost("CreateUser")]

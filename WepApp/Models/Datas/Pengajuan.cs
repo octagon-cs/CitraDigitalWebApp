@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using WebApp.Helpers;
+using System.ComponentModel.DataAnnotations;
 
-namespace WebApp.Models{
-    public class Pengajuan{
-        public int Id{get;set;}
-        public string LetterNumber{get;set;}
+namespace WebApp.Models
+{
+    public class Pengajuan
+    {
+        [Key]
+        public int Id { get; set; }
+        public int CompanyId { get; set; }
+        public string LetterNumber { get; set; }
 
-        [JsonConverter(typeof(StringEnumConverter))]
-        public StatusPengajuan Status{get;set;}
-        public DateTime Created{get;set;}
-        public IEnumerable<PengajuanItem> Items{get;set;}
+        public StatusPengajuan StatusPengajuan { get; set; }
+        public DateTime Created { get; set; }
+        public List<PengajuanItem> Items { get; set; }
     }
 }

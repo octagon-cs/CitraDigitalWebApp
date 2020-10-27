@@ -1,0 +1,26 @@
+@controller=https://localhost:5001/api/itempemeriksaan
+@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2MDM2NTI0NTAsImV4cCI6MTYwNDI1NzI1MCwiaWF0IjoxNjAzNjUyNDUwfQ.zFAipP9CTs5KFnZ25ou_kl9pITFJyQnR3qDSUwy-pkk
+POST {{controller}} HTTP/1.1
+Content-Type: application/json
+Authorization: {{auth}}
+
+{
+    "Kelengkapan":"STNK",
+    "Penjelasan":"Ini adalah penjelasan stnk"
+}
+####
+
+
+PUT  {{controller}}?id=1 HTTP/1.1
+Content-Type: application/json
+Authorization: {{auth}}
+
+{
+    "Id":1,
+    "Kelengkapan":"STNK",
+    "Penjelasan":"Ini adalah penjelasan stnk yang baru"
+}
+
+
+
+

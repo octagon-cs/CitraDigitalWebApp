@@ -1,5 +1,5 @@
 @controller=https://localhost:5001/api/companyadministrator
-@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE2IiwibmJmIjoxNjAzMjcxMTU5LCJleHAiOjE2MDM4NzU5NTksImlhdCI6MTYwMzI3MTE1OX0.nlQu644_hThJYRH1pBj7JxtVOvdTt2Vh0MejgmhEmvM
+@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIiLCJuYmYiOjE2MDM2NTI3MzYsImV4cCI6MTYwNDI1NzUzNiwiaWF0IjoxNjAzNjUyNzM2fQ.wIQXkGRJUjXVZQ68glNQC5b2b8zP7demmxt4oRFFThw
 
 POST {{controller}}/createprofile HTTP/1.1
 Content-Type: application/json
@@ -19,13 +19,51 @@ Content-Type: application/json
 Authorization: {{auth}}
 
 {
-    "platenumber":"11111", "Merk":"Toyota", "CarCreated":2015, "TruckType":"Truck", "DriverName":"Chandra", 
-    "DriverPhoto":"", "DriverIdCard":"KTP123456","DriverLicense":"SIM1234",
-                    "AssdriverName":"Bagus", "assdriverphoto":"", "assdriveridcard":"KTP23456", 
-                    "assdriverlicense":"SIM23456", "VehicleRegistration":"STNK1234", "KeurDLLAJR":"Kuer123456",
-                    "CompanyId":4
+    "platenumber":"11123", "Merk":"Toyota", "CarCreated":2015, "TruckType":"Truck",
+    "DriverName":"Chandra", 
+    "DriverPhoto":"", 
+    "DriverIdCard":"KTP123456",
+    "DriverLicense":"{Number:'SIM1234', Berlaku:'2020-10-30', Hingga:'2023-10-30'}",
+    "AssdriverName":"Bagus", 
+    "assdriverphoto":"", 
+    "assdriveridcard":"KTP23456", 
+    "assdriverlicense":"SIM23456", 
+    "VehicleRegistration":"{Number:'STNK1234', Berlaku:'2020-10-30', Hingga:'2023-10-30'}", 
+    "KeurDLLAJR":"Kuer123456"
 }
 
+###
+
+
+Get {{controller}}/trucks HTTP/1.1
+Content-Type: application/json
+Authorization: {{auth}}
+
+
+###
+
+Put {{controller}}/trucks HTTP/1.1
+Content-Type: application/json
+Authorization: {{auth}}
+
+{
+    "id": 2,
+    "plateNumber": "11123",
+    "merk": "Toyota",
+    "carCreated": 2015,
+    "truckType": "Truck",
+    "driverName": "Chandra",
+    "driverPhoto": "",
+    "driverIDCard": "KTP123456",
+    "driverLicense": "{Number:'SIM1234', Berlaku:'2020-10-30', Hingga:'2023-10-30'}",
+    "assdriverName": "Bagus",
+    "assdriverPhoto": "",
+    "assdriverIDCard": "KTP23456",
+    "assdriverLicense": "SIM23456",
+    "vehicleRegistration": "{Number:'STNK121212', Berlaku:'2020-10-30', Hingga:'2023-10-30'}",
+    "keurDLLAJR": "Kuer123456",
+    "companyId": 1
+  }
 ###
 
 
@@ -41,6 +79,22 @@ Authorization:  :{{auth}}
     ]
 
 }
+
+####
+
+
+Get {{controller}}/submission/1 HTTP/1.1
+Content-Type: application/json
+Authorization:  :{{auth}}
+
+###
+
+
+Get {{controller}}/submission HTTP/1.1
+Content-Type: application/json
+Authorization:  :{{auth}}
+
+###
 
 
 

@@ -1,4 +1,4 @@
-using Dapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -8,10 +8,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using WebApp.DataStores;
 using WebApp.Helpers;
 using WebApp.Models;
-using WebApp.Proxy;
 
 namespace WebApp.Services
 {
@@ -28,10 +26,12 @@ namespace WebApp.Services
     {
         // users hardcoded for simplicity, store in a db with hashed passwords in production applications
         private readonly AppSettings _appSettings;
+        private readonly DataContext context;
 
-        public UserService(IOptions<AppSettings> appSettings)
+        public UserService(IOptions<AppSettings> appSettings, DataContext _context)
         {
             _appSettings = appSettings.Value;
+            context = _context;
         }
 
 
@@ -40,12 +40,9 @@ namespace WebApp.Services
             try
             {
                 user.Password = MD5Hash.ToMD5Hash(user.Password);
-                IDataStores<User> store = new UserDataStore();
-                var result = await store.InsertAndGetLastId(user);
-                if (result != null)
-                    return result;
-                throw new SystemException("Registration Invalid ...!");
-
+                context.Users.Add(user);
+                await context.SaveChangesAsync();
+                return user;
             }
             catch (System.Exception ex)
             {
@@ -53,54 +50,40 @@ namespace WebApp.Services
             }
         }
 
-        public async Task<AuthenticateResponse> Authenticate(AuthenticateRequest model)
+        public Task<AuthenticateResponse> Authenticate(AuthenticateRequest model)
         {
-            await Task.Delay(1);
-            var dataStore = new UserDataStore();
-            var userRoleStrore = new UserRoleDataStore();
-            var users = await dataStore.Get();
-            var user = users.Where(x => x.UserName == model.UserName && x.Password == MD5Hash.ToMD5Hash(model.Password)).FirstOrDefault();
-           if(users==null || users.Count()<=0)
-           {
-                await RegisterAdmin();
-           }
-           
-            if (user == null)
+
+            try
             {
-                return null;
+                var users = context.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).ToList();
+                var user = users.Where(x => x.UserName == model.UserName && x.Password == MD5Hash.ToMD5Hash(model.Password)).FirstOrDefault();
+
+                if (user == null)
+                {
+                    throw new SystemException("User Name Or Password Invalid !");
+                }
+                var token = generateJwtToken(user);
+
+                return Task.FromResult(new AuthenticateResponse(user, token));
             }
-            user.Roles = await user.GetRoles();
-            var token = generateJwtToken(user);
-
-            return new AuthenticateResponse(user, token);
-        }
-
-        private async Task RegisterAdmin()
-        {
-            var model = new User { UserName = "Administrator", Password = "Admin123", 
-            FirstName="Administrator", Status=true };
-            var userDataStore = new UserDataStore();
-            model.Password = MD5Hash.ToMD5Hash(model.Password);
-            var data = await userDataStore.InsertAndGetLastId(model);
-            if (data.Id > 0)
+            catch (System.Exception ex)
             {
-                var userinRole = new UserRoleDataStore();
-                var result = await userinRole.AddUserRole(data.Id,"administrator");
+
+                throw new SystemException(ex.Message);
             }
         }
 
-        public async Task<IEnumerable<User>> GetAll()
+
+        public Task<IEnumerable<User>> GetAll()
         {
-            var dataStore = new UserDataStore();
-            var users = await dataStore.Get();
-            return users;
+            var users = context.Users.ToList();
+            return Task.FromResult(users.AsEnumerable());
         }
 
-        public async Task<User> GetById(int id)
+        public Task<User> GetById(int id)
         {
-            var dataStore = new UserDataStore();
-            var result = await dataStore.GetById(id);
-            return result;
+            var result = context.Users.Where(x => x.Id == id).Include(x => x.UserRoles).ThenInclude(x => x.Role).FirstOrDefault();
+            return Task.FromResult(result);
 
         }
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using WebApp.DataStores;
 using WebApp.Models;
 using WebApp.Services;
 
@@ -23,27 +22,28 @@ namespace WebApp.Proxy.Domains
         Task PrintKIM(KIM kim);
 
         Task<List<KIM>> GetAllKIM();
-
+        Task<bool> UpdateItemPemeriksaan(int id, ItemPemeriksaan model);
     }
 
 
     public class Administrator : IAdministrator
     {
         private IUserService _userService;
+        private DataContext _context;
 
-        public Administrator(IUserService userService)
+        public Administrator(IUserService userService, DataContext context)
         {
             _userService = userService;
+            _context = context;
+
         }
         public async Task<ItemPemeriksaan> AddNewItemPemeriksaaan(ItemPemeriksaan item)
         {
-           try
+            try
             {
-                var store = new ItemPemeriksaanDataStrore();
-                var result = await store.Insert(item);
-                if (result == null)
-                    throw new SystemException("Item Can Not Saved !");
-                return result;
+                _context.ItemPemeriksaans.Add(item);
+                await _context.SaveChangesAsync();
+                return item;
 
             }
             catch (System.Exception ex)
@@ -56,10 +56,13 @@ namespace WebApp.Proxy.Domains
         {
             try
             {
-                var userInRoles = new UserRoleDataStore();
-                var userRole = await userInRoles.AddUserRole(userId, roleName);
-                if (!userRole)
-                    throw new SystemException("Role {roleName} Exists !");
+                var user = _context.Users.FirstOrDefault(x => x.Id == userId);
+                if (user != null)
+                {
+                    var role = _context.Roles.Where(x => x.Name == roleName).FirstOrDefault();
+                    user.UserRoles.Add(new UserRole { UserId = userId, RoleId = role.Id });
+                }
+                await _context.SaveChangesAsync();
 
             }
             catch (System.Exception ex)
@@ -109,6 +112,27 @@ namespace WebApp.Proxy.Domains
         public Task PrintKIM(KIM kim)
         {
             throw new System.NotImplementedException();
+        }
+
+        public async Task<bool> UpdateItemPemeriksaan(int id, ItemPemeriksaan model)
+        {
+            try
+            {
+                var item = _context.ItemPemeriksaans.Where(x => x.Id == id).FirstOrDefault();
+                if (item == null)
+                    throw new SystemException("Item Pemeriksaan Not Found !");
+                item.Kelengkapan = model.Kelengkapan;
+                item.Penjelasan = model.Penjelasan;
+                var result = await _context.SaveChangesAsync();
+                if (result > 0)
+                    return true;
+                return false;
+            }
+            catch (System.Exception ex)
+            {
+
+                throw new SystemException(ex.Message);
+            }
         }
     }
 }

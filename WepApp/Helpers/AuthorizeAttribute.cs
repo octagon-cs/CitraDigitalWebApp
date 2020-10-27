@@ -19,7 +19,7 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
         }
         else
         {
-            if(Roles!=null && Roles.Split(",").Length>0 && !InRole(user))
+            if (Roles != null && Roles.Split(",").Length > 0 && !InRole(user))
             {
                 context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
             }
@@ -31,7 +31,8 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
         bool isFound = false;
         for (int i = 0; i < Roles.Split(",").Length; i++)
         {
-            var data = user.Roles.FirstOrDefault(x => x.Name.ToLower() == Roles.Split(",")[i].ToLower());
+            var roleName = Roles.Split(",")[i].Trim();
+            var data = user.UserRoles.FirstOrDefault(x => x.Role.Name.ToLower() == roleName.ToLower());
             if (data != null)
             {
                 isFound = true;

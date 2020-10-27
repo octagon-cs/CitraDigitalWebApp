@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Newtonsoft.Json;
 using WebApp.Helpers;
@@ -8,6 +10,7 @@ namespace WebApp.Models
 {
     public class User
     {
+        [Key]
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -16,15 +19,17 @@ namespace WebApp.Models
 
         [JsonIgnore]
         public string Password { get; set; }
-        public List<Role> Roles { get; set; }
+        public IList<UserRole> UserRoles { get; set; } = new List<UserRole>();
         public bool Status { get; set; }
+
+        [NotMapped]
         public UserType UserType
         {
             get
             {
-                if (Roles != null && Roles.Count() > 0)
+                if (UserRoles != null && UserRoles.Count() > 0)
                 {
-                    Role role = Roles.FirstOrDefault();
+                    Role role = UserRoles.FirstOrDefault().Role;
                     return (UserType)Enum.Parse(typeof(UserType), role.Name);
                 }
 
@@ -32,7 +37,7 @@ namespace WebApp.Models
             }
         }
 
-
+        [NotMapped]
         public string FullName
         {
             get

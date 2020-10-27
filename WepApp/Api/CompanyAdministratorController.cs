@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WebApp.DataStores;
 using WebApp.Helpers;
 using WebApp.Models;
 using WebApp.Proxy;
@@ -19,7 +18,7 @@ namespace WebApp.Controllers
 
         public CompanyAdministratorController(IUserService userService)
         {
-              administrator = UserProxy.GetCompanyAdministratorProxy();
+            administrator = UserProxy.GetCompanyAdministratorProxy();
         }
 
         [HttpPost("CreateProfile")]
@@ -29,7 +28,11 @@ namespace WebApp.Controllers
             {
                 User user = await Request.GetUser();
                 model.UserId = user.Id;
-                var profile = await administrator.CreateProfile(model);
+                var profile = await administrator.GetProfileByUserId(user.Id);
+                if (profile != null)
+                    throw new SystemException("Profile Is Exists ..!");
+
+                profile = await administrator.CreateProfile(model);
                 if (profile == null)
                     return BadRequest(new { message = "Create Company Profile Invalid ..!" });
                 return Ok(profile);
@@ -40,11 +43,20 @@ namespace WebApp.Controllers
             }
         }
 
-        [HttpPost("addtruck")]
+
+
+
+
+
+        #region trucks
+
         public async Task<IActionResult> AddTruck(Truck truck)
         {
             try
             {
+                var adminUser = await Request.GetUser();
+                var company = await adminUser.GetCompany();
+                truck.CompanyId = company.Id;
                 await administrator.AddNewTruck(truck);
                 return Ok(true);
             }
@@ -60,10 +72,10 @@ namespace WebApp.Controllers
         {
             try
             {
-                var adminUser = await Request.GetUser();    
+                var adminUser = await Request.GetUser();
                 var company = await adminUser.GetCompany();
                 var result = await administrator.GetTrucks(company.Id);
-                return Ok(true);
+                return Ok(result);
             }
             catch (System.Exception ex)
             {
@@ -72,8 +84,37 @@ namespace WebApp.Controllers
 
         }
 
+
+        [HttpPut("trucks")]
+        public async Task<IActionResult> PutTrucks(Truck truck)
+        {
+            try
+            {
+                var adminUser = await Request.GetUser();
+                var company = await adminUser.GetCompany();
+                var result = await administrator.UpdateTrucks(truck);
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+
+
+
+
+        #endregion
+
+
+        #region submission
+
+
         [HttpPost("createsubmission")]
         public async Task<IActionResult> createsubmission(Pengajuan pengajuan)
+
         {
             try
             {
@@ -86,5 +127,40 @@ namespace WebApp.Controllers
             }
 
         }
+
+
+        [HttpGet("submission")]
+        public async Task<IActionResult> GetSubmission()
+        {
+
+            try
+            {
+                var adminUser = await Request.GetUser();
+                var company = await adminUser.GetCompany();
+                var result = await administrator.GetSubmissionByCompanyId(company.Id);
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("submission/{id}")]
+        public async Task<IActionResult> GetSubmission(int id)
+        {
+
+            try
+            {
+                var result = await administrator.GetSubmissionByPengajuanId(id);
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        #endregion
     }
 }

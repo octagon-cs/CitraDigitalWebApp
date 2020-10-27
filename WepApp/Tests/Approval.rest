@@ -1,7 +1,42 @@
 @controller=https://localhost:5001/api/Approval
-@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE3IiwibmJmIjoxNjAzMzQ5MjA2LCJleHAiOjE2MDM5NTQwMDYsImlhdCI6MTYwMzM0OTIwNn0.sfCFDcvAry876RGUrELu0V8K66sn4BVQJ4WbVCLPrcw
+@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMiLCJuYmYiOjE2MDM2NTQ3MzIsImV4cCI6MTYwNDI1OTUzMiwiaWF0IjoxNjAzNjU0NzMyfQ.qu60sv7RC8yao5yIH9VNM5YL4KFsOf0NMWCJMfsXM68
 
-
+@authHSE=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJuYmYiOjE2MDM2ODUzMTgsImV4cCI6MTYwNDI5MDExOCwiaWF0IjoxNjAzNjg1MzE4fQ.J9cGFOCfi7vKKgcI8-MpQqvYgHMeXaNYhZtkjakxcQg
+@authManager=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUiLCJuYmYiOjE2MDM2ODU5MDYsImV4cCI6MTYwNDI5MDcwNiwiaWF0IjoxNjAzNjg1OTA2fQ.nFaBDOtTCNJcXiYXpmoje6mVG5PqLZ7rrRqYAZM8PGU
 GET {{controller}}/GetPersetujuan HTTP/1.1
 Content-Type: application/json
 Authorization: {{auth}}
+####
+
+POST {{controller}}/approve HTTP/1.1
+Content-Type: application/json
+Authorization: {{auth}}
+
+{
+        "PengajuanItemId": 4,
+        "StatusPersetujuan": "Approved"
+}
+
+####
+
+POST {{controller}}/approve HTTP/1.1
+Content-Type: application/json
+Authorization: {{authHSE}}
+
+{
+   "PengajuanItemId": 4,
+   "StatusPersetujuan": "Approved"
+}
+
+
+
+####
+
+POST {{controller}}/approve HTTP/1.1
+Content-Type: application/json
+Authorization: {{authManager}}
+
+{
+        "PengajuanItemId": 4,
+        "StatusPersetujuan": "Approved"
+}

@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WebApp.DataStores;
 using WebApp.Helpers;
 using WebApp.Models;
 using WebApp.Proxy;
@@ -12,7 +11,7 @@ namespace WebApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Approval1, Manager, HSE")]
     public class ApprovalController : ControllerBase
     {
         private IApproval approval;
@@ -22,11 +21,26 @@ namespace WebApp.Controllers
         {
             try
             {
-                   var user = await Request.GetUser();
-              approval = UserProxy.GetApprovalProxy(user);
-              var pengajuans= await approval.GetPengajuanNotApprove();
+                var user = await Request.GetUser();
+                approval = UserProxy.GetApprovalProxy(user);
+                var pengajuans = await approval.GetPengajuanNotApprove();
+                return Ok(pengajuans);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
-              return Ok(pengajuans);
+        [HttpPost("approve")]
+        public async Task<IActionResult> Approve(Persetujuan model)
+        {
+            try
+            {
+                var user = await Request.GetUser();
+                approval = UserProxy.GetApprovalProxy(user);
+                var pengajuan = await approval.Approve(model);
+                return Ok(pengajuan);
             }
             catch (System.Exception ex)
             {

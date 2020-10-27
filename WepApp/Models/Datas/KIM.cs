@@ -1,5 +1,9 @@
-namespace WebApp.Models{
-    public class KIM{
-        public int Id{get;set;}
+using System.ComponentModel.DataAnnotations;
+namespace WebApp.Models
+{
+    public class KIM
+    {
+        [Key]
+        public int Id { get; set; }
     }
 }

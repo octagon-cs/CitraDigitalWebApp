@@ -1,5 +1,5 @@
 @controller=https://localhost:5001/api/administrator
-@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2MDM2NTI0NTAsImV4cCI6MTYwNDI1NzI1MCwiaWF0IjoxNjAzNjUyNDUwfQ.zFAipP9CTs5KFnZ25ou_kl9pITFJyQnR3qDSUwy-pkk
+@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2MDM4NTIzODQsImV4cCI6MTYwNDQ1NzE4NCwiaWF0IjoxNjAzODUyMzg0fQ.Eb4bRD6ZEehdtBdaS6Mn7aLmA7ZxUUs1v_ORPSK3PH4
 POST {{controller}}/createuser HTTP/1.1
 Content-Type: application/json
 Authorization: {{auth}}
@@ -17,7 +17,6 @@ GET {{controller}}/adduserrole?userid=5&rolename=Manager HTTP/1.1
 Content-Type: application/json
 Authorization: {{auth}} 
 
-
 ####
 POST {{controller}}/createuser HTTP/1.1
 Content-Type: application/json
@@ -29,8 +28,6 @@ Authorization: {{auth}}
     "UserName" : "Approval1",
     "Password" : "Sony@77"
 }
-
-
 
 ####
 POST {{controller}}/createuser HTTP/1.1
@@ -45,9 +42,6 @@ Authorization: {{auth}}
 }
 
 
-
-
-
 ####
 POST {{controller}}/createuser HTTP/1.1
 Content-Type: application/json
@@ -60,18 +54,3 @@ Authorization: {{auth}}
     "Password" : "Sony@77"
 }
 
-
-
-
-
-####
-POST {{controller}}/createuser HTTP/1.1
-Content-Type: application/json
-Authorization: {{auth}}
-
-{
-    "FirstName":"Manager",
-    "LastName":"",
-    "UserName" : "Manager",
-    "Password" : "Sony@77"
-}

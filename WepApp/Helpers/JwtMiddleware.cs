@@ -50,8 +50,9 @@ namespace WebApp.Helpers
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
+                var user = await userService.GetById(userId);
                 // attach user to context on successful jwt validation
-                context.Items["User"] = await userService.GetById(userId);
+                context.Items["User"] = user;
             }
             catch
             {

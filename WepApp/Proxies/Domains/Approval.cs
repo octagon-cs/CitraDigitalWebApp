@@ -12,9 +12,9 @@ namespace WebApp.Models
     {
         List<KIM> GetInfoPengajuanById(int id);
         List<KIM> Checked(Pengajuan kim);
-        Task<Persetujuan> Approve(Persetujuan pengajuan);
+        Task<Persetujuan> Approve(int id, List<HasilPemeriksaan> hasil);
         Task<List<Pengajuan>> GetPengajuanNotApprove();
-        Task GetPenialain(int id);
+        Task<List<HasilPemeriksaan>> GetPenilaian(int itemPengajuanId);
     }
 
 
@@ -29,32 +29,59 @@ namespace WebApp.Models
             context = GetServiceProvider.Instance.GetRequiredService<DataContext>();
         }
 
-        public async Task<Persetujuan> Approve(Persetujuan persetujuan)
+        public async Task<Persetujuan> Approve(int id, List<HasilPemeriksaan> hasil)
         {
+
+            await using var transaction = await context.Database.BeginTransactionAsync();
             try
             {
-                var itemPengajuan = context.PengajuanItem.Where(x => x.Id == persetujuan.PengajuanItemId)
+
+                var itemPengajuan = context.PengajuanItems.Where(x => x.Id == id)
+                .Include(x=>x.HasilPemeriksaan)
                 .Include(x => x.Persetujuans).FirstOrDefault();
+
+
                 if (itemPengajuan != null && ValidateApproved(itemPengajuan))
                 {
-                    persetujuan.UserId = this.user.Id;
-                    persetujuan.ApprovedBy = user.UserType;
-                    persetujuan.ApprovedDate = DateTime.Now;
+
+                    if (itemPengajuan.HasilPemeriksaan != null && itemPengajuan.HasilPemeriksaan.Count > 0)
+                    {
+                        foreach (var item in hasil)
+                        {
+                            var itemHasil = itemPengajuan.HasilPemeriksaan.Where(x => x.ItemPemeriksaanId == item.ItemPemeriksaanId && x.ItemPengajuanId == id).FirstOrDefault();
+                            if (itemHasil == null)
+                                itemPengajuan.HasilPemeriksaan.Add(item);
+                            else
+                            {
+                                itemHasil.Keterangan = item.Keterangan;
+                                itemHasil.TindakLanjut = item.Keterangan;
+                                itemHasil.Hasil = item.Hasil;
+                            }
+
+                        }
+
+                    }
+                    else
+                        itemPengajuan.HasilPemeriksaan = hasil;
+
+
+
+                    await context.SaveChangesAsync();
+                    var persetujuan = new Persetujuan { PengajuanItemId = id, UserId = user.Id, ApprovedBy = user.UserType, ApprovedDate = DateTime.Now, StatusPersetujuan = StatusPersetujuan.Approved };
                     context.Persetujuans.Add(persetujuan);
                     await context.SaveChangesAsync();
+                    await transaction.CommitAsync();
                     return persetujuan;
-
                 }
                 throw new SystemException("Item Pengajuan Not Found !");
 
             }
             catch (System.Exception ex)
             {
+                await transaction.RollbackAsync();
                 throw new SystemException(ex.Message);
             }
         }
-
-
 
         public List<KIM> Checked(Pengajuan kim)
         {
@@ -81,24 +108,6 @@ namespace WebApp.Models
             }
         }
 
-        private List<KIM> GetAllKimByApproval2()
-        {
-            //Get All Pengajuan After Aprove by Approval 1
-            throw new NotImplementedException();
-        }
-
-        private List<KIM> GetAllKimByApproval1()
-        {
-            //Get All Pengajuan Not Have Approval
-            throw new NotImplementedException();
-        }
-
-        private List<KIM> GetAllKimByManager()
-        {
-            //Get All Pengajuan Have Apprval from Approval2
-            throw new NotImplementedException();
-        }
-
         public Task<List<Pengajuan>> GetPengajuanNotApprove()
         {
             switch (this.user.UserType)
@@ -115,6 +124,50 @@ namespace WebApp.Models
                 default:
                     return null;
             }
+        }
+
+        public Task<List<HasilPemeriksaan>> GetPenilaian(int pengajuanItemid)
+        {
+            try
+            {
+                var item = context.PengajuanItems.Where(x => x.Id == pengajuanItemid)
+                .Include(x => x.HasilPemeriksaan).ThenInclude(x => x.ItemPemeriksaan).FirstOrDefault();
+                if (item == null)
+                    throw new SystemException("Item Pengajuan Not Fornd ...!");
+
+                if (item.HasilPemeriksaan == null || item.HasilPemeriksaan.Count <= 0)
+                {
+                    var datas = context.ItemPemeriksaans.ToList();
+                    foreach (var itemPemeriksaan in datas)
+                    {
+                        item.HasilPemeriksaan.Add(new HasilPemeriksaan { ItemPengajuanId = pengajuanItemid, ItemPemeriksaanId = itemPemeriksaan.Id });
+                    }
+                }
+                context.SaveChangesAsync();
+                return Task.FromResult(item.HasilPemeriksaan.OrderBy(x => x.Id).ToList());
+            }
+            catch (System.Exception ex)
+            {
+                throw new SystemException(ex.Message);
+            }
+        }
+        #region Private
+        private List<KIM> GetAllKimByApproval2()
+        {
+            //Get All Pengajuan After Aprove by Approval 1
+            throw new NotImplementedException();
+        }
+
+        private List<KIM> GetAllKimByApproval1()
+        {
+            //Get All Pengajuan Not Have Approval
+            throw new NotImplementedException();
+        }
+
+        private List<KIM> GetAllKimByManager()
+        {
+            //Get All Pengajuan Have Apprval from Approval2
+            throw new NotImplementedException();
         }
 
         private Task<List<Pengajuan>> GetPengajuanNotApprovedByApproval1()
@@ -186,13 +239,7 @@ namespace WebApp.Models
 
         }
 
-        public Task GetPenialain(int id)
-        {
+        #endregion
 
-
-            var item = context.PengajuanItem.Where(x => x.Id == id).Include(x => x.HasilPemeriksaan).FirstOrDefault();
-
-
-        }
     }
 }

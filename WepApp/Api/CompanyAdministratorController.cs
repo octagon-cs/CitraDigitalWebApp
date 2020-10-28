@@ -44,9 +44,6 @@ namespace WebApp.Controllers
 
 
 
-
-
-
         #region trucks
         [HttpPost("trucks")]
         public async Task<IActionResult> AddTruck(Truck truck)
@@ -117,8 +114,8 @@ namespace WebApp.Controllers
         {
             try
             {
-                await administrator.AddNewPengajuanTruck(pengajuan);
-                return Ok(true);
+                var result = await administrator.AddNewPengajuanTruck(pengajuan);
+                return Ok(result);
             }
             catch (System.Exception ex)
             {

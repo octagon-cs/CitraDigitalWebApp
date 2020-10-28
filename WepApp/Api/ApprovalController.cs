@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Helpers;
@@ -32,14 +33,14 @@ namespace WebApp.Controllers
             }
         }
 
-        [HttpPost("approve")]
-        public async Task<IActionResult> Approve(Persetujuan model)
+        [HttpPost("approve/{id}")]
+        public async Task<IActionResult> Approve(int id, List<HasilPemeriksaan> model)
         {
             try
             {
                 var user = await Request.GetUser();
                 approval = UserProxy.GetApprovalProxy(user);
-                var pengajuan = await approval.Approve(model);
+                var pengajuan = await approval.Approve(id, model);
                 return Ok(pengajuan);
             }
             catch (System.Exception ex)
@@ -49,14 +50,14 @@ namespace WebApp.Controllers
         }
 
 
-        [HttpGet("GetPenilaian")]
+        [HttpGet("GetPenilaian/{id}")]
         public async Task<IActionResult> GetPenilaian(int id)
         {
             try
             {
                 var user = await Request.GetUser();
                 approval = UserProxy.GetApprovalProxy(user);
-                var penilaian = await approval.GetPenialain(id);
+                var penilaian = await approval.GetPenilaian(id);
                 return Ok(penilaian);
             }
             catch (System.Exception ex)

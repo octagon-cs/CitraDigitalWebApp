@@ -49,6 +49,37 @@ namespace WepApp.Migrations
                     b.ToTable("CompanyProfiles");
                 });
 
+            modelBuilder.Entity("WebApp.Models.HasilPemeriksaan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Hasil")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("ItemPemeriksaanId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ItemPengajuanId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Keterangan")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int?>("PengajuanItemId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TindakLanjut")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PengajuanItemId");
+
+                    b.ToTable("HasilPemeriksaans");
+                });
+
             modelBuilder.Entity("WebApp.Models.ItemPemeriksaan", b =>
                 {
                     b.Property<int>("Id")
@@ -81,6 +112,9 @@ namespace WepApp.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Created")
@@ -116,7 +150,7 @@ namespace WepApp.Migrations
 
                     b.HasIndex("PengajuanId");
 
-                    b.ToTable("PengajuanItem");
+                    b.ToTable("PengajuanItems");
                 });
 
             modelBuilder.Entity("WebApp.Models.Persetujuan", b =>
@@ -144,7 +178,7 @@ namespace WepApp.Migrations
 
                     b.HasIndex("PengajuanItemId");
 
-                    b.ToTable("Persetujuan");
+                    b.ToTable("Persetujuans");
                 });
 
             modelBuilder.Entity("WebApp.Models.Role", b =>
@@ -265,6 +299,13 @@ namespace WepApp.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRole");
+                });
+
+            modelBuilder.Entity("WebApp.Models.HasilPemeriksaan", b =>
+                {
+                    b.HasOne("WebApp.Models.PengajuanItem", null)
+                        .WithMany("HasilPemeriksaan")
+                        .HasForeignKey("PengajuanItemId");
                 });
 
             modelBuilder.Entity("WebApp.Models.PengajuanItem", b =>

@@ -59,6 +59,7 @@ namespace WepApp.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CompanyId = table.Column<int>(nullable: false),
                     LetterNumber = table.Column<string>(nullable: true),
                     StatusPengajuan = table.Column<int>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false)
@@ -92,15 +93,15 @@ namespace WepApp.Migrations
                     CarCreated = table.Column<int>(nullable: false),
                     TruckType = table.Column<string>(nullable: true),
                     DriverName = table.Column<string>(nullable: true),
-                    DriverPhoto = table.Column<string>(nullable: true),
                     DriverIDCard = table.Column<string>(nullable: true),
                     DriverLicense = table.Column<string>(nullable: true),
+                    DriverPhoto = table.Column<string>(nullable: true),
                     AssdriverName = table.Column<string>(nullable: true),
-                    AssdriverPhoto = table.Column<string>(nullable: true),
                     AssdriverIDCard = table.Column<string>(nullable: true),
                     AssdriverLicense = table.Column<string>(nullable: true),
-                    VehicleRegistration = table.Column<string>(nullable: true),
+                    AssdriverPhoto = table.Column<string>(nullable: true),
                     KeurDLLAJR = table.Column<string>(nullable: true),
+                    VehicleRegistration = table.Column<string>(nullable: true),
                     CompanyId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -127,7 +128,7 @@ namespace WepApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PengajuanItem",
+                name: "PengajuanItems",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -138,9 +139,9 @@ namespace WepApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PengajuanItem", x => x.Id);
+                    table.PrimaryKey("PK_PengajuanItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PengajuanItem_Pengajuans_PengajuanId",
+                        name: "FK_PengajuanItems_Pengajuans_PengajuanId",
                         column: x => x.PengajuanId,
                         principalTable: "Pengajuans",
                         principalColumn: "Id",
@@ -174,7 +175,31 @@ namespace WepApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Persetujuan",
+                name: "HasilPemeriksaans",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ItemPengajuanId = table.Column<int>(nullable: false),
+                    ItemPemeriksaanId = table.Column<int>(nullable: false),
+                    Hasil = table.Column<bool>(nullable: false),
+                    TindakLanjut = table.Column<string>(nullable: true),
+                    Keterangan = table.Column<string>(nullable: true),
+                    PengajuanItemId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HasilPemeriksaans", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_HasilPemeriksaans_PengajuanItems_PengajuanItemId",
+                        column: x => x.PengajuanItemId,
+                        principalTable: "PengajuanItems",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Persetujuans",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -187,23 +212,28 @@ namespace WepApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Persetujuan", x => x.Id);
+                    table.PrimaryKey("PK_Persetujuans", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Persetujuan_PengajuanItem_PengajuanItemId",
+                        name: "FK_Persetujuans_PengajuanItems_PengajuanItemId",
                         column: x => x.PengajuanItemId,
-                        principalTable: "PengajuanItem",
+                        principalTable: "PengajuanItems",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PengajuanItem_PengajuanId",
-                table: "PengajuanItem",
+                name: "IX_HasilPemeriksaans_PengajuanItemId",
+                table: "HasilPemeriksaans",
+                column: "PengajuanItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PengajuanItems_PengajuanId",
+                table: "PengajuanItems",
                 column: "PengajuanId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Persetujuan_PengajuanItemId",
-                table: "Persetujuan",
+                name: "IX_Persetujuans_PengajuanItemId",
+                table: "Persetujuans",
                 column: "PengajuanItemId");
 
             migrationBuilder.CreateIndex(
@@ -223,13 +253,16 @@ namespace WepApp.Migrations
                 name: "CompanyProfiles");
 
             migrationBuilder.DropTable(
+                name: "HasilPemeriksaans");
+
+            migrationBuilder.DropTable(
                 name: "ItemPemeriksaans");
 
             migrationBuilder.DropTable(
                 name: "Kims");
 
             migrationBuilder.DropTable(
-                name: "Persetujuan");
+                name: "Persetujuans");
 
             migrationBuilder.DropTable(
                 name: "Trucks");
@@ -238,7 +271,7 @@ namespace WepApp.Migrations
                 name: "UserRole");
 
             migrationBuilder.DropTable(
-                name: "PengajuanItem");
+                name: "PengajuanItems");
 
             migrationBuilder.DropTable(
                 name: "Roles");

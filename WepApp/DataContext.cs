@@ -11,7 +11,7 @@ namespace WebApp
         public DbSet<Role> Roles { get; set; }
         public DbSet<CompanyProfile> CompanyProfiles { get; set; }
         public DbSet<ItemPemeriksaan> ItemPemeriksaans { get; set; }
-        public DbSet<PengajuanItem> PengajuanItem { get; set; }
+        public DbSet<PengajuanItem> PengajuanItems { get; set; }
         public DbSet<Pengajuan> Pengajuans { get; set; }
         public DbSet<Persetujuan> Persetujuans { get; set; }
         public DbSet<HasilPemeriksaan> HasilPemeriksaans { get; set; }

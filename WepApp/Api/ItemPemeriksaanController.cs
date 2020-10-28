@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Helpers;
@@ -15,10 +16,28 @@ namespace WebApp.Controllers
     public class ItemPemeriksaanController : ControllerBase
     {
         private IUserService _userService;
+        private DataContext _context;
 
-        public ItemPemeriksaanController(IUserService userService)
+        public ItemPemeriksaanController(IUserService userService, DataContext context)
         {
             _userService = userService;
+            _context = context;
+        }
+
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            try
+            {
+                var items = _context.ItemPemeriksaans.ToList();
+                return Ok(items);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [Authorize(Roles = "Administrator")]

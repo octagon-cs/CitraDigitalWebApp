@@ -48,5 +48,22 @@ namespace WebApp.Controllers
             }
         }
 
+
+        [HttpGet("GetPenilaian")]
+        public async Task<IActionResult> GetPenilaian(int id)
+        {
+            try
+            {
+                var user = await Request.GetUser();
+                approval = UserProxy.GetApprovalProxy(user);
+                var penilaian = await approval.GetPenialain(id);
+                return Ok(penilaian);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

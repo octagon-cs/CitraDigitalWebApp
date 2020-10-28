@@ -31,6 +31,7 @@ namespace WebApp
                     dataContext.ItemPemeriksaans.Add(new Models.ItemPemeriksaan { Kelengkapan = "STNK", Penjelasan = "Surat Tanda Nomor Kendaraan " });
                     dataContext.ItemPemeriksaans.Add(new Models.ItemPemeriksaan { Kelengkapan = "SIM", Penjelasan = "Surat Izin Mengemudi" });
                     dataContext.ItemPemeriksaans.Add(new Models.ItemPemeriksaan { Kelengkapan = "KEURDLLAJR", Penjelasan = "KEUR KENDARAAN" });
+                    dataContext.SaveChanges();
                 }
 
 

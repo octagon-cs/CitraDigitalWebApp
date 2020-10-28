@@ -14,6 +14,7 @@ namespace WebApp.Models
         List<KIM> Checked(Pengajuan kim);
         Task<Persetujuan> Approve(Persetujuan pengajuan);
         Task<List<Pengajuan>> GetPengajuanNotApprove();
+        Task GetPenialain(int id);
     }
 
 
@@ -182,6 +183,15 @@ namespace WebApp.Models
 
                 throw new SystemException(ex.Message);
             }
+
+        }
+
+        public Task GetPenialain(int id)
+        {
+
+
+            var item = context.PengajuanItem.Where(x => x.Id == id).Include(x => x.HasilPemeriksaan).FirstOrDefault();
+
 
         }
     }

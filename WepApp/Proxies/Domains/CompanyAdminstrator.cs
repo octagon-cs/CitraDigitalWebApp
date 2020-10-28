@@ -49,45 +49,12 @@ namespace WebApp.Proxy.Domains
         public async Task<Truck> AddNewTruck(Truck truck)
         {
 
-            List<Tuple<int, Task<string>>> tasks = new List<Tuple<int, Task<string>>>();
+
             try
             {
 
-                var taskDriverId = Helpers.FileHelper.SaveTruckFile(truck.FileDriverId, Helpers.PathType.Document);
-                tasks.Add(Tuple.Create(1, taskDriverId));
-
-                var taskAssDriverId = Helpers.FileHelper.SaveTruckFile(truck.FileAssDriverId, Helpers.PathType.Document);
-                tasks.Add(Tuple.Create(2, taskAssDriverId));
-
-                var taskDriverPhoto = Helpers.FileHelper.SaveTruckFile(truck.DriverPhotoData, Helpers.PathType.Photo);
-                tasks.Add(Tuple.Create(3, taskDriverPhoto));
-
-                var taskassDriverPhoto = Helpers.FileHelper.SaveTruckFile(truck.AssDriverPhotoData, Helpers.PathType.Photo);
-                tasks.Add(Tuple.Create(4, taskassDriverPhoto));
-
-                var taskDriverLicense = Helpers.FileHelper.SaveTruckFile(truck.FileDriverLicense, Helpers.PathType.Document);
-                tasks.Add(Tuple.Create(5, taskDriverLicense));
-
-                var taskAssDriverLicense = Helpers.FileHelper.SaveTruckFile(truck.FileAssDriverLicense, Helpers.PathType.Document);
-                tasks.Add(Tuple.Create(6, taskAssDriverLicense));
-
-
-                var resultTask = await Task.WhenAll(tasks.Select(x => x.Item2).ToArray());
-                foreach (var item in tasks)
-                {
-                    var filename = item.Item2.Result;
-
-                    switch (item.Item1)
-                    {
-                        case 3:
-                            truck.DriverPhoto = filename;
-                            break;
-
-                    }
-                }
-
-
-                context.Trucks.Add(truck);
+                var dataTruck = await SaveFile(truck);
+                context.Trucks.Add(dataTruck);
                 var result = await context.SaveChangesAsync();
                 if (result > 0)
                     return truck;
@@ -100,6 +67,7 @@ namespace WebApp.Proxy.Domains
 
 
         }
+
 
         public Task<bool> ChangeQRPPejabat(int companyId)
         {
@@ -155,10 +123,12 @@ namespace WebApp.Proxy.Domains
             return Task.FromResult(result.AsEnumerable());
         }
 
-        public async Task<bool> UpdateTrucks(Truck truck)
+        public async Task<bool> UpdateTrucks(Truck data)
         {
             try
             {
+                var truck = await SaveFile(data);
+
                 var truckExists = context.Trucks.Where(x => x.Id == truck.Id).FirstOrDefault();
                 if (truckExists == null)
                     throw new System.SystemException("Truck Not Found !");
@@ -194,5 +164,74 @@ namespace WebApp.Proxy.Domains
 
 
         }
+
+
+        private async Task<Truck> SaveFile(Truck truck)
+        {
+            List<Tuple<int, Task<string>>> tasks = new List<Tuple<int, Task<string>>>();
+            var taskDriverId = Helpers.FileHelper.SaveTruckFile(truck.FileDriverId, Helpers.PathType.Document, truck.DriverIDCard);
+            tasks.Add(Tuple.Create(1, taskDriverId));
+
+            var taskAssDriverId = Helpers.FileHelper.SaveTruckFile(truck.FileAssDriverId, Helpers.PathType.Document, truck.AssdriverIDCard);
+            tasks.Add(Tuple.Create(2, taskAssDriverId));
+
+            var taskDriverPhoto = Helpers.FileHelper.SaveTruckFile(truck.FileDriverPhoto, Helpers.PathType.Photo, truck.DriverPhoto);
+            tasks.Add(Tuple.Create(3, taskDriverPhoto));
+
+            var taskassDriverPhoto = Helpers.FileHelper.SaveTruckFile(truck.FileAssDriverPhoto, Helpers.PathType.Photo, truck.AssdriverPhoto);
+            tasks.Add(Tuple.Create(4, taskassDriverPhoto));
+
+            var taskDriverLicense = Helpers.FileHelper.SaveTruckFile(truck.FileDriverLicense, Helpers.PathType.Document, truck.DriverLicense);
+            tasks.Add(Tuple.Create(5, taskDriverLicense));
+
+            var taskAssDriverLicense = Helpers.FileHelper.SaveTruckFile(truck.FileAssDriverLicense, Helpers.PathType.Document, truck.AssdriverLicense);
+            tasks.Add(Tuple.Create(6, taskAssDriverLicense));
+
+            var taskVichel = Helpers.FileHelper.SaveTruckFile(truck.FileVehicleRegistration, Helpers.PathType.Document, truck.VehicleRegistration);
+            tasks.Add(Tuple.Create(7, taskVichel));
+
+            var taskKeur = Helpers.FileHelper.SaveTruckFile(truck.FileKeurDLLAJR, Helpers.PathType.Document, truck.KeurDLLAJR);
+            tasks.Add(Tuple.Create(8, taskKeur));
+
+            var resultTask = await Task.WhenAll(tasks.Select(x => x.Item2).ToArray());
+            foreach (var item in tasks)
+            {
+                var filename = item.Item2.Result;
+                if (!string.IsNullOrEmpty(filename))
+                {
+                    switch (item.Item1)
+                    {
+                        case 1:
+                            truck.DriverIDCard = filename;
+                            break;
+                        case 2:
+                            truck.AssdriverIDCard = filename;
+                            break;
+                        case 3:
+                            truck.DriverPhoto = filename;
+                            break;
+                        case 4:
+                            truck.AssdriverPhoto = filename;
+                            break;
+                        case 5:
+                            truck.DriverLicense = filename;
+                            break;
+                        case 6:
+                            truck.AssdriverLicense = filename;
+                            break;
+                        case 7:
+                            truck.VehicleRegistration = filename;
+                            break;
+                        case 8:
+                            truck.KeurDLLAJR = filename;
+                            break;
+
+                    }
+                }
+            }
+
+            return truck;
+        }
+
     }
 }

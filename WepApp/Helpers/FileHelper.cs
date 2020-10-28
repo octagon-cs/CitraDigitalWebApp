@@ -8,8 +8,7 @@ namespace WebApp.Helpers
     public class FileHelper
     {
 
-        public static string PhotoPath => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/photos");
-        public static string DocumentPath => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/documents");
+        public static string BasePath => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/");
         public static byte[] CreateThumb(byte[] byteArray)
         {
             try
@@ -53,27 +52,54 @@ namespace WebApp.Helpers
             }
         }
 
-        internal static async Task<string> SaveTruckFile(FileData file, PathType pathType)
+        internal static async Task<string> SaveTruckFile(FileData file, PathType pathType, string lastFile)
         {
             try
             {
-                var fileName = Helpers.FileHelper.CreateFileName(file.FileExtention, pathType);
+                if (file == null)
+                    throw new SystemException();
 
-                await System.IO.File.WriteAllBytesAsync(fileName, file.Data, new System.Threading.CancellationToken());
+                if (!string.IsNullOrEmpty(lastFile))
+                {
+                    await DeleteFile(lastFile).ConfigureAwait(false);
+                }
+
+                var fileName = Helpers.FileHelper.CreateFileName(file.FileExtention, pathType);
+                await System.IO.File.WriteAllBytesAsync(BasePath + fileName, file.Data, new System.Threading.CancellationToken());
                 return fileName;
             }
-            catch (System.Exception ex)
+            catch (SystemException ex)
             {
-                throw new SystemException(ex.Message);
+                return string.Empty;
+            }
+        }
+
+
+        public static Task<bool> DeleteFile(string fileName)
+        {
+            try
+            {
+                var fullPath = BasePath + fileName;
+
+                if (System.IO.File.Exists(fullPath))
+                {
+                    System.IO.File.Delete(fullPath);
+                }
+
+                return Task.FromResult(true);
+            }
+            catch
+            {
+                return Task.FromResult(false);
             }
         }
 
         internal static string CreateFileName(string fileType, PathType type)
         {
             Guid guid = Guid.NewGuid();
-            var path = type == PathType.Photo ? PhotoPath : DocumentPath;
+            var path = type == PathType.Photo ? "photos" : "documents";
 
-            return path + "/" + guid.ToString() + "." + fileType;
+            return $"{path}/{guid.ToString()}.{fileType}";
         }
 
 

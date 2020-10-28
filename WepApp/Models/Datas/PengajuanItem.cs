@@ -14,5 +14,6 @@ namespace WebApp.Models
         public int PengajuanId { get; set; }
 
         public List<Persetujuan> Persetujuans { get; set; } = new List<Persetujuan>();
+        public List<HasilPemeriksaan> HasilPemeriksaan { get; set; } = new List<HasilPemeriksaan>();
     }
 }

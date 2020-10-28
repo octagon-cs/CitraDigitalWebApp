@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WebApp.Helpers;
 using WebApp.Models;
 using WebApp.Proxy;
 using WebApp.Proxy.Domains;
@@ -49,7 +48,7 @@ namespace WebApp.Controllers
 
 
         #region trucks
-
+        [HttpPost("trucks")]
         public async Task<IActionResult> AddTruck(Truck truck)
         {
             try
@@ -57,8 +56,8 @@ namespace WebApp.Controllers
                 var adminUser = await Request.GetUser();
                 var company = await adminUser.GetCompany();
                 truck.CompanyId = company.Id;
-                await administrator.AddNewTruck(truck);
-                return Ok(true);
+                var result = await administrator.AddNewTruck(truck);
+                return Ok(result);
             }
             catch (System.Exception ex)
             {

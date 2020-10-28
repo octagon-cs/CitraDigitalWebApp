@@ -14,6 +14,7 @@ namespace WebApp
         public DbSet<PengajuanItem> PengajuanItem { get; set; }
         public DbSet<Pengajuan> Pengajuans { get; set; }
         public DbSet<Persetujuan> Persetujuans { get; set; }
+        public DbSet<HasilPemeriksaan> HasilPemeriksaans { get; set; }
         public DataContext(DbContextOptions<DataContext> options)
             : base(options) { }
     }

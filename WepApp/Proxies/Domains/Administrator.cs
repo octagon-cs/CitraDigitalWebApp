@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 using WebApp.Services;
 
@@ -15,7 +16,7 @@ namespace WebApp.Proxy.Domains
         Task<ItemPemeriksaan> AddNewItemPemeriksaaan(ItemPemeriksaan item);
         Task<List<KIM>> GetAllKIMNotYetApproved();
 
-        Task<KIM> CreateNewKIM(KIM kim);
+        Task<KIM> CreateNewKIM(int itempengajuanId, KIM kim);
 
         Task<KIM> GetKIMById(int kimId);
 
@@ -23,6 +24,7 @@ namespace WebApp.Proxy.Domains
 
         Task<List<KIM>> GetAllKIM();
         Task<bool> UpdateItemPemeriksaan(int id, ItemPemeriksaan model);
+        Task<List<PengajuanItem>> GetPersetujuan();
     }
 
 
@@ -72,9 +74,29 @@ namespace WebApp.Proxy.Domains
 
         }
 
-        public Task<KIM> CreateNewKIM(KIM kim)
+        public async Task<KIM> CreateNewKIM(int itempengajuanid, KIM kim)
         {
-            throw new System.NotImplementedException();
+            var pengajuanItem = _context.PengajuanItems.Where(xx => xx.Id == itempengajuanid)
+              .Include(x => x.Truck)
+            .AsNoTracking().FirstOrDefault();
+
+            var truck = _context.Trucks.Where(xx => xx.Id == pengajuanItem.TruckId).Include(xx => xx.Kims).FirstOrDefault();
+            KIM tempKim = truck.KIM;
+            if (tempKim == null)
+            {
+                tempKim = kim;
+                tempKim.TruckId = pengajuanItem.TruckId;
+                _context.Kims.Add(tempKim);
+            }
+            else
+            {
+                var dataKim = _context.Kims.Where(x => x.Id == tempKim.Id).FirstOrDefault();
+                dataKim.BeginDate = kim.BeginDate;
+                dataKim.EndDate = kim.EndDate;
+            }
+            var result = await _context.SaveChangesAsync();
+
+            return tempKim;
         }
 
         public Task<User> CreateUser(User user)
@@ -107,6 +129,29 @@ namespace WebApp.Proxy.Domains
         public Task<KIM> GetKIMById(int kimId)
         {
             throw new System.NotImplementedException();
+        }
+
+        public Task<List<PengajuanItem>> GetPersetujuan()
+        {
+            var pengajuans = _context.Pengajuans.Where(x => x.StatusPengajuan != Helpers.StatusPengajuan.Complete)
+            .Include(x => x.Items).ThenInclude(x => x.Truck)
+            .Include(x => x.Items).ThenInclude(x => x.Persetujuans)
+            .Include(x => x.Items).ThenInclude(x => x.HasilPemeriksaan)
+            .AsNoTracking();
+            var resuls = pengajuans.SelectMany(x => x.Items).ToList().Where(x => x.Status == Helpers.StatusPersetujuan.Approved);
+
+
+            List<PengajuanItem> list = new List<PengajuanItem>();
+            foreach (var item in resuls)
+            {
+                var truck = _context.Trucks.Where(x => x.Id == item.TruckId).Include(x => x.Kims).FirstOrDefault();
+                if (truck.KIM == null || (truck.KIM != null && truck.KIM.Expired != Helpers.ExpireStatus.None))
+                {
+                    list.Add(item);
+                }
+            }
+
+            return Task.FromResult(list.ToList());
         }
 
         public Task PrintKIM(KIM kim)

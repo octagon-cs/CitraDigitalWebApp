@@ -42,6 +42,24 @@ namespace WebApp.Controllers
             }
         }
 
+        [HttpGet("GetProfile")]
+        public async Task<IActionResult> GetProfile()
+        {
+            try
+            {
+                User user = await Request.GetUser();
+                var profile = await administrator.GetProfileByUserId(user.Id);
+                if (profile == null)
+                    return BadRequest(new { message = "Company Profile Not Created ..!" });
+
+                return Ok(profile);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
 
         #region trucks

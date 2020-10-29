@@ -37,7 +37,7 @@ namespace WebApp.Models
             {
 
                 var itemPengajuan = context.PengajuanItems.Where(x => x.Id == id)
-                .Include(x=>x.HasilPemeriksaan)
+                .Include(x => x.HasilPemeriksaan)
                 .Include(x => x.Persetujuans).FirstOrDefault();
 
 
@@ -67,9 +67,21 @@ namespace WebApp.Models
 
 
                     await context.SaveChangesAsync();
-                    var persetujuan = new Persetujuan { PengajuanItemId = id, UserId = user.Id, ApprovedBy = user.UserType, ApprovedDate = DateTime.Now, StatusPersetujuan = StatusPersetujuan.Approved };
+                    var persetujuan = new Persetujuan
+                    {
+                        PengajuanItemId = id,
+                        UserId = user.Id,
+                        ApprovedBy = user.UserType,
+                        ApprovedDate = DateTime.Now,
+                        StatusPersetujuan = StatusPersetujuan.Approved
+                    };
                     context.Persetujuans.Add(persetujuan);
+                    var pengajuan = context.Pengajuans.Where(x => x.Id == itemPengajuan.PengajuanId).FirstOrDefault();
+                    if (persetujuan.ApprovedBy == UserType.Approval1)
+                        pengajuan.StatusPengajuan = StatusPengajuan.Proccess;
+
                     await context.SaveChangesAsync();
+
                     await transaction.CommitAsync();
                     return persetujuan;
                 }

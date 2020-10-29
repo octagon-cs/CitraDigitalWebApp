@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using Newtonsoft.Json;
 using WebApp.Helpers;
 
@@ -25,6 +27,20 @@ namespace WebApp.Models
         public string KeurDLLAJR { get; set; }
         public string VehicleRegistration { get; set; }
         public int CompanyId { get; set; }
+
+        public List<KIM> Kims { get; set; } = new List<KIM>();
+
+
+        [NotMapped]
+        public KIM KIM
+        {
+            get
+            {
+                if (Kims == null || Kims.Count <= 0)
+                    return null;
+                return Kims.Last();
+            }
+        }
 
 
         [JsonIgnore]

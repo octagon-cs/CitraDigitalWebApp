@@ -1,6 +1,6 @@
 @controller=https://localhost:5001/api/Approval
-@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJuYmYiOjE2MDM4NTY5NDIsImV4cCI6MTYwNDQ2MTc0MiwiaWF0IjoxNjAzODU2OTQyfQ.X7hPW9MjJBPxHKirARRHxxkmc_nTrCjwdFQgdHWbsc4
-@authHSE=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMiLCJuYmYiOjE2MDM4NjA4NjUsImV4cCI6MTYwNDQ2NTY2NSwiaWF0IjoxNjAzODYwODY1fQ.9s6qYYcSiEt4LOssFmP7bQn-_TUZIbmDD3Ck2Rc1OQ4
+@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMiLCJuYmYiOjE2MDM5NjI2ODQsImV4cCI6MTYwNDU2NzQ4NCwiaWF0IjoxNjAzOTYyNjg0fQ.87yqEl4RiztCAKhQUssU20wyo0Ps84Ehm1VL_MDcd1Y
+@authHSE=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJuYmYiOjE2MDM5NjI0NjIsImV4cCI6MTYwNDU2NzI2MiwiaWF0IjoxNjAzOTYyNDYyfQ.dn5scxFAyJ4tB0rhZ8E9ssMEsE4T-L0y2bHTQMxUsC8
 @authManager=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUiLCJuYmYiOjE2MDM2ODU5MDYsImV4cCI6MTYwNDI5MDcwNiwiaWF0IjoxNjAzNjg1OTA2fQ.nFaBDOtTCNJcXiYXpmoje6mVG5PqLZ7rrRqYAZM8PGU
 GET {{controller}}/GetPersetujuan HTTP/1.1
 Content-Type: application/json
@@ -31,14 +31,14 @@ Authorization: {{authHSE}}
 
 ####
 
-POST {{controller}}/approve/3 HTTP/1.1
+POST {{controller}}/approve/1 HTTP/1.1
 Content-Type: application/json
 Authorization: {{authManager}}
 
 [
   {
-    "id": 0,
-    "itemPengajuanId": 3,
+    "id": 1,
+    "itemPengajuanId": 1,
     "itemPemeriksaanId": 2,
     "hasil": true,
     "tindakLanjut": null,
@@ -50,8 +50,8 @@ Authorization: {{authManager}}
     }
   },
   {
-    "id": 0,
-    "itemPengajuanId": 3,
+    "id": 2,
+    "itemPengajuanId": 1,
     "itemPemeriksaanId": 1,
     "hasil": true,
     "tindakLanjut": null,
@@ -63,8 +63,8 @@ Authorization: {{authManager}}
     }
   },
   {
-    "id": 0,
-    "itemPengajuanId": 3,
+    "id": 3,
+    "itemPengajuanId": 1,
     "itemPemeriksaanId": 3,
     "hasil": true,
     "tindakLanjut": null,
@@ -78,6 +78,6 @@ Authorization: {{authManager}}
 ]
 #####
 
-GET {{controller}}/GetPenilaian/3 HTTP/1.1
+GET {{controller}}/GetPenilaian/1 HTTP/1.1
 Content-Type: application/json
 Authorization: {{auth}}

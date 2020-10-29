@@ -19,7 +19,7 @@ namespace WebApp.Helpers
     [JsonConverter(typeof(StringEnumConverter))]
     public enum AttackStatus
     {
-        Baru, Perpanjangan
+        Baru, Perpanjangan, Complete
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -28,6 +28,10 @@ namespace WebApp.Helpers
         Proccess, Approved, Reject
     }
 
-
+    [JsonConverter(typeof(StringEnumConverter))]
+    public enum ExpireStatus
+    {
+        None, WillExpire, Expire
+    }
 
 }

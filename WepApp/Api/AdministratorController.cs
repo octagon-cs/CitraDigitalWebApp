@@ -51,5 +51,37 @@ namespace WebApp.Controllers
             }
 
         }
+
+
+        [HttpGet("GetPersetujuan")]
+        public async Task<IActionResult> GetPersetujuan()
+        {
+            try
+            {
+                var results = await administrator.GetPersetujuan();
+                return Ok(results);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpPost("CreateKim/{id}")]
+        public async Task<IActionResult> CreateKim(int id, KIM kim)
+        {
+            try
+            {
+                var user = await administrator.CreateNewKIM(id, kim);
+                if (user == null)
+                    return BadRequest(new { message = "Username or password is incorrect" });
+                return Ok(user);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

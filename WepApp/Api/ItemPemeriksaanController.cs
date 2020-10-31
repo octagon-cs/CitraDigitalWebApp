@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApp.Helpers;
 using WebApp.Models;
 using WebApp.Proxy;
@@ -31,7 +32,7 @@ namespace WebApp.Controllers
         {
             try
             {
-                var items = _context.ItemPemeriksaans.ToList();
+                var items = await _context.Pemeriksaans.Include(x => x.Items).ToListAsync();
                 return Ok(items);
             }
             catch (System.Exception ex)
@@ -43,7 +44,7 @@ namespace WebApp.Controllers
         [Authorize(Roles = "Administrator")]
 
         [HttpPost]
-        public async Task<IActionResult> Post(ItemPemeriksaan model)
+        public async Task<IActionResult> Post(Pemeriksaan model)
         {
             try
             {
@@ -61,7 +62,7 @@ namespace WebApp.Controllers
         [Authorize(Roles = "Administrator")]
 
         [HttpPut]
-        public async Task<IActionResult> Put(int id, ItemPemeriksaan model)
+        public async Task<IActionResult> Put(int id, Pemeriksaan model)
         {
             try
             {

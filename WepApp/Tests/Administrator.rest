@@ -1,6 +1,8 @@
 @controller=https://localhost:5001/api/administrator
 @auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2MDM4NTIzODQsImV4cCI6MTYwNDQ1NzE4NCwiaWF0IjoxNjAzODUyMzg0fQ.Eb4bRD6ZEehdtBdaS6Mn7aLmA7ZxUUs1v_ORPSK3PH4
-POST {{controller}}/createuser HTTP/1.1
+
+
+POST {{controller}}/createuser/Company HTTP/1.1
 Content-Type: application/json
 Authorization: {{auth}}
 
@@ -18,7 +20,7 @@ Content-Type: application/json
 Authorization: {{auth}} 
 
 ####
-POST {{controller}}/createuser HTTP/1.1
+POST {{controller}}/createuser/Approval1 HTTP/1.1
 Content-Type: application/json
 Authorization: {{auth}}
 
@@ -30,7 +32,7 @@ Authorization: {{auth}}
 }
 
 ####
-POST {{controller}}/createuser HTTP/1.1
+POST {{controller}}/createuser/HSE HTTP/1.1
 Content-Type: application/json
 Authorization: {{auth}}
 
@@ -43,7 +45,7 @@ Authorization: {{auth}}
 
 
 ####
-POST {{controller}}/createuser HTTP/1.1
+POST {{controller}}/createuser/Manager HTTP/1.1
 Content-Type: application/json
 Authorization: {{auth}}
 
@@ -54,18 +56,14 @@ Authorization: {{auth}}
     "Password" : "Sony@77"
 }
 
-
-
 ####
-
 
 GET {{controller}}/GetPersetujuan HTTP/1.1
 Content-Type: application/json
 Authorization: {{auth}}
 
-
-
 ####
+
 POST {{controller}}/createkim/1 HTTP/1.1
 Content-Type: application/json
 Authorization: {{auth}}
@@ -76,6 +74,17 @@ Authorization: {{auth}}
     "KimNumber" : "1020202020"
 }
 
+####
 
+GET {{controller}}/GetKims HTTP/1.1
+Content-Type: application/json
+Authorization: {{auth}}
+
+####
+
+
+GET {{controller}}/GetKims/2 HTTP/1.1
+Content-Type: application/json
+Authorization: {{auth}}
 
 ####

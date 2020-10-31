@@ -25,9 +25,15 @@ namespace WebApp
             services.AddRazorPages();
             services.AddCors();
             services.AddControllers().AddJsonOptions(opts =>
-   {
-       opts.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
-   });
+            {
+                opts.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+            });
+            services.AddControllers()
+             .AddNewtonsoftJson(options =>
+             {
+                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+             }
+         );
             services.AddDbContextPool<DataContext>(
           options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection")
        ));

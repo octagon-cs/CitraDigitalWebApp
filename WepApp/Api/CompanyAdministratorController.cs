@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Models;
@@ -21,7 +23,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost("CreateProfile")]
-        public async Task<IActionResult> CreateProfile(CompanyProfile model)
+        public async Task<IActionResult> CreateProfile(Company model)
         {
             try
             {
@@ -71,7 +73,7 @@ namespace WebApp.Controllers
                 var adminUser = await Request.GetUser();
                 var company = await adminUser.GetCompany();
                 truck.CompanyId = company.Id;
-                var result = await administrator.AddNewTruck(truck);
+                ITruck result = await administrator.AddNewTruck(truck);
                 return Ok(result);
             }
             catch (System.Exception ex)
@@ -89,7 +91,7 @@ namespace WebApp.Controllers
                 var adminUser = await Request.GetUser();
                 var company = await adminUser.GetCompany();
                 var result = await administrator.GetTrucks(company.Id);
-                return Ok(result);
+                return Ok(result.ToList<ITruck>());
             }
             catch (System.Exception ex)
             {

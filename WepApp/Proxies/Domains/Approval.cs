@@ -13,7 +13,7 @@ namespace WebApp.Models
         List<KIM> GetInfoPengajuanById(int id);
         List<KIM> Checked(Pengajuan kim);
         Task<Persetujuan> Approve(int id, List<HasilPemeriksaan> hasil);
-        Task<List<Pengajuan>> GetPengajuanNotApprove();
+        Task<List<PengajuanItem>> GetPengajuanNotApprove();
         Task<List<HasilPemeriksaan>> GetPenilaian(int itemPengajuanId);
     }
 
@@ -120,7 +120,7 @@ namespace WebApp.Models
             }
         }
 
-        public Task<List<Pengajuan>> GetPengajuanNotApprove()
+        public Task<List<PengajuanItem>> GetPengajuanNotApprove()
         {
             switch (this.user.UserType)
             {
@@ -149,7 +149,7 @@ namespace WebApp.Models
 
                 if (item.HasilPemeriksaan == null || item.HasilPemeriksaan.Count <= 0)
                 {
-                    var datas = context.ItemPemeriksaans.ToList();
+                    var datas = context.ItemPemeiksaans.ToList();
                     foreach (var itemPemeriksaan in datas)
                     {
                         item.HasilPemeriksaan.Add(new HasilPemeriksaan { ItemPengajuanId = pengajuanItemid, ItemPemeriksaanId = itemPemeriksaan.Id });
@@ -182,27 +182,35 @@ namespace WebApp.Models
             throw new NotImplementedException();
         }
 
-        private Task<List<Pengajuan>> GetPengajuanNotApprovedByApproval1()
+        private Task<List<PengajuanItem>> GetPengajuanNotApprovedByApproval1()
         {
-            var pengajuanStrore = context.Pengajuans.Include(x => x.Items).ThenInclude(x => x.Persetujuans);
-
-            foreach (var item in pengajuanStrore)
-            {
-                var trucks = item.Items.Where(x => x.Persetujuans == null || x.Persetujuans.Count <= 0);
-                item.Items = trucks.ToList();
-            }
-
-            return pengajuanStrore.Where(x => x.Items.Count > 0).ToListAsync();
+            var pengajuanStrore = context.PengajuanItems.Where(x => x.Persetujuans == null || x.Persetujuans.Count <= 0)
+            .Include(x => x.Persetujuans)
+            .Include(x => x.Truck).ThenInclude(x => x.Kims)
+            .Include(x => x.HasilPemeriksaan)
+            .Include(x => x.Pengajuan).ThenInclude(x => x.Company);
+            return pengajuanStrore.Where(x => x.Persetujuans == null || x.Persetujuans.Count <= 0).ToListAsync();
         }
 
-        private Task<List<Pengajuan>> GetPengajuanNotApprovedByHse()
+        private Task<List<PengajuanItem>> GetPengajuanNotApprovedByHse()
         {
-            throw new NotImplementedException();
+            var pengajuanStrore = context.PengajuanItems.Where(x => x.Persetujuans == null || x.Persetujuans.Count <= 0)
+           .Include(x => x.Persetujuans)
+           .Include(x => x.Truck).ThenInclude(x => x.Kims)
+           .Include(x => x.HasilPemeriksaan)
+           .Include(x => x.Pengajuan).ThenInclude(x => x.Company);
+            return pengajuanStrore.Where(x => x.Persetujuans.Count == 1).ToListAsync();
+
         }
 
-        private Task<List<Pengajuan>> GetPengajuanNotApprovedByManager()
+        private Task<List<PengajuanItem>> GetPengajuanNotApprovedByManager()
         {
-            throw new NotImplementedException();
+            var pengajuanStrore = context.PengajuanItems.Where(x => x.Persetujuans == null || x.Persetujuans.Count <= 0)
+         .Include(x => x.Persetujuans)
+         .Include(x => x.Truck).ThenInclude(x => x.Kims)
+         .Include(x => x.HasilPemeriksaan)
+         .Include(x => x.Pengajuan).ThenInclude(x => x.Company);
+            return pengajuanStrore.Where(x => x.Persetujuans.Count == 2).ToListAsync();
         }
 
         private bool ValidateApproved(PengajuanItem itemPengajuan)

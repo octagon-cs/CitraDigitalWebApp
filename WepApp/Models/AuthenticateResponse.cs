@@ -15,15 +15,14 @@ namespace WebApp.Models
 
         public AuthenticateResponse(User user, string token)
         {
-            var roles = user.UserRoles.SelectMany(x => x.Role.Name);
-
             Id = user.Id;
             FirstName = user.FirstName;
             LastName = user.LastName;
             UserName = user.UserName;
             Email = user.Email;
-            Roles = user.UserRoles != null ? user.UserRoles.Select(x => x.Role.Name) : null;
             Token = token;
+            if (user.UserRoles != null || user.UserRoles.Count > 0)
+                this.Roles = user.UserRoles.Select(x => x.Role.Name.ToString()).ToList();
         }
     }
 }

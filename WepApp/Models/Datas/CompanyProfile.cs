@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace WebApp.Models
 {
-    public class CompanyProfile
+    public class Company
     {
         [Key]
         public int Id { get; set; }

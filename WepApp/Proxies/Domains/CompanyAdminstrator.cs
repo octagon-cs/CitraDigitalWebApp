@@ -10,7 +10,7 @@ namespace WebApp.Proxy.Domains
 {
     public interface ICompanyAdministrator
     {
-        Task<CompanyProfile> CreateProfile(CompanyProfile model);
+        Task<Company> CreateProfile(Company model);
 
         Task<Truck> AddNewTruck(Truck truck);
 
@@ -19,8 +19,8 @@ namespace WebApp.Proxy.Domains
         Task<IEnumerable<KIM>> GetAllKim(int companyId);
 
         Task<bool> ChangeQRPPejabat(int companyId);
-        Task<IEnumerable<Truck>> GetTrucks(int id);
-        Task<CompanyProfile> GetProfileByUserId(int id);
+        Task<List<Truck>> GetTrucks(int id);
+        Task<Company> GetProfileByUserId(int id);
         Task<Pengajuan> GetSubmissionByPengajuanId(int id);
         Task<List<Pengajuan>> GetSubmissionByCompanyId(int id);
         Task<bool> UpdateTrucks(Truck truck);
@@ -74,11 +74,11 @@ namespace WebApp.Proxy.Domains
             throw new System.NotImplementedException();
         }
 
-        public async Task<CompanyProfile> CreateProfile(CompanyProfile profile)
+        public async Task<Company> CreateProfile(Company profile)
         {
             try
             {
-                context.CompanyProfiles.Add(profile);
+                context.Companies.Add(profile);
                 await context.SaveChangesAsync();
 
                 return profile;
@@ -96,9 +96,9 @@ namespace WebApp.Proxy.Domains
             throw new System.NotImplementedException();
         }
 
-        public Task<CompanyProfile> GetProfileByUserId(int id)
+        public Task<Company> GetProfileByUserId(int id)
         {
-            CompanyProfile profile = context.CompanyProfiles.Where(x => x.UserId == id).FirstOrDefault();
+            Company profile = context.Companies.Where(x => x.UserId == id).FirstOrDefault();
             return Task.FromResult(profile);
         }
 
@@ -117,10 +117,10 @@ namespace WebApp.Proxy.Domains
             return Task.FromResult(result.ToList());
         }
 
-        public Task<IEnumerable<Truck>> GetTrucks(int companyId)
+        public Task<List<Truck>> GetTrucks(int companyId)
         {
             var result = context.Trucks.Where(x => x.CompanyId == companyId);
-            return Task.FromResult(result.AsEnumerable());
+            return Task.FromResult(result.ToList());
         }
 
         public async Task<bool> UpdateTrucks(Truck data)

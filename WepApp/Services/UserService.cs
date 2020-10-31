@@ -19,7 +19,7 @@ namespace WebApp.Services
         Task<IEnumerable<User>> GetAll();
         Task<User> GetById(int id);
 
-        Task<User> Register(User user);
+        Task<User> Register(string roleName, User user);
     }
 
     public class UserService : IUserService
@@ -35,11 +35,14 @@ namespace WebApp.Services
         }
 
 
-        public async Task<User> Register(User user)
+        public async Task<User> Register(string roleName, User user)
         {
             try
             {
                 user.Password = MD5Hash.ToMD5Hash(user.Password);
+                var role = context.Roles.Where(x => x.Name == roleName).FirstOrDefault();
+                user.UserRoles.Add(new UserRole { Role = role, RoleId = role.Id, UserId = user.Id });
+                user.Status = true;
                 context.Users.Add(user);
                 await context.SaveChangesAsync();
                 return user;
@@ -55,8 +58,8 @@ namespace WebApp.Services
 
             try
             {
-                var users = context.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).ToList();
-                var user = users.Where(x => x.UserName == model.UserName && x.Password == MD5Hash.ToMD5Hash(model.Password)).FirstOrDefault();
+                var user = context.Users.Where(x => x.UserName == model.UserName && x.Password
+                == MD5Hash.ToMD5Hash(model.Password)).Include(x => x.UserRoles).ThenInclude(x => x.Role).SingleOrDefault();
 
                 if (user == null)
                 {
@@ -76,7 +79,7 @@ namespace WebApp.Services
 
         public Task<IEnumerable<User>> GetAll()
         {
-            var users = context.Users.ToList();
+            var users = context.Users.Include(x => x.UserRoles).ThenInclude(x => x.Role).ToList();
             return Task.FromResult(users.AsEnumerable());
         }
 

@@ -1,5 +1,5 @@
 @controller=https://localhost:5001/api/companyadministrator
-@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIiLCJuYmYiOjE2MDM2NTI3MzYsImV4cCI6MTYwNDI1NzUzNiwiaWF0IjoxNjAzNjUyNzM2fQ.wIQXkGRJUjXVZQ68glNQC5b2b8zP7demmxt4oRFFThw
+@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJuYmYiOjE2MDQxMzc2MjcsImV4cCI6MTYwNDc0MjQyNiwiaWF0IjoxNjA0MTM3NjI3fQ.iaQVAMsQvArU7mEpmgHKmc2DUiWDqGz3cF5G2AX2cUs
 
 
 POST {{controller}}/createprofile HTTP/1.1
@@ -50,7 +50,6 @@ Authorization: {{auth}}
 }
 
 ###
-
 
 Get {{controller}}/trucks HTTP/1.1
 Content-Type: application/json

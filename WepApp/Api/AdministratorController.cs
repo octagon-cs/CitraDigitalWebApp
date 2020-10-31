@@ -21,12 +21,12 @@ namespace WebApp.Controllers
             administrator = UserProxy.GetAdministratorProxy(userService);
         }
 
-        [HttpPost("CreateUser")]
-        public async Task<IActionResult> CreateUser(User model)
+        [HttpPost("CreateUser/{rolename}")]
+        public async Task<IActionResult> CreateUser(string roleName, User model)
         {
             try
             {
-                var user = await administrator.CreateUser(model);
+                var user = await administrator.CreateUser(roleName, model);
                 if (user == null)
                     return BadRequest(new { message = "Username or password is incorrect" });
                 return Ok(user);
@@ -77,6 +77,39 @@ namespace WebApp.Controllers
                 if (user == null)
                     return BadRequest(new { message = "Username or password is incorrect" });
                 return Ok(user);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpGet("GetKims")]
+        public async Task<IActionResult> GetKims()
+        {
+            try
+            {
+                var user = await administrator.GetAllKIM();
+                if (user == null)
+                    return BadRequest(new { message = "Username or password is incorrect" });
+                return Ok(user);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetKims/{id}")]
+        public async Task<IActionResult> GetKims(int id)
+        {
+            try
+            {
+                var kim = await administrator.GetKIMById(id);
+                if (kim == null)
+                    return BadRequest(new { message = "KIM Not Found ...!" });
+                return Ok(kim);
             }
             catch (System.Exception ex)
             {

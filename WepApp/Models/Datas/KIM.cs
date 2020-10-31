@@ -12,6 +12,8 @@ namespace WebApp.Models
 
         public int TruckId { get; set; }
 
+        public Truck Truck { get; set; }
+
         public string KimNumber { get; set; }
 
         public DateTime BeginDate { get; set; }

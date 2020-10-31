@@ -11,9 +11,9 @@ namespace WebApp.Proxy.Domains
 {
     public interface IAdministrator
     {
-        Task<User> CreateUser(User user);
+        Task<User> CreateUser(string roleName, User user);
         Task AddUserRole(int userId, string roleName);
-        Task<ItemPemeriksaan> AddNewItemPemeriksaaan(ItemPemeriksaan item);
+        Task<Pemeriksaan> AddNewItemPemeriksaaan(Pemeriksaan item);
         Task<List<KIM>> GetAllKIMNotYetApproved();
 
         Task<KIM> CreateNewKIM(int itempengajuanId, KIM kim);
@@ -23,7 +23,7 @@ namespace WebApp.Proxy.Domains
         Task PrintKIM(KIM kim);
 
         Task<List<KIM>> GetAllKIM();
-        Task<bool> UpdateItemPemeriksaan(int id, ItemPemeriksaan model);
+        Task<bool> UpdateItemPemeriksaan(int id, Pemeriksaan model);
         Task<List<PengajuanItem>> GetPersetujuan();
     }
 
@@ -39,11 +39,11 @@ namespace WebApp.Proxy.Domains
             _context = context;
 
         }
-        public async Task<ItemPemeriksaan> AddNewItemPemeriksaaan(ItemPemeriksaan item)
+        public async Task<Pemeriksaan> AddNewItemPemeriksaaan(Pemeriksaan item)
         {
             try
             {
-                _context.ItemPemeriksaans.Add(item);
+                _context.Pemeriksaans.Add(item);
                 await _context.SaveChangesAsync();
                 return item;
 
@@ -62,7 +62,7 @@ namespace WebApp.Proxy.Domains
                 if (user != null)
                 {
                     var role = _context.Roles.Where(x => x.Name == roleName).FirstOrDefault();
-                    user.UserRoles.Add(new UserRole { UserId = userId, RoleId = role.Id });
+                    user.UserRoles.Add(new UserRole { Role = role, UserId = user.Id, RoleId = role.Id });
                 }
                 await _context.SaveChangesAsync();
 
@@ -99,11 +99,11 @@ namespace WebApp.Proxy.Domains
             return tempKim;
         }
 
-        public Task<User> CreateUser(User user)
+        public async Task<User> CreateUser(string roleName, User user)
         {
             try
             {
-                var result = _userService.Register(user);
+                var result = await _userService.Register(roleName, user);
                 if (result != null)
                     return result;
                 return null;
@@ -116,9 +116,12 @@ namespace WebApp.Proxy.Domains
             }
         }
 
-        public Task<List<KIM>> GetAllKIM()
+        public async Task<List<KIM>> GetAllKIM()
         {
-            throw new System.NotImplementedException();
+            var kims = await _context.Kims
+            .Include(x => x.Truck).ThenInclude(x => x.Company)
+            .AsNoTracking().ToListAsync();
+            return kims.ToList();
         }
 
         public Task<List<KIM>> GetAllKIMNotYetApproved()
@@ -128,7 +131,8 @@ namespace WebApp.Proxy.Domains
 
         public Task<KIM> GetKIMById(int kimId)
         {
-            throw new System.NotImplementedException();
+            var kims = _context.Kims.Where(x => x.Id == kimId).FirstOrDefault();
+            return Task.FromResult(kims);
         }
 
         public Task<List<PengajuanItem>> GetPersetujuan()
@@ -159,15 +163,42 @@ namespace WebApp.Proxy.Domains
             throw new System.NotImplementedException();
         }
 
-        public async Task<bool> UpdateItemPemeriksaan(int id, ItemPemeriksaan model)
+        public async Task<bool> UpdateItemPemeriksaan(int id, Pemeriksaan model)
         {
             try
             {
-                var item = _context.ItemPemeriksaans.Where(x => x.Id == id).FirstOrDefault();
+                var item = _context.Pemeriksaans.Where(x => x.Id == id).Include(x => x.Items).FirstOrDefault();
                 if (item == null)
                     throw new SystemException("Item Pemeriksaan Not Found !");
-                item.Kelengkapan = model.Kelengkapan;
-                item.Penjelasan = model.Penjelasan;
+
+                _context.Entry(item).CurrentValues.SetValues(model);
+
+
+                foreach (var data in model.Items)
+                {
+
+                    if (data.Id == 0)
+                        item.Items.Add(data);
+                    else
+                    {
+                        var existingChild = item.Items
+                                               .Where(c => c.Id == data.Id)
+                                                   .SingleOrDefault();
+
+                        if (existingChild != null)
+                            _context.Entry(existingChild).CurrentValues.SetValues(data);
+                        else
+                        {
+                            item.Items.Add(data);
+                        }
+                    }
+
+                }
+
+
+
+
+
                 var result = await _context.SaveChangesAsync();
                 if (result > 0)
                     return true;

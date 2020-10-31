@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,12 +26,25 @@ namespace WebApp
                 }
 
 
-                var pemeriksaaans = dataContext.ItemPemeriksaans.ToList();
+                var pemeriksaaans = dataContext.Pemeriksaans.ToList();
                 if (pemeriksaaans == null || pemeriksaaans.Count <= 0)
                 {
-                    dataContext.ItemPemeriksaans.Add(new Models.ItemPemeriksaan { Kelengkapan = "STNK", Penjelasan = "Surat Tanda Nomor Kendaraan " });
-                    dataContext.ItemPemeriksaans.Add(new Models.ItemPemeriksaan { Kelengkapan = "SIM", Penjelasan = "Surat Izin Mengemudi" });
-                    dataContext.ItemPemeriksaans.Add(new Models.ItemPemeriksaan { Kelengkapan = "KEURDLLAJR", Penjelasan = "KEUR KENDARAAN" });
+                    dataContext.Pemeriksaans.Add(new Models.Pemeriksaan
+                    {
+                        Name = "STNK",
+                        Items = new List<Models.ItemPemeriksaan> { new Models.ItemPemeriksaan { Kelengkapan = "STNK", Penjelasan = "Surat Tanda Nomor Kendaraan " } }
+                    });
+                    dataContext.Pemeriksaans.Add(new Models.Pemeriksaan
+                    {
+                        Name = "SIM",
+                        Items = new List<Models.ItemPemeriksaan> { new Models.ItemPemeriksaan { Kelengkapan = "SIM", Penjelasan = "Surat Izin Mengemudi" } }
+                    });
+                    dataContext.Pemeriksaans.Add(new Models.Pemeriksaan
+                    {
+                        Name = "KEURDLLAJR",
+                        Items = new List<Models.ItemPemeriksaan> { new Models.ItemPemeriksaan { Kelengkapan = "KEURDLLAJR", Penjelasan = "KEUR " } }
+                    });
+
                     dataContext.SaveChanges();
                 }
 
@@ -49,13 +63,9 @@ namespace WebApp
                         Status = true,
                         Password = Helpers.MD5Hash.ToMD5Hash("Admin123")
                     };
-                    dataContext.Users.Add(model);
-
-                    dataContext.SaveChanges();
-
                     var roleAdmin = dataContext.Roles.FirstOrDefault(x => x.Name == "Administrator");
-                    if (roleAdmin != null)
-                        model.UserRoles.Add(new Models.UserRole { UserId = model.Id, RoleId = roleAdmin.Id });
+                    model.UserRoles.Add(new Models.UserRole { Role = roleAdmin, RoleId = roleAdmin.Id, UserId = model.Id });
+                    dataContext.Users.Add(model);
                     dataContext.SaveChanges();
                 }
 

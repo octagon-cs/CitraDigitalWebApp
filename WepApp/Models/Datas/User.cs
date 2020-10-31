@@ -17,7 +17,6 @@ namespace WebApp.Models
         public string UserName { get; set; }
         public string Email { get; set; }
 
-        [JsonIgnore]
         public string Password { get; set; }
         public IList<UserRole> UserRoles { get; set; } = new List<UserRole>();
         public bool Status { get; set; }

@@ -1,6 +1,8 @@
-@controller=http://localhost/api/users/authenticate
+@controller=https://localhost:5001/api/users
 
-POST {{controller}} HTTP/1.1
+@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2MDM4NTIzODQsImV4cCI6MTYwNDQ1NzE4NCwiaWF0IjoxNjAzODUyMzg0fQ.Eb4bRD6ZEehdtBdaS6Mn7aLmA7ZxUUs1v_ORPSK3PH4
+
+POST {{controller}}/authenticate HTTP/1.1
 Content-Type: application/json
 
 {
@@ -11,7 +13,7 @@ Content-Type: application/json
 
 ###
 //Company User
-POST {{controller}} HTTP/1.1
+POST {{controller}}/authenticate HTTP/1.1
 Content-Type: application/json
 
 {
@@ -20,10 +22,9 @@ Content-Type: application/json
 }
 
 
-
 ###
 //Approval1
-POST {{controller}} HTTP/1.1
+POST {{controller}}/authenticate HTTP/1.1
 Content-Type: application/json
 
 {
@@ -31,11 +32,9 @@ Content-Type: application/json
     "Password" : "Sony@77"
 }
 
-
-
 ###
 //HSE
-POST {{controller}} HTTP/1.1
+POST {{controller}}/authenticate HTTP/1.1
 Content-Type: application/json
 
 {
@@ -43,12 +42,9 @@ Content-Type: application/json
     "Password" : "Sony@77"
 }
 
-
-
-
 ###
 //Manager
-POST {{controller}} HTTP/1.1
+POST {{controller}}/authenticate HTTP/1.1
 Content-Type: application/json
 
 {
@@ -56,3 +52,13 @@ Content-Type: application/json
     "Password" : "Sony@77"
 }
 
+
+###
+//Manager
+GET  {{controller}} HTTP/1.1
+Content-Type: application/json
+Authorization: {{auth}}
+
+
+
+###

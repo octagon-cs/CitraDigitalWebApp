@@ -10,9 +10,8 @@ namespace WebApp.Models
         [Key]
         public int Id { get; set; }
         public int CompanyId { get; set; }
-        public CompanyProfile Company { get; set; }
+        public Company Company { get; set; }
         public string LetterNumber { get; set; }
-
         public StatusPengajuan StatusPengajuan { get; set; }
         public DateTime Created { get; set; }
         public List<PengajuanItem> Items { get; set; }

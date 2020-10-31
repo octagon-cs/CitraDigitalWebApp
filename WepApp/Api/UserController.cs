@@ -36,5 +36,22 @@ namespace WebApp.Controllers
             }
         }
 
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            try
+            {
+                var response = await _userService.GetAll();
+                return Ok(response);
+            }
+            catch (System.Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

@@ -18,13 +18,13 @@ namespace WebApp
         }
 
 
-        public static Task<CompanyProfile> GetCompany(this User user)
+        public static Task<Company> GetCompany(this User user)
         {
             try
             {
                 var service = (DataContext)GetServiceProvider.Instance.GetService(typeof(DataContext));
 
-                var result = service.CompanyProfiles.Where(x => x.UserId == user.Id).FirstOrDefault();
+                var result = service.Companies.Where(x => x.UserId == user.Id).FirstOrDefault();
 
                 if (result == null)
                     throw new System.SystemException("You Not Have Access !");
@@ -41,7 +41,7 @@ namespace WebApp
         {
 
             var context = (DataContext)GetServiceProvider.Instance.GetService(typeof(DataContext));
-            var result = context.Users.Where(x => x.Id == user.Id).Include(x => x.UserRoles).ThenInclude(x => x.Role).FirstOrDefault();
+            var result = context.Users.Where(x => x.Id == user.Id).Include(x => x.UserRoles).FirstOrDefault();
             return Task.FromResult(result.UserRoles.Select(x => x.Role).ToList());
 
         }

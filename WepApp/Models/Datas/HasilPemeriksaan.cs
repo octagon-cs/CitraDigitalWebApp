@@ -11,6 +11,6 @@ namespace WebApp.Models
         public string TindakLanjut { get; set; }
         public string Keterangan { get; set; }
 
-        public ItemPemeriksaan ItemPemeriksaan { get; set; }
+        public ItemPemeriksaan ItemPemeriksaan{ get; set; }
     }
 }

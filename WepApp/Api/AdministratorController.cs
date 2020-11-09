@@ -37,6 +37,22 @@ namespace WebApp.Controllers
             }
         }
 
+        [HttpPut("UpdateUser/{id}")]
+        public async Task<IActionResult> UpdateUser(int id, User model)
+        {
+            try
+            {
+                var user = await administrator.UpdateUser(id, model);
+                if (user == null)
+                    return BadRequest(new { message = "Not Saved ...!" });
+                return Ok(user);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("adduserrole")]
         public async Task<IActionResult> AddUserRole(int userId, string roleName)
         {

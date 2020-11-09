@@ -11,6 +11,7 @@ namespace WebApp.Models
         public string UserName { get; set; }
         public string Token { get; set; }
         public string Email { get; set; }
+        public bool Status { get; set; }
         public IEnumerable<string> Roles { get; set; }
 
         public AuthenticateResponse(User user, string token)
@@ -20,6 +21,7 @@ namespace WebApp.Models
             LastName = user.LastName;
             UserName = user.UserName;
             Email = user.Email;
+            Status=user.Status;
             Token = token;
             if (user.UserRoles != null || user.UserRoles.Count > 0)
                 this.Roles = user.UserRoles.Select(x => x.Role.Name.ToString()).ToList();

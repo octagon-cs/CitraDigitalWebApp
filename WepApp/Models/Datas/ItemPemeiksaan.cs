@@ -9,5 +9,7 @@ namespace WebApp.Models
         public string Kelengkapan { get; set; }
         public string Penjelasan { get; set; }
 
+        public Pemeriksaan Pemeriksaan { get; set; }
+
     }
 }

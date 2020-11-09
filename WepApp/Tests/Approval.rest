@@ -1,7 +1,7 @@
 @controller=https://localhost:5001/api/Approval
-@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMiLCJuYmYiOjE2MDM5NjI2ODQsImV4cCI6MTYwNDU2NzQ4NCwiaWF0IjoxNjAzOTYyNjg0fQ.87yqEl4RiztCAKhQUssU20wyo0Ps84Ehm1VL_MDcd1Y
-@authHSE=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQiLCJuYmYiOjE2MDM5NjI0NjIsImV4cCI6MTYwNDU2NzI2MiwiaWF0IjoxNjAzOTYyNDYyfQ.dn5scxFAyJ4tB0rhZ8E9ssMEsE4T-L0y2bHTQMxUsC8
-@authManager=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUiLCJuYmYiOjE2MDM2ODU5MDYsImV4cCI6MTYwNDI5MDcwNiwiaWF0IjoxNjAzNjg1OTA2fQ.nFaBDOtTCNJcXiYXpmoje6mVG5PqLZ7rrRqYAZM8PGU
+@authApproval1= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjciLCJuYmYiOjE2MDQxNTc5NDIsImV4cCI6MTYwNDc2Mjc0MiwiaWF0IjoxNjA0MTU3OTQyfQ.PrZX32558sv2Tg2XOXiuuxE5IgbZ5sLyQYxNmCdtnSE
+@authHSE=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgiLCJuYmYiOjE2MDQxNTg4NjEsImV4cCI6MTYwNDc2MzY2MSwiaWF0IjoxNjA0MTU4ODYxfQ.6xhH1X_OGxbly-HcIDRmcZSFiV3YnmUZo1yBiHUW6nk
+@authManager=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjkiLCJuYmYiOjE2MDQxNTg4ODYsImV4cCI6MTYwNDc2MzY4NiwiaWF0IjoxNjA0MTU4ODg2fQ.vbM9x2DEP0RrF8zDWbVtw1O5t7aIHRyo4DcNrP8fobo
 
 
 
@@ -10,29 +10,8 @@
 
 GET {{controller}}/GetPersetujuan HTTP/1.1
 Content-Type: application/json
-Authorization: {{authHSE}}
+Authorization: {{authManager}}
 ####
-
-POST {{controller}}/approve HTTP/1.1
-Content-Type: application/json
-Authorization: {{auth}}
-
-{
-        "PengajuanItemId": 4,
-        "StatusPersetujuan": "Approved"
-}
-
-####
-
-POST {{controller}}/approve HTTP/1.1
-Content-Type: application/json
-Authorization: {{authHSE}}
-
-{
-   "PengajuanItemId": 4,
-   "StatusPersetujuan": "Approved"
-}
-
 
 
 ####
@@ -41,49 +20,12 @@ POST {{controller}}/approve/1 HTTP/1.1
 Content-Type: application/json
 Authorization: {{authManager}}
 
-[
-  {
-    "id": 1,
-    "itemPengajuanId": 1,
-    "itemPemeriksaanId": 2,
-    "hasil": true,
-    "tindakLanjut": null,
-    "keterangan": null,
-    "itemPemeriksaan": {
-      "id": 2,
-      "kelengkapan": "SIM",
-      "penjelasan": "Surat Izin Mengemudi"
-    }
-  },
-  {
-    "id": 2,
-    "itemPengajuanId": 1,
-    "itemPemeriksaanId": 1,
-    "hasil": true,
-    "tindakLanjut": null,
-    "keterangan": null,
-    "itemPemeriksaan": {
-      "id": 1,
-      "kelengkapan": "KEURDLLAJR",
-      "penjelasan": "KEUR KENDARAAN"
-    }
-  },
-  {
-    "id": 3,
-    "itemPengajuanId": 1,
-    "itemPemeriksaanId": 3,
-    "hasil": true,
-    "tindakLanjut": null,
-    "keterangan": null,
-    "itemPemeriksaan": {
-      "id": 3,
-      "kelengkapan": "STNK",
-      "penjelasan": "Surat Tanda Nomor Kendaraan "
-    }
-  }
-]
+[{"Id":1,"ItemPengajuanId":1,"ItemPemeriksaanId":1,"Hasil":true,"TindakLanjut":"From Hse","Keterangan":null,"ItemPemeriksaan":{"Id":1,"Kelengkapan":"Child 1","Penjelasan":"Ini Child1","Pemeriksaan":{"Id":1,"Name":"Parent","Items":[]}}},{"Id":2,"ItemPengajuanId":1,"ItemPemeriksaanId":2,"Hasil":true,"TindakLanjut":null,"Keterangan":null,"ItemPemeriksaan":{"Id":2,"Kelengkapan":"Child 2","Penjelasan":"Ini Child2","Pemeriksaan":{"Id":1,"Name":"Parent","Items":[]}}},{"Id":3,"ItemPengajuanId":1,"ItemPemeriksaanId":3,"Hasil":true,"TindakLanjut":null,"Keterangan":null,"ItemPemeriksaan":{"Id":3,"Kelengkapan":"STNK","Penjelasan":"Surat Tanda Nomor Kendaraan ","Pemeriksaan":{"Id":3,"Name":"STNK","Items":[]}}},{"Id":4,"ItemPengajuanId":1,"ItemPemeriksaanId":4,"Hasil":true,"TindakLanjut":null,"Keterangan":null,"ItemPemeriksaan":{"Id":4,"Kelengkapan":"SIM ","Penjelasan":"Ini adalah penjelasan sim","Pemeriksaan":{"Id":2,"Name":"SIM","Items":[]}}},{"Id":7,"ItemPengajuanId":1,"ItemPemeriksaanId":7,"Hasil":true,"TindakLanjut":null,"Keterangan":null,"ItemPemeriksaan":{"Id":7,"Kelengkapan":"Detail 2","Penjelasan":"Penjelasan Detail 2","Pemeriksaan":{"Id":2,"Name":"SIM","Items":[]}}},{"Id":5,"ItemPengajuanId":1,"ItemPemeriksaanId":5,"Hasil":true,"TindakLanjut":null,"Keterangan":null,"ItemPemeriksaan":{"Id":5,"Kelengkapan":"Tes 1 Saja ","Penjelasan":"Ini adalah penjelasan test","Pemeriksaan":{"Id":4,"Name":"Test A","Items":[]}}},{"Id":6,"ItemPengajuanId":1,"ItemPemeriksaanId":6,"Hasil":true,"TindakLanjut":null,"Keterangan":null,"ItemPemeriksaan":{"Id":6,"Kelengkapan":"Tes 2 Saja ","Penjelasan":"Ini adalah penjelasan test","Pemeriksaan":{"Id":4,"Name":"Test A","Items":[]}}}]
+
 #####
+
+
 
 GET {{controller}}/GetPenilaian/1 HTTP/1.1
 Content-Type: application/json
-Authorization: {{auth}}
+Authorization: {{authHSE}}

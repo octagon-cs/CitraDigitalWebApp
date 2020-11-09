@@ -1,6 +1,8 @@
 using System;
+using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,10 +22,18 @@ namespace WebApp
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.KnownProxies.Add(IPAddress.Parse("36.94.6.214"));
+            });
+
             services.AddRazorPages();
             services.AddCors();
+
+
             services.AddControllers().AddJsonOptions(opts =>
             {
                 opts.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
@@ -33,23 +43,48 @@ namespace WebApp
              {
                  options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
              }
-         );
-            services.AddDbContextPool<DataContext>(
-          options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection")
-       ));
+            );
+
+            services.AddDbContext<DataContext>(
+                options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection")
+            ));
 
             // configure strongly typed settings object
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
-
+            services.AddSwaggerDocument(config =>
+            {
+                config.PostProcess = document =>
+                {
+                    document.Info.Version = "v1";
+                    document.Info.Title = "ToDo API";
+                    document.Info.Description = "A simple ASP.NET Core web API";
+                    document.Info.TermsOfService = "None";
+                    document.Info.Contact = new NSwag.OpenApiContact
+                    {
+                        Name = "Shayne Boyer",
+                        Email = string.Empty,
+                        Url = "https://twitter.com/spboyer"
+                    };
+                    document.Info.License = new NSwag.OpenApiLicense
+                    {
+                        Name = "Use under LICX",
+                        Url = "https://example.com/license"
+                    };
+                };
+            });
         }
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             if (env.IsDevelopment())
             {
@@ -63,6 +98,7 @@ namespace WebApp
             }
             GetServiceProvider.Instance = app.ApplicationServices.CreateScope().ServiceProvider;
             app.UseRouting();
+            
 
             // global cors policy
             app.UseCors(x => x
@@ -75,6 +111,9 @@ namespace WebApp
 
             app.UseAuthorization();
             app.UseEndpoints(x => x.MapControllers());
+
+            app.UseSwagger();
+            app.UseSwaggerUi3();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

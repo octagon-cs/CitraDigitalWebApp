@@ -27,6 +27,10 @@ namespace WebApp.Controllers
                     return Unauthorized(new { message = "Username or password is incorrect" });
                 }
 
+                if(!response.Status){
+                    return Unauthorized(new { message = "You are account not active, Contact Administrator" });
+                }
+
                 return Ok(response);
             }
             catch (System.Exception ex)
@@ -44,6 +48,22 @@ namespace WebApp.Controllers
             try
             {
                 var response = await _userService.GetAll();
+                return Ok(response);
+            }
+            catch (System.Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> Put(int id, User user)
+        {
+            try
+            {
+                var response = await _userService.UpdateUser(id, user);
                 return Ok(response);
             }
             catch (System.Exception ex)

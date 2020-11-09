@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ namespace WebApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Approval1, Manager, HSE")]
+    [Authorize(Roles = "Approval1, Manager, HSE, Gate")]
     public class ApprovalController : ControllerBase
     {
         private IApproval approval;
@@ -25,7 +26,7 @@ namespace WebApp.Controllers
                 var user = await Request.GetUser();
                 approval = UserProxy.GetApprovalProxy(user);
                 var pengajuans = await approval.GetPengajuanNotApprove();
-                return Ok(pengajuans);
+                return Ok(pengajuans.Where(x=>x.Status!=StatusPersetujuan.Reject).ToList());
             }
             catch (System.Exception ex)
             {
@@ -48,6 +49,23 @@ namespace WebApp.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("reject/{id}")]
+        public async Task<IActionResult> Reject(int id, List<HasilPemeriksaan> model)
+        {
+            try
+            {
+                var user = await Request.GetUser();
+                approval = UserProxy.GetApprovalProxy(user);
+                var pengajuan = await approval.Reject(id, model);
+                return Ok(pengajuan);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
 
         [HttpGet("GetPenilaian/{id}")]

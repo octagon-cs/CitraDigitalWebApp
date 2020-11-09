@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using WebApp.Helpers;
 
 namespace WebApp.Models
 {
@@ -13,8 +15,8 @@ namespace WebApp.Models
         public string NPWP { get; set; }
         public string Logo { get; set; }
 
-        [JsonIgnore]
-        public byte[] LogoData { get; set; }
+        [NotMapped]     
+        public FileData LogoData { get; set; }
         public int UserId { get; set; }
 
     }

@@ -32,6 +32,7 @@ bld/
 msbuild.log
 msbuild.err
 msbuild.wrn
-
+**/wepapp/wwwroot/documents/
+**/wepapp/wwwroot/photos/
 # Visual Studio 2015
 .vs/

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System;
 namespace WebApp.Models
 {
     public class HasilPemeriksaan
@@ -10,7 +11,7 @@ namespace WebApp.Models
         public bool Hasil { get; set; }
         public string TindakLanjut { get; set; }
         public string Keterangan { get; set; }
-
-        public ItemPemeriksaan ItemPemeriksaan{ get; set; }
+        public DateTime? CompensationDeadline { get; set; }
+        public ItemPemeriksaan ItemPemeriksaan { get; set; }
     }
 }

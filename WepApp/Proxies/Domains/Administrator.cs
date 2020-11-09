@@ -12,6 +12,7 @@ namespace WebApp.Proxy.Domains
     public interface IAdministrator
     {
         Task<User> CreateUser(string roleName, User user);
+        Task<User> UpdateUser(int id,User user);
         Task AddUserRole(int userId, string roleName);
         Task<Pemeriksaan> AddNewItemPemeriksaaan(Pemeriksaan item);
         Task<List<KIM>> GetAllKIMNotYetApproved();
@@ -39,6 +40,27 @@ namespace WebApp.Proxy.Domains
             _context = context;
 
         }
+
+        public async  Task<User> UpdateUser(int id, User user){
+             try
+            {
+               var data =  _context.Users.Where(x=>x.Id==user.Id).FirstOrDefault();
+                data.FirstName = user.FirstName;
+                data.LastName = user.LastName;
+                data.Email = user.Email;
+                data.Status = user.Status;
+                var result = await _context.SaveChangesAsync();
+                if(result<=0)
+                    throw new SystemException("Not Saved ...!");
+                return user;
+
+            }
+            catch (System.Exception ex)
+            {
+                throw new SystemException(ex.Message);
+            }
+        }
+
         public async Task<Pemeriksaan> AddNewItemPemeriksaaan(Pemeriksaan item)
         {
             try
@@ -148,7 +170,9 @@ namespace WebApp.Proxy.Domains
             List<PengajuanItem> list = new List<PengajuanItem>();
             foreach (var item in resuls)
             {
-                var truck = _context.Trucks.Where(x => x.Id == item.TruckId).Include(x => x.Kims).FirstOrDefault();
+                var truck = _context.Trucks.Where(x => x.Id == item.TruckId)
+                .Include(x => x.Company)
+                .Include(x => x.Kims).FirstOrDefault();
                 if (truck.KIM == null || (truck.KIM != null && truck.KIM.Expired != Helpers.ExpireStatus.None))
                 {
                     list.Add(item);
@@ -173,7 +197,6 @@ namespace WebApp.Proxy.Domains
 
                 _context.Entry(item).CurrentValues.SetValues(model);
 
-
                 foreach (var data in model.Items)
                 {
 
@@ -194,10 +217,6 @@ namespace WebApp.Proxy.Domains
                     }
 
                 }
-
-
-
-
 
                 var result = await _context.SaveChangesAsync();
                 if (result > 0)

@@ -13,11 +13,14 @@ namespace WebApp.Models
         public int PengajuanItemId { get; set; }
 
         public int UserId { get; set; }
+        
         public StatusPersetujuan StatusPersetujuan { get; set; }
 
         public UserType ApprovedBy { get; set; }
 
         public DateTime ApprovedDate { get; set; }
+
+       
 
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -44,6 +43,28 @@ namespace WebApp.Controllers
             }
         }
 
+        [HttpPut("UpdateProfile/{id}")]
+        public async Task<IActionResult> UpdateProfile(int id, Company model)
+        {
+            try
+            {
+                User user = await Request.GetUser();
+                model.UserId = user.Id;
+                var profile = await administrator.GetProfileByUserId(user.Id);
+                if (profile == null)
+                    throw new SystemException("Profile Is Not Exists ..!");
+
+                profile = await administrator.UpdateProfile(model);
+                if (profile == null)
+                    return BadRequest(new { message = "Update Company Profile Invalid ..!" });
+                return Ok(profile);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("GetProfile")]
         public async Task<IActionResult> GetProfile()
         {
@@ -73,7 +94,7 @@ namespace WebApp.Controllers
                 var adminUser = await Request.GetUser();
                 var company = await adminUser.GetCompany();
                 truck.CompanyId = company.Id;
-                ITruck result = await administrator.AddNewTruck(truck);
+                ITruck result =  await administrator.AddNewTruck(truck);
                 return Ok(result);
             }
             catch (System.Exception ex)
@@ -91,7 +112,7 @@ namespace WebApp.Controllers
                 var adminUser = await Request.GetUser();
                 var company = await adminUser.GetCompany();
                 var result = await administrator.GetTrucks(company.Id);
-                return Ok(result.ToList<ITruck>());
+                return Ok(result.ToList<Truck>());
             }
             catch (System.Exception ex)
             {
@@ -101,8 +122,8 @@ namespace WebApp.Controllers
         }
 
 
-        [HttpPut("trucks")]
-        public async Task<IActionResult> PutTrucks(Truck truck)
+        [HttpPut("trucks/{id}")]
+        public async Task<IActionResult> PutTrucks(int id, Truck truck)
         {
             try
             {
@@ -117,10 +138,6 @@ namespace WebApp.Controllers
             }
 
         }
-
-
-
-
 
         #endregion
 

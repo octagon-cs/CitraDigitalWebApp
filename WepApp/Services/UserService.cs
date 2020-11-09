@@ -20,6 +20,7 @@ namespace WebApp.Services
         Task<User> GetById(int id);
 
         Task<User> Register(string roleName, User user);
+        Task<bool> UpdateUser(int id, User user);
     }
 
     public class UserService : IUserService
@@ -105,6 +106,30 @@ namespace WebApp.Services
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public async Task<bool> UpdateUser(int id, User user)
+        {
+            try
+            {
+                var dataUSer = context.Users.Where(x => x.Id == id).SingleOrDefault();
+                if (dataUSer == null)
+                    throw new SystemException("User Not Found !");
+
+                dataUSer.FirstName = user.FullName;
+                dataUSer.LastName = user.LastName;
+                dataUSer.Status = user.Status;
+                var result = await context.SaveChangesAsync();
+
+                if (result <= 0)
+                    throw new SystemException("Data Not Saved .... !");
+                return true;
+            }
+            catch (System.Exception ex)
+            {
+
+                throw new SystemException(ex.Message);
+            }
         }
     }
 }

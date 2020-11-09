@@ -7,7 +7,7 @@ namespace WebApp.Helpers
     [JsonConverter(typeof(StringEnumConverter))]
     public enum UserType
     {
-        None, Administrator, Manager, Approval1, HSE, Company
+        None, Administrator, Manager, Approval1, HSE, Company, Gate
     }
 
     [JsonConverter(typeof(StringEnumConverter))]

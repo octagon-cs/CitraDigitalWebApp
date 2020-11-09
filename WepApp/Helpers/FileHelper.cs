@@ -68,7 +68,7 @@ namespace WebApp.Helpers
                 await System.IO.File.WriteAllBytesAsync(BasePath + fileName, file.Data, new System.Threading.CancellationToken());
                 return fileName;
             }
-            catch (SystemException ex)
+            catch
             {
                 return string.Empty;
             }

@@ -27,7 +27,7 @@ namespace WebApp
         {
             services.Configure<ForwardedHeadersOptions>(options =>
             {
-                options.KnownProxies.Add(IPAddress.Parse("36.94.6.214"));
+                options.KnownProxies.Add(IPAddress.Parse("153.92.4.73"));
             });
 
             services.AddRazorPages();

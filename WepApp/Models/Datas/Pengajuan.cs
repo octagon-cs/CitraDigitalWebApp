@@ -9,7 +9,6 @@ namespace WebApp.Models
     {
         [Key]
         public int Id { get; set; }
-        public int CompanyId { get; set; }
         public Company Company { get; set; }
         public string LetterNumber { get; set; }
         public StatusPengajuan StatusPengajuan { get; set; }

@@ -17,7 +17,7 @@ namespace WebApp.Models
 
         [NotMapped]     
         public FileData LogoData { get; set; }
-        public int UserId { get; set; }
+        public User User { get; set; }
 
     }
 }

@@ -10,9 +10,7 @@ namespace WebApp.Models
 
         public int Id { get; set; }
 
-        public int PengajuanItemId { get; set; }
-
-        public int UserId { get; set; }
+        public User User { get; set; }
         
         public StatusPersetujuan StatusPersetujuan { get; set; }
 

@@ -42,7 +42,7 @@ namespace WebApp.Services
             {
                 user.Password = MD5Hash.ToMD5Hash(user.Password);
                 var role = context.Roles.Where(x => x.Name == roleName).FirstOrDefault();
-                user.UserRoles.Add(new UserRole { Role = role, RoleId = role.Id, UserId = user.Id });
+                user.UserRoles.Add(new UserRole { Role = role});
                 user.Status = true;
                 context.Users.Add(user);
                 await context.SaveChangesAsync();

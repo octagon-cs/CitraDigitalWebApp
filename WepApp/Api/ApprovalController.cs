@@ -13,7 +13,7 @@ namespace WebApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Approval1, Manager, HSE, Gate")]
+    [Authorize(Roles = "Company, Approval1, Manager, HSE, Gate")]
     public class ApprovalController : ControllerBase
     {
         private IApproval approval;
@@ -26,7 +26,7 @@ namespace WebApp.Controllers
                 var user = await Request.GetUser();
                 approval = UserProxy.GetApprovalProxy(user);
                 var pengajuans = await approval.GetPengajuanNotApprove();
-                return Ok(pengajuans.Where(x=>x.Status!=StatusPersetujuan.Reject).ToList());
+                return Ok(pengajuans);
             }
             catch (System.Exception ex)
             {

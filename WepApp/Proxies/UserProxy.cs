@@ -11,10 +11,10 @@ namespace WebApp.Proxy
     {
 
 
-        public static IAdministrator GetAdministratorProxy(IUserService userService)
+        public static IAdministrator GetAdministratorProxy(User userLogin, IUserService userService)
         {
             var context = GetServiceProvider.Instance.GetRequiredService<DataContext>();
-            return new Administrator(userService, context);
+            return new Administrator(userLogin, userService, context);
         }
 
         public static ICompanyAdministrator GetCompanyAdministratorProxy()

@@ -1,0 +1,14 @@
+{
+  "name": "webpertamina",
+  "homepage": "https://github.com/kristt26/webpertamina",
+  "_release": "cb1eaac878",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "cb1eaac878b264d80019bf263100b8c55d97ee4c"
+  },
+  "_source": "https://github.com/kristt26/webpertamina.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/kristt26/webpertamina.git",
+  "_direct": true
+}

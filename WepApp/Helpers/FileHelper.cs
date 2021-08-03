@@ -39,18 +39,18 @@ namespace WebApp.Helpers
         }
 
 
-        internal static async Task SaveFile(byte[] data, string extention, PathType pathType)
-        {
-            try
-            {
-                var fileName = Helpers.FileHelper.CreateFileName(extention, pathType);
-                await System.IO.File.WriteAllBytesAsync(fileName, data, new System.Threading.CancellationToken());
-            }
-            catch (System.Exception ex)
-            {
-                throw new SystemException(ex.Message);
-            }
-        }
+        //internal static async Task SaveFile(byte[] data, string extention, PathType pathType)
+        //{
+        //    try
+        //    {
+        //        var fileName = Helpers.FileHelper.CreateFileName(extention, pathType);
+        //        await System.IO.File.WriteAllBytesAsync(fileName, data, new System.Threading.CancellationToken());
+        //    }
+        //    catch (System.Exception ex)
+        //    {
+        //        throw new SystemException(ex.Message);
+        //    }
+        //}
 
         internal static async Task<string> SaveTruckFile(FileData file, PathType pathType, string lastFile)
         {

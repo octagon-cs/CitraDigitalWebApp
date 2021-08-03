@@ -1,6 +1,6 @@
-@controller=https://localhost:5001/api/companyadministrator
-@auth=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE0IiwibmJmIjoxNjA0NzUzNjAyLCJleHAiOjE2MDUzNTg0MDIsImlhdCI6MTYwNDc1MzYwMn0.buBpsDenrOFeFweWHk6JX8-KZ6mtvV_7GzVNZO8la4o
-
+@controller=http://localhost:5000/api/companyadministrator
+//@controller=https://localhost:44326/api/companyadministrator
+@auth=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjciLCJuYmYiOjE2MjUwNTAxNDUsImV4cCI6MTYyNTY1NDk0NSwiaWF0IjoxNjI1MDUwMTQ1fQ.yPPLFQaxigTJ3txfJ028vkQYjAVe0AIT1fAihnC_enA
 
 POST {{controller}}/createprofile HTTP/1.1
 Content-Type: application/json
@@ -13,6 +13,34 @@ Authorization: {{auth}}
     "NPWP" : "Sony@77"
 }
 
+###
+
+
+Put {{controller}}/UpdateProfile/1 HTTP/1.1
+Content-Type: application/json
+Authorization: {{auth}}
+
+{
+  "id": 1,
+  "name": "Pertamina AA",
+  "address": "Jln. Koti II Jayapura",
+  "email": "pertamina@gmail.com",
+  "npwp": "Sony@77",
+  "logo": null,
+  "logoData": null,
+  "user": {
+    "id": 2,
+    "firstName": "Ajenk",
+    "lastName": "Kungkung",
+    "userName": "Ajn26",
+    "email": null,
+    "password": "e601540f6c101a8e836213d03ae10b2d",
+    "userRoles": [],
+    "status": true,
+    "userType": "None",
+    "fullName": "Ajenk Kungkung"
+  }
+}
 ###
 
 
@@ -125,6 +153,9 @@ Authorization: {{auth}}
 }
 ###
 
+#######
+
+
 Get {{controller}}/trucks HTTP/1.1
 Content-Type: application/json
 Authorization: {{auth}}
@@ -138,64 +169,67 @@ Authorization: {{auth}}
 
 {
     "id": 1,
-    "plateNumber": "DS 11123",
-    "merk": "Toyota",
-    "carCreated": 2015,
-    "truckType": "Truck",
-    "truckPhoto": null,
-    "driverName": "Chandra",
+    "plateNumber": "DH.6351.AH",
+    "merk": "Honda",
+    "carCreated": 2000,
+    "capacity": 0,
+    "truckType": "Solar",
+    "truckPhoto": "photos/f636276b-1a28-4dcf-a8f0-0a55e4116308.pdf",
+    "driverName": "Deni Malik",
     "driverIDCard": {
-      "number": "SIM12345",
-      "berlaku": "2020-10-30T00:00:00",
-      "hingga": "2023-10-30T00:00:00",
-      "document": null
+      "number": "4",
+      "berlaku": "2020-11-04T15:00:00Z",
+      "hingga": "2020-11-25T15:00:00Z",
+      "document": "documents/88eeb93b-88d3-4241-9378-0afcd517cd4d.pdf"
     },
     "driverLicense": {
-      "number": "SIM12345",
-      "berlaku": "2020-10-30T00:00:00",
-      "hingga": "2023-10-30T00:00:00",
-      "document": null
+      "number": "3",
+      "berlaku": "2020-11-18T15:00:00Z",
+      "hingga": "2020-11-20T15:00:00Z",
+      "document": "documents/8e9c3886-23c1-4f48-9480-a838314f719c.pdf"
     },
-    "driverPhoto": "photos/da1ab969-e5e8-4fb3-b370-19ecb7ab9f9b.png",
-    "assdriverName": "Bagus",
+    "driverPhoto": "photos/8949e012-f4ae-423e-a8a5-74468c6f2c88.png",
+    "assdriverName": "Bagus Joko",
     "assdriverIDCard": {
-      "number": "SIM12345",
-      "berlaku": "2020-10-30T00:00:00",
-      "hingga": "2023-10-30T00:00:00",
-      "document": null
+      "number": "4",
+      "berlaku": "2020-11-04T15:00:00Z",
+      "hingga": "2020-11-25T15:00:00Z",
+      "document": "documents/8fdc9223-3d0a-4120-ac44-6b54f156c80a.pdf"
     },
     "assdriverLicense": {
-      "number": "SIM12345",
-      "berlaku": "2020-10-30T00:00:00",
-      "hingga": "2023-10-30T00:00:00",
-      "document": null
+      "number": "4",
+      "berlaku": "2020-11-03T15:00:00Z",
+      "hingga": "2020-11-19T15:00:00Z",
+      "document": "documents/47864490-aed6-4903-b51e-40d727735941.pdf"
     },
-    "assdriverPhoto": "photos/da1ab969-e5e8-4fb3-b370-19ecb7ab9f9b.png",
+    "assdriverPhoto": "photos/1735c324-4f28-443c-94ce-01777500304f.png",
     "keurDLLAJR": {
-      "number": "STNK12345",
-      "berlaku": "2020-10-30T00:00:00",
-      "hingga": "2023-10-30T00:00:00",
-      "document": null
+      "number": "6",
+      "berlaku": "2020-11-01T15:00:00Z",
+      "hingga": "2020-11-26T15:00:00Z",
+      "document": "documents/d888ab3f-9adc-4eb9-bd56-f9882d291f5d.pdf"
     },
     "vehicleRegistration": {
-      "number": "STNK12345",
-      "berlaku": "2020-10-30T00:00:00",
-      "hingga": "2023-10-30T00:00:00",
-      "document": null
+      "number": "2",
+      "berlaku": "2020-10-31T15:00:00Z",
+      "hingga": "2020-11-29T15:00:00Z",
+      "document": "documents/1ef96854-b8c8-42ad-816a-757650eea69a.pdf"
     },
     "companyId": 1,
     "company": {
       "id": 1,
-      "name": "Pertamina A",
+      "name": "Pertamina AA",
       "address": "Jln. Koti II Jayapura",
       "email": "pertamina@gmail.com",
       "npwp": "Sony@77",
       "logo": null,
       "logoData": null,
-      "userId": 6
+      "user": null
     },
+    "incommings": null,
     "kims": [],
     "kim": null,
+    "lastIncomming": null,
     "fileTruckPhoto": null,
     "fileDriverPhoto": null,
     "fileDriverId": null,
@@ -207,8 +241,7 @@ Authorization: {{auth}}
     "fileKeurDLLAJR": null
   }
 
-  ###
-
+#####
 
 
 
@@ -218,13 +251,90 @@ Content-Type: application/json
 Authorization:  :{{auth}}
 
 {
-    "LetterNumber":"12525233",
-    "CompanyId":2,
-    "Items":
-    [
-        {"TruckId":4}
-    ]
-
+    "items": [
+        {
+            "truck": {
+                "id": 7,
+                "plateNumber": "PA 1237",
+                "merk": "Toyota",
+                "carCreated": 2011,
+                "capacity": 1500,
+                "truckType": "minyak",
+                "truckPhoto": null,
+                "driverName": "Aji",
+                "driverIDCard": {
+                    "number": "197102111980008",
+                    "berlaku": "2020-12-31T15:00:00Z",
+                    "hingga": "2025-12-30T15:00:00Z",
+                    "document": null
+                },
+                "driverLicense": {
+                    "number": "123456789",
+                    "berlaku": "2020-12-31T15:00:00Z",
+                    "hingga": "2025-12-30T15:00:00Z",
+                    "document": null
+                },
+                "driverPhoto": null,
+                "assdriverName": "Candra",
+                "assdriverIDCard": {
+                    "number": "197102111980009",
+                    "berlaku": "2020-12-31T15:00:00Z",
+                    "hingga": "2025-12-30T15:00:00Z",
+                    "document": null
+                },
+                "assdriverLicense": {
+                    "number": "123456789",
+                    "berlaku": "2021-01-29T15:00:00Z",
+                    "hingga": "2025-12-29T15:00:00Z",
+                    "document": null
+                },
+                "assdriverPhoto": null,
+                "keurDLLAJR": {
+                    "number": "123456",
+                    "berlaku": "2021-05-31T15:00:00Z",
+                    "hingga": "2025-12-29T15:00:00Z",
+                    "document": null
+                },
+                "vehicleRegistration": {
+                    "number": "12347",
+                    "berlaku": "2021-01-01T15:00:00Z",
+                    "hingga": "2025-12-30T15:00:00Z",
+                    "document": null
+                },
+                "companyId": 3,
+                "company": {
+                    "id": 3,
+                    "name": "PT. Minyak Tanah",
+                    "address": "Pemda",
+                    "email": "minyakpapua@gmail.com",
+                    "npwp": "1724020421875",
+                    "logo": "photos/d0f550ef-0bf9-434b-9055-b2b10a1a53ba.jpg",
+                    "logoData": null,
+                    "user": null
+                },
+                "incommings": null,
+                "kims": [],
+                "kim": null,
+                "lastIncomming": null,
+                "fileTruckPhoto": null,
+                "fileDriverPhoto": null,
+                "fileDriverId": null,
+                "fileDriverLicense": null,
+                "fileAssDriverPhoto": null,
+                "fileAssDriverId": null,
+                "fileAssDriverLicense": null,
+                "fileVehicleRegistration": null,
+                "fileKeurDLLAJR": null,
+                "$$hashKey": "object:18",
+                "attackStatus": "Baru"
+            },
+            "$$hashKey": "object:19"
+        }
+    ],
+    "company": {
+        "id": 3
+    },
+    "letterNumber": "2/PT.MINYAKTANAH/XXX/2021"
 }
 
 ####
@@ -238,6 +348,107 @@ Authorization:  :{{auth}}
 
 
 Get {{controller}}/submission HTTP/1.1
+Content-Type: application/json
+Authorization:  :{{auth}}
+
+###
+
+
+Put {{controller}}/submission/1 HTTP/1.1
+Content-Type: application/json
+Authorization:  :{{auth}}
+
+
+{
+  "id": 1,
+  "company": {
+    "id": 1,
+    "name": "Pertamina AA",
+    "address": "Jln. Koti II Jayapura",
+    "email": "pertamina@gmail.com",
+    "npwp": "Sony@77",
+    "logo": null,
+    "logoData": null,
+    "user": null
+  },
+  "letterNumber": "12525233",
+  "statusPengajuan": "Baru",
+  "created": "2021-06-22T12:19:49.808822",
+  "items": [
+ {
+      "truck": {
+        "id": 1,
+        "plateNumber": "DH.6351.AH",
+        "merk": "Honda",
+        "carCreated": 2000,
+        "capacity": 0,
+        "truckType": "Solar",
+        "truckPhoto": "photos/f636276b-1a28-4dcf-a8f0-0a55e4116308.pdf",
+        "driverName": "Deni Malik",
+        "driverIDCard": {
+          "number": "4",
+          "berlaku": "2020-11-04T15:00:00Z",
+          "hingga": "2020-11-25T15:00:00Z",
+          "document": "documents/88eeb93b-88d3-4241-9378-0afcd517cd4d.pdf"
+        },
+        "driverLicense": {
+          "number": "3",
+          "berlaku": "2020-11-18T15:00:00Z",
+          "hingga": "2020-11-20T15:00:00Z",
+          "document": "documents/8e9c3886-23c1-4f48-9480-a838314f719c.pdf"
+        },
+        "driverPhoto": "photos/8949e012-f4ae-423e-a8a5-74468c6f2c88.png",
+        "assdriverName": "Bagus Joko",
+        "assdriverIDCard": {
+          "number": "4",
+          "berlaku": "2020-11-04T15:00:00Z",
+          "hingga": "2020-11-25T15:00:00Z",
+          "document": "documents/8fdc9223-3d0a-4120-ac44-6b54f156c80a.pdf"
+        },
+        "assdriverLicense": {
+          "number": "4",
+          "berlaku": "2020-11-03T15:00:00Z",
+          "hingga": "2020-11-19T15:00:00Z",
+          "document": "documents/47864490-aed6-4903-b51e-40d727735941.pdf"
+        },
+        "assdriverPhoto": "photos/1735c324-4f28-443c-94ce-01777500304f.png",
+        "keurDLLAJR": {
+          "number": "6",
+          "berlaku": "2020-11-01T15:00:00Z",
+          "hingga": "2020-11-26T15:00:00Z",
+          "document": "documents/d888ab3f-9adc-4eb9-bd56-f9882d291f5d.pdf"
+        },
+        "vehicleRegistration": {
+          "number": "2",
+          "berlaku": "2020-10-31T15:00:00Z",
+          "hingga": "2020-11-29T15:00:00Z",
+          "document": "documents/1ef96854-b8c8-42ad-816a-757650eea69a.pdf"
+        },
+        "companyId": 1,
+        "company": null,
+        "incommings": null,
+        "kims": [],
+        "kim": null,
+        "lastIncomming": null,
+        "fileTruckPhoto": null,
+        "fileDriverPhoto": null,
+        "fileDriverId": null,
+        "fileDriverLicense": null,
+        "fileAssDriverPhoto": null,
+        "fileAssDriverId": null,
+        "fileAssDriverLicense": null,
+        "fileVehicleRegistration": null,
+        "fileKeurDLLAJR": null
+      },
+      "attackStatus": "Baru",
+      "persetujuans": [],
+      "hasilPemeriksaan": [],
+      "status": "Proccess"
+    }
+  ]
+}
+###
+DELETE {{controller}}/submission/2 HTTP/1.1
 Content-Type: application/json
 Authorization:  :{{auth}}
 

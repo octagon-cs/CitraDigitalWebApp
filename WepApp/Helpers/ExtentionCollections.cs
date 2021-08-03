@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
@@ -24,7 +23,7 @@ namespace WebApp
             {
                 var service = (DataContext)GetServiceProvider.Instance.GetService(typeof(DataContext));
 
-                var result = service.Companies.Where(x => x.UserId == user.Id).FirstOrDefault();
+                var result = service.Companies.Include(x=>x.User).Where(x => x.User.Id == user.Id).AsNoTracking().FirstOrDefault();
 
                 if (result == null)
                     throw new System.SystemException("You Not Have Access !");

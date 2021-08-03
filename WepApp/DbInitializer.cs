@@ -16,15 +16,14 @@ namespace WebApp
                 var roles = dataContext.Roles.ToList();
                 if (roles == null || roles.Count() <= 0)
                 {
-                    dataContext.Roles.Add(new Models.Role { Name = "Administrator" });
-                    dataContext.Roles.Add(new Models.Role { Name = "Manager" });
-                    dataContext.Roles.Add(new Models.Role { Name = "Approval1" });
-                    dataContext.Roles.Add(new Models.Role { Name = "HSE" });
-                    dataContext.Roles.Add(new Models.Role { Name = "Company" });
-                    dataContext.Roles.Add(new Models.Role { Name = "Gate" });
+                    dataContext.Roles.Add(new Models.Role { Id=1, Name = "Administrator" });
+                    dataContext.Roles.Add(new Models.Role { Id = 2, Name = "Manager" });
+                    dataContext.Roles.Add(new Models.Role { Id = 3, Name = "Approval1" });
+                    dataContext.Roles.Add(new Models.Role { Id = 4, Name = "HSE" });
+                    dataContext.Roles.Add(new Models.Role { Id = 5, Name = "Company" });
+                    dataContext.Roles.Add(new Models.Role { Id = 6, Name = "Gate" });
                     dataContext.SaveChanges();
                 }
-
 
                 var pemeriksaaans = dataContext.Pemeriksaans.ToList();
                 if (pemeriksaaans == null || pemeriksaaans.Count <= 0)
@@ -32,24 +31,21 @@ namespace WebApp
                     dataContext.Pemeriksaans.Add(new Models.Pemeriksaan
                     {
                         Name = "STNK",
-                        Items = new List<Models.ItemPemeriksaan> { new Models.ItemPemeriksaan { Kelengkapan = "STNK", Penjelasan = "Surat Tanda Nomor Kendaraan " } }
+                        Items = new List<Models.ItemPemeriksaan> { new Models.ItemPemeriksaan { Kelengkapan = "STNK", Penjelasan = "Surat Tanda Nomor Kendaraan ", JenisPemeriksaan= Models.JenisPemeriksaan.Dokumen } }
                     });
                     dataContext.Pemeriksaans.Add(new Models.Pemeriksaan
                     {
                         Name = "SIM",
-                        Items = new List<Models.ItemPemeriksaan> { new Models.ItemPemeriksaan { Kelengkapan = "SIM", Penjelasan = "Surat Izin Mengemudi" } }
+                        Items = new List<Models.ItemPemeriksaan> { new Models.ItemPemeriksaan { Kelengkapan = "SIM", Penjelasan = "Surat Izin Mengemudi", JenisPemeriksaan = Models.JenisPemeriksaan.Dokumen } }
                     });
                     dataContext.Pemeriksaans.Add(new Models.Pemeriksaan
                     {
                         Name = "KEURDLLAJR",
-                        Items = new List<Models.ItemPemeriksaan> { new Models.ItemPemeriksaan { Kelengkapan = "KEURDLLAJR", Penjelasan = "KEUR " } }
+                        Items = new List<Models.ItemPemeriksaan> { new Models.ItemPemeriksaan { Kelengkapan = "KEURDLLAJR", Penjelasan = "KEUR ", JenisPemeriksaan = Models.JenisPemeriksaan.Dokumen } }
                     });
 
                     dataContext.SaveChanges();
                 }
-
-
-
 
                 var users = dataContext.Users.AsEnumerable();
                 if (users == null || users.Count() <= 0)
@@ -63,9 +59,12 @@ namespace WebApp
                         Status = true,
                         Password = Helpers.MD5Hash.ToMD5Hash("Admin123")
                     };
+
                     var roleAdmin = dataContext.Roles.FirstOrDefault(x => x.Name == "Administrator");
-                    model.UserRoles.Add(new Models.UserRole { Role = roleAdmin, RoleId = roleAdmin.Id, UserId = model.Id });
                     dataContext.Users.Add(model);
+                    var userRole = new Models.UserRole { Role = roleAdmin, User = model };
+                    dataContext.Entry(userRole.Role).State = Microsoft.EntityFrameworkCore.EntityState.Unchanged;
+                    model.UserRoles.Add(userRole);
                     dataContext.SaveChanges();
                 }
 

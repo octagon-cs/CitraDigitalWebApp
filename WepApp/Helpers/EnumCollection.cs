@@ -13,7 +13,7 @@ namespace WebApp.Helpers
     [JsonConverter(typeof(StringEnumConverter))]
     public enum StatusPengajuan
     {
-        Baru, Proccess, Complete
+        Baru, Proccess, Complete , Cancel=-1
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
@@ -25,7 +25,7 @@ namespace WebApp.Helpers
     [JsonConverter(typeof(StringEnumConverter))]
     public enum StatusPersetujuan
     {
-        Proccess, Approved, Reject
+        Proccess, Approved, Complete, Reject, Fixed, Cancel=-1
     }
 
     [JsonConverter(typeof(StringEnumConverter))]

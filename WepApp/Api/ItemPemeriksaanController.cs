@@ -48,7 +48,8 @@ namespace WebApp.Controllers
         {
             try
             {
-                var admin = UserProxy.GetAdministratorProxy(_userService);
+                var user = await Request.GetUser();
+                var admin = UserProxy.GetAdministratorProxy(user, _userService);
                 var result = await admin.AddNewItemPemeriksaaan(model);
                 return Ok(result);
             }
@@ -66,7 +67,8 @@ namespace WebApp.Controllers
         {
             try
             {
-                var admin = UserProxy.GetAdministratorProxy(_userService);
+                var user = await Request.GetUser();
+                var admin = UserProxy.GetAdministratorProxy(user, _userService);
                 var result = await admin.UpdateItemPemeriksaan(id, model);
                 return Ok(result);
             }

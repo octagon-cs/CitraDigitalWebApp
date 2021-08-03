@@ -39,19 +39,18 @@ namespace WebApp.Proxy.Domains
         {
             try
             {
-                var pengajuans = await _context.PengajuanItems.Where(x => x.TruckId == truckId)
+                var pengajuans = await _context.PengajuanItems.Include(x=>x.Truck).Where(x => x.Truck.Id == truckId)
                 .Include(x => x.Truck).ThenInclude(x => x.Company)
-                .Include(x => x.Persetujuans).ToListAsync();
+                .Include(x => x.Truck).ThenInclude(x => x.Kims)
+                .Include(x => x.Persetujuans)
+                .Include(x => x.HasilPemeriksaan)
+                .ThenInclude(x=>x.ItemPemeriksaan)
+                .ThenInclude(x=>x.Pemeriksaan)
+                .ToListAsync();
 
                 if (pengajuans == null || pengajuans.Count <= 0)
                     throw new SystemException("Pengajuan KIM Truck Belum Diajukan");
                 var pengajuan = pengajuans.Last();
-                if (pengajuan != null)
-                {
-                    pengajuan.HasilPemeriksaan = await _context.HasilPemeriksaans.Where(x => x.ItemPengajuanId == pengajuan.Id)
-                    .Include(x => x.ItemPemeriksaan).ThenInclude(x => x.Pemeriksaan)
-                    .AsNoTracking().ToListAsync();
-                }
                 return pengajuan;
             }
             catch (System.Exception ex)
@@ -75,12 +74,16 @@ namespace WebApp.Proxy.Domains
                     throw new SystemException("Data Truck Not Found..!");
 
                 var incomming = new TruckIncomming()
-                {
-                    TruckId = itemPengajuan.TruckId,
+                {   
+                    Truck= itemPengajuan.Truck,
                     Notes = new List<IncommingNote>(),
                     Created = DateTime.Now,
                     Status = status
                 };
+
+                _context.ChangeTracker.Clear();
+                _context.Attach(incomming);
+                _context.Entry(incomming.Truck).State= EntityState.Unchanged;
 
                 foreach (var item in hasil)
                 {

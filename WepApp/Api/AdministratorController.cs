@@ -14,11 +14,13 @@ namespace WebApp.Controllers
     [Authorize(Roles = "Administrator")]
     public class AdministratorController : ControllerBase
     {
+        private IUserService _userService;
         private IAdministrator administrator;
 
         public AdministratorController(IUserService userService)
         {
-            administrator = UserProxy.GetAdministratorProxy(userService);
+            _userService = userService;
+            administrator = UserProxy.GetAdministratorProxy(null, userService);
         }
 
         [HttpPost("CreateUser/{rolename}")]
@@ -89,10 +91,12 @@ namespace WebApp.Controllers
         {
             try
             {
-                var user = await administrator.CreateNewKIM(id, kim);
-                if (user == null)
+                var user = await Request.GetUser();
+                administrator = UserProxy.GetAdministratorProxy(user, _userService);
+                var model = await administrator.CreateNewKIM(id, kim);
+                if (model == null)
                     return BadRequest(new { message = "Username or password is incorrect" });
-                return Ok(user);
+                return Ok(model);
             }
             catch (System.Exception ex)
             {
@@ -126,6 +130,36 @@ namespace WebApp.Controllers
                 if (kim == null)
                     return BadRequest(new { message = "KIM Not Found ...!" });
                 return Ok(kim);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("GetManager")]
+        public async Task<IActionResult> GetManagerName(int id)
+        {
+            try
+            {
+                string nama = await administrator.GetManagerName(id);
+                if (string.IsNullOrEmpty(nama))
+                    return BadRequest(new { message = "Manager aktif belum ada !" });
+                return Ok(nama);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+         [HttpGet("GetDashboard")]
+        public async Task<IActionResult> GetDasboard(int id)
+        {
+            try
+            {
+                object data = await administrator.GetDashboard();
+                return Ok(data);
             }
             catch (System.Exception ex)
             {

@@ -1,7 +1,6 @@
-@controller=http://localhost/api/administrator
-@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2MDM4NTIzODQsImV4cCI6MTYwNDQ1NzE4NCwiaWF0IjoxNjAzODUyMzg0fQ.Eb4bRD6ZEehdtBdaS6Mn7aLmA7ZxUUs1v_ORPSK3PH4
-
-
+ @controller=https://localhost:5001/api/administrator
+//@controller=https://localhost:44326/api/administrator
+@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2MjQ5NTc4OTAsImV4cCI6MTYyNTU2MjY5MCwiaWF0IjoxNjI0OTU3ODkwfQ.PCW_S2xI9gi2VYkglkwKInWYxwvjXTYVjsGXDKuTv8g
 POST {{controller}}/createuser/Company HTTP/1.1
 Content-Type: application/json
 Authorization: {{auth}}
@@ -28,7 +27,7 @@ Authorization: {{auth}}
     "FirstName":"Approval 1",
     "LastName":"",
     "UserName" : "Approval1",
-    "Password" : "Sony@77"
+    "Password" : "Approval123"
 }
 
 ####
@@ -83,9 +82,83 @@ Content-Type: application/json
 Authorization: {{auth}}
 
 {
-    "BeginDate":"2020-10-20",
-    "EndDate":"2021-12-20",
-    "KimNumber" : "1020202020"
+    "id": 0,
+    "truck": {
+        "id": 1,
+        "plateNumber": "DH.6351.AH",
+        "merk": "Honda",
+        "carCreated": 2000,
+        "capacity": 0,
+        "truckType": "Solar",
+        "truckPhoto": "photos/f636276b-1a28-4dcf-a8f0-0a55e4116308.pdf",
+        "driverName": "Deni Malik",
+        "driverIDCard": {
+            "number": "4",
+            "berlaku": "2020-11-04T15:00:00Z",
+            "hingga": "2020-11-25T15:00:00Z",
+            "document": "documents/88eeb93b-88d3-4241-9378-0afcd517cd4d.pdf"
+        },
+        "driverLicense": {
+            "number": "3",
+            "berlaku": "2020-11-18T15:00:00Z",
+            "hingga": "2020-11-20T15:00:00Z",
+            "document": "documents/8e9c3886-23c1-4f48-9480-a838314f719c.pdf"
+        },
+        "driverPhoto": "photos/8949e012-f4ae-423e-a8a5-74468c6f2c88.png",
+        "assdriverName": "Bagus Joko",
+        "assdriverIDCard": {
+            "number": "4",
+            "berlaku": "2020-11-04T15:00:00Z",
+            "hingga": "2020-11-25T15:00:00Z",
+            "document": "documents/8fdc9223-3d0a-4120-ac44-6b54f156c80a.pdf"
+        },
+        "assdriverLicense": {
+            "number": "4",
+            "berlaku": "2020-11-03T15:00:00Z",
+            "hingga": "2020-11-19T15:00:00Z",
+            "document": "documents/47864490-aed6-4903-b51e-40d727735941.pdf"
+        },
+        "assdriverPhoto": "photos/1735c324-4f28-443c-94ce-01777500304f.png",
+        "keurDLLAJR": {
+            "number": "6",
+            "berlaku": "2020-11-01T15:00:00Z",
+            "hingga": "2020-11-26T15:00:00Z",
+            "document": "documents/d888ab3f-9adc-4eb9-bd56-f9882d291f5d.pdf"
+        },
+        "vehicleRegistration": {
+            "number": "2",
+            "berlaku": "2020-10-31T15:00:00Z",
+            "hingga": "2020-11-29T15:00:00Z",
+            "document": "documents/1ef96854-b8c8-42ad-816a-757650eea69a.pdf"
+        },
+        "companyId": 1,
+        "company": {
+            "id": 1,
+            "name": "Pertamina AA",
+            "address": "Jln. Koti II Jayapura",
+            "email": "pertamina@gmail.com",
+            "npwp": "Sony@77",
+            "logo": null,
+            "logoData": null,
+            "user": null
+        },
+        "incommings": null,
+        "kims": [],
+        "kim": null,
+        "lastIncomming": null,
+        "fileTruckPhoto": null,
+        "fileDriverPhoto": null,
+        "fileDriverId": null,
+        "fileDriverLicense": null,
+        "fileAssDriverPhoto": null,
+        "fileAssDriverId": null,
+        "fileAssDriverLicense": null,
+        "fileVehicleRegistration": null,
+        "fileKeurDLLAJR": null
+    },
+    "kimNumber": "12313213",
+    "beginDate": "2021-06-01T00:00:00.000Z",
+    "endDate": "2021-06-30T00:00:00.000Z"
 }
 
 ####
@@ -98,6 +171,12 @@ Authorization: {{auth}}
 
 
 GET {{controller}}/GetKims/2 HTTP/1.1
+Content-Type: application/json
+Authorization: {{auth}}
+
+####
+
+GET {{controller}}/GetDashboard HTTP/1.1
 Content-Type: application/json
 Authorization: {{auth}}
 

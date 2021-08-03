@@ -10,7 +10,7 @@ namespace WebApp.Models
         [Key]
         public int Id { get; set; }
 
-        public int TruckId { get; set; }
+        public Truck Truck { get; set; }
         
         public bool Status { get; set; }
 

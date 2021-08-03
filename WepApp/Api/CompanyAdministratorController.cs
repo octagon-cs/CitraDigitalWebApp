@@ -27,7 +27,7 @@ namespace WebApp.Controllers
             try
             {
                 User user = await Request.GetUser();
-                model.UserId = user.Id;
+                model.User = user;
                 var profile = await administrator.GetProfileByUserId(user.Id);
                 if (profile != null)
                     throw new SystemException("Profile Is Exists ..!");
@@ -49,7 +49,7 @@ namespace WebApp.Controllers
             try
             {
                 User user = await Request.GetUser();
-                model.UserId = user.Id;
+                model.User = user;
                 var profile = await administrator.GetProfileByUserId(user.Id);
                 if (profile == null)
                     throw new SystemException("Profile Is Not Exists ..!");
@@ -194,6 +194,53 @@ namespace WebApp.Controllers
             }
         }
 
+        [HttpPut("submission/{id}")]
+        public async Task<IActionResult> PutSubmission(int id, Pengajuan model)
+        {
+
+            try
+            {
+                var result = await administrator.UpdatePengajuanTruck(id, model);
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpDelete("submission/{id}")]
+        public async Task<IActionResult> CancelSubmission(int id)
+        {
+
+            try
+            {
+                var result = await administrator.CancelPengajuan(id);
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+         [HttpGet("GetDashboard")]
+        public async Task<IActionResult> GetDashboard()
+        {
+            try
+            {
+                var adminUser = await Request.GetUser();
+                var company = await adminUser.GetCompany();
+                var result = await administrator.GetDashboard(company.Id);
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         #endregion
     }
 }

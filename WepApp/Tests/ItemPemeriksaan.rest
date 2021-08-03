@@ -1,5 +1,7 @@
-@controller=https://localhost:5001/api/itempemeriksaan
-@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2MDM2NTI0NTAsImV4cCI6MTYwNDI1NzI1MCwiaWF0IjoxNjAzNjUyNDUwfQ.zFAipP9CTs5KFnZ25ou_kl9pITFJyQnR3qDSUwy-pkk
+//@controller=https://localhost:5001/api/itempemeriksaan
+
+@controller=https://localhost:44326/api/itempemeriksaan
+@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2MjQyOTM0MTYsImV4cCI6MTYyNDg5ODIxNiwiaWF0IjoxNjI0MjkzNDE2fQ.5PlE7t2A3WLdMefav7SFquQ9dadu5B8DcZEEFa9TNoU
 
 
 

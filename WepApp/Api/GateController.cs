@@ -78,6 +78,7 @@ namespace WebApp.Controllers
             catch (System.Exception ex)
             {
                 return BadRequest(ex.Message);
+                
             }
         }
 

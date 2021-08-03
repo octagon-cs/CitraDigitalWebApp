@@ -45,9 +45,13 @@ namespace WebApp
              }
             );
 
-            services.AddDbContext<DataContext>(
-                options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection")
-            ));
+            services.AddDbContext<DataContext>(options =>
+            {
+                var constring = Configuration.GetConnectionString("DefaultConnection");
+                options.UseMySql(constring, ServerVersion.AutoDetect(constring));
+                options.EnableDetailedErrors();
+                options.EnableSensitiveDataLogging();
+            });
 
             // configure strongly typed settings object
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
@@ -112,8 +116,8 @@ namespace WebApp
             app.UseAuthorization();
             app.UseEndpoints(x => x.MapControllers());
 
-            app.UseSwagger();
             app.UseSwaggerUi3();
+            app.UseOpenApi();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

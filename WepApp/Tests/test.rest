@@ -1,0 +1,14 @@
+@controller=http://localhost:5000/api/users
+
+GET https://console.zenziva.net/api/balance/?userkey=1a82d6a37985&passkey=779fd6329d235e907aef4e4c HTTP/1.1
+
+
+
+####
+
+POST https://console.zenziva.net/reguler/api/sendsms/ HTTP/1.1
+content-type: application/json
+
+{"userkey":"1a82d6a37985","passkey":"779fd6329d235e907aef4e4c","to":"08114810279","message":"Test Lagi Berhasil !"}
+
+#####

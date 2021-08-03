@@ -14,6 +14,7 @@ namespace WebApp.Proxy.Domains
         Task<Company> UpdateProfile(Company model);
         Task<Truck> AddNewTruck(Truck truck);
         Task<Pengajuan> AddNewPengajuanTruck(Pengajuan pengajuan);
+        Task<Pengajuan> UpdatePengajuanTruck(int id, Pengajuan pengajuan);
         Task<IEnumerable<KIM>> GetAllKim(int companyId);
         Task<bool> ChangeQRPPejabat(int companyId);
         Task<List<Truck>> GetTrucks(int id);
@@ -21,17 +22,43 @@ namespace WebApp.Proxy.Domains
         Task<Pengajuan> GetSubmissionByPengajuanId(int id);
         Task<List<Pengajuan>> GetSubmissionByCompanyId(int id);
         Task<bool> UpdateTrucks(Truck truck);
+        Task<bool> CancelPengajuan(int id);
+        Task<object> GetDashboard(int companyId);
     }
 
     public class CompanyAdministrator : ICompanyAdministrator
     {
         private DataContext context = GetServiceProvider.Instance.GetRequiredService<DataContext>();
-
+       
         public async Task<Pengajuan> AddNewPengajuanTruck(Pengajuan pengajuan)
         {
             try
             {
+                context.ChangeTracker.Clear();
+                if(pengajuan.Items==null || pengajuan.Items.Count<=0)
+                    throw new SystemException("Data Kendaraan Tidak Boleh Kosong !");
+
                 pengajuan.Created = DateTime.Now;
+                foreach (var item in pengajuan.Items)
+                {
+                    var pItem = context.PengajuanItems
+                    .Include(x=>x.Truck)
+                    .Include(x=>x.Persetujuans)
+                    .Where(x=>x.Truck.Id==item.Truck.Id)
+                    .AsNoTracking()
+                    .ToList();
+                    
+                    var pengajuanItem= pItem.Where(x=>x.Status == Helpers.StatusPersetujuan.Proccess || x.Status== Helpers.StatusPersetujuan.Approved || x.Status== Helpers.StatusPersetujuan.Reject).FirstOrDefault();
+                     if(pengajuanItem!=null){
+                         throw new SystemException($"Mobil : {item.Truck.PlateNumber} Sudah Diajukan  !");   
+                     }                   
+
+
+                    context.Entry(item.Truck).State = EntityState.Unchanged;
+                }
+
+                context.Entry(pengajuan.Company).State = EntityState.Unchanged;
+                context.Attach(pengajuan);
                 context.Pengajuans.Add(pengajuan);
                 var result = await context.SaveChangesAsync();
                 if (result > 0)
@@ -39,6 +66,57 @@ namespace WebApp.Proxy.Domains
                 throw new SystemException("Pengajuan Not Saved ...!");
             }
             catch (System.Exception ex)
+            {
+                throw new SystemException(ex.Message);
+            }
+        }
+
+
+        public async Task<Pengajuan> UpdatePengajuanTruck(int id, Pengajuan pengajuan)
+        {
+            try
+            {
+                var oldPengajuan = context.Pengajuans.Include(x=>x.Items).Where(x => x.Id == id).FirstOrDefault();
+                if (oldPengajuan == null)
+                    throw new SystemException("Data Tidak Ditemukan !");
+
+                oldPengajuan.LetterNumber = pengajuan.LetterNumber;
+                oldPengajuan.StatusPengajuan = pengajuan.StatusPengajuan;
+
+                foreach (var item in pengajuan.Items.ToList())
+                {
+                    if(item.Id == 0)
+                    {
+                        context.Entry(item.Truck).State = EntityState.Unchanged;
+                        oldPengajuan.Items.Add(item);
+                    }
+                    else if(oldPengajuan.Items!=null)
+                    {
+                        var oldItem = oldPengajuan.Items.Where(x => x.Id == item.Id).FirstOrDefault();
+                        if (oldItem != null && oldItem.AttackStatus != item.AttackStatus)
+                        {
+                            oldItem.AttackStatus = item.AttackStatus;
+                        }
+                    }
+                }
+
+
+                foreach (var item in oldPengajuan.Items.ToList())
+                {
+                    var removeItem = pengajuan.Items.Where(x => x.Id == item.Id).FirstOrDefault();
+                    if (removeItem == null)
+                    {
+                        context.PengajuanItems.Remove(item);
+                    }
+                }
+
+
+                var result = await context.SaveChangesAsync();
+                if (result > 0)
+                    return pengajuan;
+                throw new SystemException("Pengajuan Not Saved ...!");
+            }
+            catch (Exception ex)
             {
                 throw new SystemException(ex.Message);
             }
@@ -61,7 +139,6 @@ namespace WebApp.Proxy.Domains
             }
         }
 
-
         public Task<bool> ChangeQRPPejabat(int companyId)
         {
             throw new System.NotImplementedException();
@@ -71,11 +148,18 @@ namespace WebApp.Proxy.Domains
         {
             try
             {
+
+                var tracker = context.ChangeTracker.Entries();
+
                 if (profile.LogoData != null)
                 {
                     var logoFile = await Helpers.FileHelper.SaveTruckFile(profile.LogoData, Helpers.PathType.Photo, profile.Logo);
                     profile.Logo = logoFile;
                 }
+                if(profile.User!=null){
+                    context.Entry<User>(profile.User).State= EntityState.Unchanged;
+                }
+
                 context.Companies.Add(profile);
                 await context.SaveChangesAsync();
 
@@ -88,7 +172,6 @@ namespace WebApp.Proxy.Domains
             }
 
         }
-
 
         public async Task<Company> UpdateProfile(Company profile)
         {
@@ -115,34 +198,45 @@ namespace WebApp.Proxy.Domains
 
         public Task<IEnumerable<KIM>> GetAllKim(int companyId)
         {
-            throw new System.NotImplementedException();
+            var results = context.Kims.Include(x => x.Truck).ThenInclude(x => x.Company).Where(x => x.Truck.Company.Id == companyId);
+            return Task.FromResult(results.AsNoTracking().AsEnumerable());
         }
 
         public Task<Company> GetProfileByUserId(int id)
         {
-            Company profile = context.Companies.Where(x => x.UserId == id).FirstOrDefault();
+            Company profile = context.Companies.Include(x=>x.User).Where(x => x.User.Id == id).AsNoTracking().FirstOrDefault();
             return Task.FromResult(profile);
         }
 
         public Task<Pengajuan> GetSubmissionByPengajuanId(int id)
         {
 
-            var result = context.Pengajuans.Where(x => x.Id == id).Include(x => x.Items);
-            return Task.FromResult(result.FirstOrDefault());
+            var result = context.Pengajuans.Include(x=>x.Company)
+            .Include(x => x.Items).ThenInclude(x=>x.HasilPemeriksaan)
+            .ThenInclude(x=>x.ItemPemeriksaan).ThenInclude(x=>x.Pemeriksaan)
+            .Include(x => x.Items).ThenInclude(x=>x.Persetujuans)
+            .Include(x => x.Items).ThenInclude(x=>x.Truck).Where(x => x.Id == id);
+            return Task.FromResult(result.AsNoTracking().FirstOrDefault());
         }
 
 
         public Task<List<Pengajuan>> GetSubmissionByCompanyId(int id)
         {
-
-            var result = context.Pengajuans.Where(x => x.CompanyId == id).Include(x => x.Items);
-            return Task.FromResult(result.ToList());
+            var result = context.Pengajuans.Include(x=>x.Company)
+            .Where(x => x.Company.Id == id)
+            .Include(x => x.Items).ThenInclude(x=>x.HasilPemeriksaan)
+            .Include(x => x.Items).ThenInclude(x=>x.Persetujuans)
+            .Include(x => x.Items).ThenInclude(x=>x.Truck);
+            return Task.FromResult(result.AsNoTracking().ToList());
         }
 
         public Task<List<Truck>> GetTrucks(int companyId)
         {
-            var result = context.Trucks.Where(x => x.CompanyId == companyId);
-            return Task.FromResult(result.ToList());
+            var result = context.Trucks
+            .Include(x=>x.Company)
+            .Include(x=>x.Kims)
+            .Where(x => x.CompanyId == companyId);
+            return Task.FromResult(result.AsNoTracking().ToList());
         }
 
         public async Task<bool> UpdateTrucks(Truck data)
@@ -163,7 +257,6 @@ namespace WebApp.Proxy.Domains
                 truckExists.DriverLicense = truck.DriverLicense;
                 truckExists.DriverName = truck.DriverName;
                 truckExists.DriverPhoto = truck.DriverPhoto;
-
                 truckExists.TruckPhoto = truck.TruckPhoto;
                 truckExists.KeurDLLAJR = truck.KeurDLLAJR;
                 truckExists.VehicleRegistration = truck.VehicleRegistration;
@@ -223,7 +316,7 @@ namespace WebApp.Proxy.Domains
             var resultTask = await Task.WhenAll(tasks.Select(x => x.Item2).ToArray());
             foreach (var item in tasks)
             {
-                var filename = item.Item2.Result;
+                var filename = await item.Item2;
                     if (!string.IsNullOrEmpty(filename))
                     {
                         switch (item.Item1)
@@ -262,6 +355,41 @@ namespace WebApp.Proxy.Domains
 
             return truck;
         }
+
+        public async Task<bool> CancelPengajuan(int id)
+        {
+            try
+            {
+                var data = context.Pengajuans.Where(x => x.Id == id).FirstOrDefault();
+                context.Attach(data).State = EntityState.Modified;
+                data.StatusPengajuan = Helpers.StatusPengajuan.Cancel;
+                await context.SaveChangesAsync();
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                throw new SystemException(ex.Message);
+            }
+        }
+
+        public Task<object> GetDashboard(int companyId)
+        {
+           var trucks = context.Trucks.Include(x=>x.CompanyId==companyId);
+           var truck = trucks.Count();
+           var kims = trucks.Include(x=>x.Kims).ToList().Where(x=>x.KIM!=null).Count();
+           var pengajuans = context.PengajuanItems
+           .Include(x=>x.Truck).ThenInclude(x=>x.Company)
+           .Include(x=>x.Persetujuans).ToList().Where(x=>x.Truck.Company.Id==companyId);
+           var terima = pengajuans.Where(x=>x.Status== Helpers.StatusPersetujuan.Complete).Count();
+           var proses = pengajuans.Where(x=>x.Status== Helpers.StatusPersetujuan.Proccess).Count();
+           var tolak = pengajuans.Where(x=>x.Status== Helpers.StatusPersetujuan.Reject).Count();
+           object data = new {Truck=truck, Kim=kims, Pengajuan=pengajuans.Count(), Terima=terima, Tolak=tolak, Proses=proses};
+           return Task.FromResult(data);
+        }
+
+
+        
 
     }
 }

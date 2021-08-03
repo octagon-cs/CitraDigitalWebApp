@@ -9,7 +9,6 @@ namespace WebApp
 {
     public class DataContext : DbContext
     {
-
         public DbSet<KIM> Kims { get; set; }
         public DbSet<Truck> Trucks { get; set; }
         public DbSet<User> Users { get; set; }
@@ -23,7 +22,8 @@ namespace WebApp
         public DbSet<HasilPemeriksaan> HasilPemeriksaans { get; set; }
         public DbSet<TruckIncomming> TruckIncommings { get; set; }
         public DataContext(DbContextOptions<DataContext> options)
-            : base(options) { }
+            : base(options) {
+        }
 
     }
 

@@ -35,14 +35,17 @@ namespace WebApp.Models
             await using var transaction = await context.Database.BeginTransactionAsync();
             try
             {
+                context.ChangeTracker.Clear();
 
                 if (hasil == null || hasil.Count <= 0)
                     throw new SystemException("Hasil Pemeriksaan Tidak Ditekuan..!");
 
                 var itemPengajuan = context.PengajuanItems.Where(x => x.Id == id)
+                .Include(x=>x.Pengajuan)
                 .Include(x => x.HasilPemeriksaan)
                 .Include(x => x.Persetujuans).FirstOrDefault();
 
+                context.Attach(itemPengajuan).State = EntityState.Modified;
 
                 if (itemPengajuan != null && ValidateApproved(itemPengajuan))
                 {
@@ -53,7 +56,10 @@ namespace WebApp.Models
                         {
                             var itemHasil = itemPengajuan.HasilPemeriksaan.Where(x => x.ItemPemeriksaanId == item.ItemPemeriksaanId && x.ItemPengajuanId == id).FirstOrDefault();
                             if (itemHasil == null)
+                            {
+                                context.Entry(item.ItemPemeriksaan).State = EntityState.Unchanged;
                                 itemPengajuan.HasilPemeriksaan.Add(item);
+                            }
                             else
                             {
                                 context.Entry(itemHasil).CurrentValues.SetValues(item);
@@ -67,19 +73,25 @@ namespace WebApp.Models
                     await context.SaveChangesAsync();
                     var persetujuan = new Persetujuan
                     {
-                        PengajuanItemId = id,
-                        UserId = user.Id,
+                        User = user,
                         ApprovedBy = user.UserType,
                         ApprovedDate = DateTime.Now,
-                        StatusPersetujuan = StatusPersetujuan.Approved
+                        StatusPersetujuan = user.UserType==UserType.Company?StatusPersetujuan.Fixed: StatusPersetujuan.Approved
                     };
-                    context.Persetujuans.Add(persetujuan);
-                    var pengajuan = context.Pengajuans.Where(x => x.Id == itemPengajuan.PengajuanId).FirstOrDefault();
+                    itemPengajuan.Persetujuans.Add(persetujuan); 
+                    var pengajuan = context.Pengajuans.Where(x => x.Id == itemPengajuan.Pengajuan.Id)
+                        .Include(x=>x.Items).ThenInclude(x=>x.Persetujuans)
+                    .FirstOrDefault();
+                    
                     if (persetujuan.ApprovedBy == UserType.Approval1)
                         pengajuan.StatusPengajuan = StatusPengajuan.Proccess;
 
                     if (persetujuan.ApprovedBy == UserType.Manager)
-                        pengajuan.StatusPengajuan = StatusPengajuan.Complete;
+                        {
+                            if(pengajuan.Items.Where(x=>x.Status== StatusPersetujuan.Approved).Count()== pengajuan.Items.Count()){
+                                pengajuan.StatusPengajuan = StatusPengajuan.Complete;
+                            }
+                        }
 
                     await context.SaveChangesAsync();
 
@@ -102,14 +114,15 @@ namespace WebApp.Models
             await using var transaction = await context.Database.BeginTransactionAsync();
             try
             {
-
+                context.ChangeTracker.Clear();
                 if (hasil == null || hasil.Count <= 0)
                     throw new SystemException("Hasil Pemeriksaan Tidak Ditekuan..!");
 
                 var itemPengajuan = context.PengajuanItems.Where(x => x.Id == id)
+                .Include(x => x.Pengajuan)
                 .Include(x => x.HasilPemeriksaan)
                 .Include(x => x.Persetujuans).FirstOrDefault();
-
+                context.Attach(itemPengajuan).State = EntityState.Modified;
 
                 if (itemPengajuan != null && ValidateApproved(itemPengajuan))
                 {
@@ -134,15 +147,13 @@ namespace WebApp.Models
                     await context.SaveChangesAsync();
                     var persetujuan = new Persetujuan
                     {
-                        PengajuanItemId = id,
-                        UserId = user.Id,
+                        User=user,
                         ApprovedBy = user.UserType,
                         ApprovedDate = DateTime.Now,
                         StatusPersetujuan = StatusPersetujuan.Reject
                     };
-
-                    context.Persetujuans.Add(persetujuan);
-                    var pengajuan = context.Pengajuans.Where(x => x.Id == itemPengajuan.PengajuanId).FirstOrDefault();
+                    itemPengajuan.Persetujuans.Add(persetujuan);
+                    var pengajuan = context.Pengajuans.Where(x => x.Id == itemPengajuan.Pengajuan.Id).FirstOrDefault();
                     if (persetujuan.ApprovedBy == UserType.Approval1)
                         pengajuan.StatusPengajuan = StatusPengajuan.Proccess;
 
@@ -188,20 +199,17 @@ namespace WebApp.Models
 
         public Task<List<PengajuanItem>> GetPengajuanNotApprove()
         {
-            switch (this.user.UserType)
-            {
-                case UserType.Manager:
-                    return GetPengajuanNotApprovedByManager();
+            return GetPengajuanNotApproveByUserType(this.user.UserType);
+        }
 
-                case UserType.Approval1:
-                    return GetPengajuanNotApprovedByApproval1();
-
-                case UserType.HSE:
-                    return GetPengajuanNotApprovedByHse();
-
-                default:
-                    return null;
-            }
+      private Task<List<PengajuanItem>>  GetPengajuanNotApproveByUserType(UserType userType){
+              IEnumerable<PengajuanItem> pengajuanStrore = context.PengajuanItems
+            .Include(x => x.Persetujuans)
+            .Include(x => x.Truck).ThenInclude(x => x.Kims)
+            .Include(x => x.HasilPemeriksaan)
+            .Include(x => x.Pengajuan).ThenInclude(x => x.Company).AsNoTracking().ToList();
+            var results = pengajuanStrore.Where(x => x.NextApprove==userType).ToList();
+            return Task.FromResult(results);
         }
 
         public Task<List<HasilPemeriksaan>> GetPenilaian(int pengajuanItemid)
@@ -209,24 +217,19 @@ namespace WebApp.Models
             try
             {
                 var item = context.PengajuanItems.Where(x => x.Id == pengajuanItemid)
-                .Include(x => x.HasilPemeriksaan)
-                .ThenInclude(x => x.ItemPemeriksaan)
-                .Include(x => x.HasilPemeriksaan)
-                .ThenInclude(x => x.ItemPemeriksaan.Pemeriksaan).AsNoTracking()
-
-                .FirstOrDefault();
+                .Include(x => x.HasilPemeriksaan).ThenInclude(x => x.ItemPemeriksaan).ThenInclude(x=>x.Pemeriksaan).AsNoTracking().FirstOrDefault();
                 if (item == null)
                     throw new SystemException("Item Pengajuan Not Fornd ...!");
 
                 if (item.HasilPemeriksaan == null || item.HasilPemeriksaan.Count <= 0)
                 {
-                    var datas = context.ItemPemeiksaans.ToList();
+                    var datas = context.ItemPemeiksaans.AsNoTracking().ToList();
                     foreach (var itemPemeriksaan in datas)
                     {
-                        item.HasilPemeriksaan.Add(new HasilPemeriksaan { ItemPengajuanId = pengajuanItemid, ItemPemeriksaanId = itemPemeriksaan.Id });
+                        var itemData = new HasilPemeriksaan { ItemPemeriksaan = itemPemeriksaan, ItemPengajuanId = pengajuanItemid, ItemPemeriksaanId = itemPemeriksaan.Id };
+                        item.HasilPemeriksaan.Add(itemData);
                     }
                 }
-                context.SaveChangesAsync();
                 return Task.FromResult(item.HasilPemeriksaan.OrderBy(x => x.ItemPemeriksaanId).ToList());
             }
             catch (System.Exception ex)
@@ -253,76 +256,21 @@ namespace WebApp.Models
             throw new NotImplementedException();
         }
 
-        private Task<List<PengajuanItem>> GetPengajuanNotApprovedByApproval1()
-        {
-            var pengajuanStrore = context.PengajuanItems.Where(x => x.Persetujuans == null || x.Persetujuans.Count <= 0)
-            .Include(x => x.Persetujuans)
-            .Include(x => x.Truck).ThenInclude(x => x.Kims)
-            .Include(x => x.HasilPemeriksaan)
-            .Include(x => x.Pengajuan).ThenInclude(x => x.Company);
-            return pengajuanStrore.Where(x => x.Persetujuans == null || x.Persetujuans.Count <= 0).ToListAsync();
-        }
-
-        private Task<List<PengajuanItem>> GetPengajuanNotApprovedByHse()
-        {
-            var pengajuanStrore = context.PengajuanItems.Where(x => x.Persetujuans != null || x.Persetujuans.Count == 1)
-           .Include(x => x.Persetujuans)
-           .Include(x => x.Truck).ThenInclude(x => x.Kims)
-           .Include(x => x.HasilPemeriksaan)
-           .Include(x => x.Pengajuan).ThenInclude(x => x.Company);
-            return pengajuanStrore.Where(x => x.Persetujuans.Count == 1 ).ToListAsync();
-        }
-
-        private Task<List<PengajuanItem>> GetPengajuanNotApprovedByManager()
-        {
-            var pengajuanStrore = context.PengajuanItems.Where(x => x.Persetujuans != null || x.Persetujuans.Count == 2)
-            .Include(x => x.Persetujuans)
-            .Include(x => x.Truck).ThenInclude(x => x.Kims)
-            .Include(x => x.HasilPemeriksaan)
-            .Include(x => x.Pengajuan).ThenInclude(x => x.Company);
-            return pengajuanStrore.Where(x => x.Persetujuans.Count == 2 ).ToListAsync();
-        }
-
         private bool ValidateApproved(PengajuanItem itemPengajuan)
         {
-            var persetujuanExists = itemPengajuan.Persetujuans.Where(x => x.ApprovedBy == this.user.UserType).FirstOrDefault();
-            if (persetujuanExists != null)
-                throw new SystemException("Approved Is Exists...!");
+
+
             try
             {
-                switch (this.user.UserType)
-                {
-                    case UserType.Manager:
-                        var hse = itemPengajuan.Persetujuans.Where(x => x.ApprovedBy == UserType.HSE).FirstOrDefault();
-                        if (hse == null)
-                        {
-                            throw new SystemException("HSE Not Yet Approve");
-                        }
+                if(itemPengajuan.NextApprove == this.user.UserType){
+                    return true;
+                }else{
 
-                        return true;
-
-                    case UserType.Approval1:
-                        return true;
-
-                    case UserType.HSE:
-                        var approval1 = itemPengajuan.Persetujuans.Where(x => x.ApprovedBy == UserType.Approval1).FirstOrDefault();
-                        if (approval1 == null)
-                        {
-                            throw new SystemException("Approval1 Not Yet Approve");
-                        }
-
-                        return true;
-
+                    throw new SystemException("Bukan Saatnya Anda Melakukan Persetujuan !");
                 }
-
-
-                return false;
-
-
             }
             catch (System.Exception ex)
             {
-
                 throw new SystemException(ex.Message);
             }
 

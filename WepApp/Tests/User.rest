@@ -19,7 +19,7 @@ POST {{controller}}/authenticate HTTP/1.1
 Content-Type: application/json
 
 {
-    "UserName" : "Ajn26",
+    "UserName" : "minyakpapua",
     "Password" : "Sony@77"
 }
 

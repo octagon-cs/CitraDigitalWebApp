@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 using WebApp.Services;
+using WebApp.Helpers;
 
 namespace WebApp.Proxy.Domains
 {
@@ -15,16 +16,14 @@ namespace WebApp.Proxy.Domains
         Task AddUserRole(int userId, string roleName);
         Task<Pemeriksaan> AddNewItemPemeriksaaan(Pemeriksaan item);
         Task<List<KIM>> GetAllKIMNotYetApproved();
-
         Task<KIM> CreateNewKIM(int itempengajuanId, KIM kim);
-
         Task<KIM> GetKIMById(int kimId);
-
         Task PrintKIM(KIM kim);
-
         Task<List<KIM>> GetAllKIM();
         Task<bool> UpdateItemPemeriksaan(int id, Pemeriksaan model);
         Task<List<PengajuanItem>> GetPersetujuan();
+        // Task<List<Pengajuan>> GetPengajuan();
+        // Task<Pengajuan> GetPengajuanById(int id);
         Task<string> GetManagerName(int id);
         Task<object> GetDashboard();
     }
@@ -167,27 +166,13 @@ namespace WebApp.Proxy.Domains
 
         public Task<List<PengajuanItem>> GetPersetujuan()
         {
-            var pengajuans = _context.Pengajuans
-            .Include(x => x.Items).ThenInclude(x => x.Truck).ThenInclude(x=>x.Company)
-            .Include(x => x.Items).ThenInclude(x => x.Persetujuans)
-            .Include(x => x.Items).ThenInclude(x => x.HasilPemeriksaan)
-            .AsNoTracking();
-            var resuls = pengajuans.SelectMany(x => x.Items).ToList().Where(x => x.Status == Helpers.StatusPersetujuan.Approved);
-
-
-            List<PengajuanItem> list = new List<PengajuanItem>();
-            foreach (var item in resuls)
-            {
-                var truck = _context.Trucks.Where(x => x.Id == item.Truck.Id)
-                .Include(x => x.Company)
-                .Include(x => x.Kims).FirstOrDefault();
-                if (truck.KIM == null || (truck.KIM != null && truck.KIM.Expired != Helpers.ExpireStatus.None))
-                {
-                    list.Add(item);
-                }
-            }
-
-            return Task.FromResult(list.ToList());
+              IEnumerable<PengajuanItem> pengajuanStrore = _context.PengajuanItems
+            .Include(x => x.Persetujuans)
+            .Include(x => x.Truck).ThenInclude(x => x.Kims)
+            .Include(x => x.HasilPemeriksaan)
+            .Include(x => x.Pengajuan).ThenInclude(x => x.Company).AsNoTracking().ToList();
+            var results = pengajuanStrore.Where(x => x.NextApprove==UserType.Administrator).ToList();
+            return Task.FromResult(results);
         }
 
         public Task PrintKIM(KIM kim)
@@ -265,5 +250,23 @@ namespace WebApp.Proxy.Domains
            object data = new {Truck=trucks, Kim=kims, Pengajuan=pengajuans.Count, Terima=terima, Tolak=tolak, Proses=proses};
             return Task.FromResult(data);
         }
+
+        //   public Task<List<Pengajuan>> GetPengajuan(){
+        //     var result = _context.Pengajuans.Include(x=>x.Company)
+        //     .Include(x => x.Items).ThenInclude(x=>x.HasilPemeriksaan)
+        //     .ThenInclude(x=>x.ItemPemeriksaan).ThenInclude(x=>x.Pemeriksaan)
+        //     .Include(x => x.Items).ThenInclude(x=>x.Persetujuans)
+        //     .Include(x => x.Items).ThenInclude(x=>x.Truck).AsNoTracking();
+        //     return Task.FromResult(result.ToList());
+        //   }
+        // public Task<Pengajuan> GetPengajuanById(int id){
+        //     var result = _context.Pengajuans.Include(x=>x.Company)
+        //     .Include(x => x.Items).ThenInclude(x=>x.HasilPemeriksaan)
+        //     .ThenInclude(x=>x.ItemPemeriksaan).ThenInclude(x=>x.Pemeriksaan)
+        //     .Include(x => x.Items).ThenInclude(x=>x.Persetujuans)
+        //     .Include(x => x.Items).ThenInclude(x=>x.Truck).Where(x => x.Id == id).AsNoTracking();
+        //     return Task.FromResult(result.FirstOrDefault());
+
+        // }
     }
 }

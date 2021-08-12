@@ -1,6 +1,6 @@
  @controller=https://localhost:5001/api/administrator
 //@controller=https://localhost:44326/api/administrator
-@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2MjQ5NTc4OTAsImV4cCI6MTYyNTU2MjY5MCwiaWF0IjoxNjI0OTU3ODkwfQ.PCW_S2xI9gi2VYkglkwKInWYxwvjXTYVjsGXDKuTv8g
+@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2Mjg3OTk5MTYsImV4cCI6MTYyOTQwNDcxNiwiaWF0IjoxNjI4Nzk5OTE2fQ.8S4stdbbgFbfI1q_P7NAG0bHUHhA6pSG2PIUNWwVXrk
 POST {{controller}}/createuser/Company HTTP/1.1
 Content-Type: application/json
 Authorization: {{auth}}
@@ -70,6 +70,13 @@ Authorization: {{auth}}
 }
 
 ####
+
+
+Get {{controller}}/submission HTTP/1.1
+Content-Type: application/json
+Authorization:  :{{auth}}
+
+###
 
 GET {{controller}}/GetPersetujuan HTTP/1.1
 Content-Type: application/json

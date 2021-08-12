@@ -166,5 +166,33 @@ namespace WebApp.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
+        //  [HttpGet("submission")]
+        // public async Task<IActionResult> GetSubmision()
+        // {
+        //     try
+        //     {
+        //         object data = await administrator.GetPengajuan();
+        //         return Ok(data);
+        //     }
+        //     catch (System.Exception ex)
+        //     {
+        //         return BadRequest(ex.Message);
+        //     }
+        // }
+        //  [HttpGet("submission/{id}")]
+        // public async Task<IActionResult> GetSubmisionById(int id)
+        // {
+        //     try
+        //     {
+        //         object data = await administrator.GetPengajuanById(id);
+        //         return Ok(data);
+        //     }
+        //     catch (System.Exception ex)
+        //     {
+        //         return BadRequest(ex.Message);
+        //     }
+        // }
     }
 }

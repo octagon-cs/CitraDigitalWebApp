@@ -1,12 +1,48 @@
 angular.module('admin.service', [])
+    .factory('dashboardServices', dashboardServices)
     .factory('DaftarUserServices', DaftarUserServices)
     .factory('ListPemeriksaanServices', ListPemeriksaanServices)
     .factory('AdministratorServices', AdministratorServices)
     .factory('PersetujuanKimServices', PersetujuanKimServices)
+    .factory('adminKimsServices', adminKimsServices)
     ;
 
+function dashboardServices($http, $q, StorageService, $state, helperServices, AuthService, message) {
+    var controller = helperServices.url+'api/Administrator';
+    var service = {};
+    service.data = [];
+    service.instance = false;
+    return {
+        get: get
+    };
+
+    function get() {
+        var def = $q.defer();
+        if (service.instance) {
+            def.resolve(service.data);
+        } else {
+            $http({
+                method: 'get',
+                url: controller + "/GetDashBoard",
+                headers: AuthService.getHeader()
+            }).then(
+                (res) => {
+                    service.instance = true;
+                    service.data = res.data;
+                    def.resolve(res.data);
+                },
+                (err) => {
+                    def.reject(err);
+                    message.error(err);
+                }
+            );
+        }
+        return def.promise;
+    }
+}
+
 function DaftarUserServices($http, $q, StorageService, $state, helperServices, AuthService, message) {
-    var controller = helperServices.url + 'users';
+    var controller = helperServices.url+'api/users';
     var service = {};
     service.data = [];
     service.instance = false;
@@ -41,7 +77,7 @@ function DaftarUserServices($http, $q, StorageService, $state, helperServices, A
         var def = $q.defer();
         $http({
             method: 'post',
-            url: helperServices.url + 'administrator/createuser/' + param.roles,
+            url: helperServices.url+'api/administrator/createuser/' + param.roles,
             data: param,
             headers: AuthService.getHeader()
         }).then(
@@ -60,7 +96,7 @@ function DaftarUserServices($http, $q, StorageService, $state, helperServices, A
         var def = $q.defer();
         $http({
             method: 'put',
-            url: helperServices.url + 'administrator/updateuser/' + param.id,
+            url: helperServices.url+'api/administrator/updateuser/' + param.id,
             data: param,
             headers: AuthService.getHeader()
         }).then(
@@ -85,7 +121,7 @@ function DaftarUserServices($http, $q, StorageService, $state, helperServices, A
 }
 
 function ListPemeriksaanServices($http, $q, StorageService, $state, helperServices, AuthService, message) {
-    var controller = helperServices.url + 'itempemeriksaan';
+    var controller = helperServices.url+'api/itempemeriksaan';
     var service = {};
     service.data = [];
     service.instance = false;
@@ -141,7 +177,7 @@ function ListPemeriksaanServices($http, $q, StorageService, $state, helperServic
         var def = $q.defer();
         $http({
             method: 'put',
-            url: controller + '?id=' + params.id,
+            url: controller + '/' + params.id,
             data: params,
             headers: AuthService.getHeader()
         }).then(
@@ -163,7 +199,7 @@ function ListPemeriksaanServices($http, $q, StorageService, $state, helperServic
 }
 
 function AdministratorServices($http, $q, StorageService, $state, helperServices, AuthService, message) {
-    var controller = helperServices.url + 'administrator';
+    var controller = helperServices.url+'api/administrator';
     var service = {};
     service.data = [];
     service.instance = false;
@@ -239,8 +275,9 @@ function AdministratorServices($http, $q, StorageService, $state, helperServices
         return def.promise;
     }
 }
+
 function PersetujuanKimServices($http, $q, StorageService, $state, helperServices, AuthService, message) {
-    var controller = helperServices.url + 'administrator';
+    var controller = helperServices.url+'api/administrator';
     var service = {};
     service.data = [];
     service.instance = false;
@@ -260,6 +297,63 @@ function PersetujuanKimServices($http, $q, StorageService, $state, helperService
             }).then(
                 (res) => {
                     service.instance = true;
+                    service.data = res.data;
+                    def.resolve(res.data);
+                },
+                (err) => {
+                    message.error(err.data);
+                    def.reject(err.data);
+                }
+            );
+        }
+        return def.promise;
+    }
+    function post(param) {
+        var def = $q.defer();
+        $http({
+            method: 'post',
+            url: controller + "/CreateKim/" + param.pengajuan,
+            data: param,
+            headers: AuthService.getHeader()
+        }).then(
+            (res) => {
+                var data = service.data.find(x=>x.id == param.pengajuan);
+                if(data){
+                    var index = service.data.indexOf(data);
+                    service.data.splice(index, 1);
+                }
+                def.resolve(res.data);
+            },
+            (err) => {
+                message.error(err.data);
+                def.reject(err.data);
+            }
+        );
+        return def.promise;
+    }
+}
+
+function adminKimsServices($http, $q, StorageService, $state, helperServices, AuthService, message) {
+    var controller = helperServices.url+'api/administrator';
+    var service = {};
+    service.data = [];
+    service.instance = false;
+    return {
+        get: get, post: post
+    };
+
+    function get() {
+        var def = $q.defer();
+        if (service.instance) {
+            def.resolve(service.data);
+        } else {
+            $http({
+                method: 'get',
+                url: controller + "/GetKims",
+                headers: AuthService.getHeader()
+            }).then(
+                (res) => {
+                    // service.instance = true;
                     service.data = res.data;
                     def.resolve(res.data);
                 },

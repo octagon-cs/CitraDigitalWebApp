@@ -62,7 +62,7 @@ namespace WebApp.Controllers
 
         [Authorize(Roles = "Administrator")]
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, Pemeriksaan model)
         {
             try

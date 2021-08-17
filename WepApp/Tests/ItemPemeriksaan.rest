@@ -1,8 +1,7 @@
+@controller=http://localhost/api/itempemeriksaan
 //@controller=https://localhost:5001/api/itempemeriksaan
-
-@controller=https://localhost:44326/api/itempemeriksaan
-@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2MjQyOTM0MTYsImV4cCI6MTYyNDg5ODIxNiwiaWF0IjoxNjI0MjkzNDE2fQ.5PlE7t2A3WLdMefav7SFquQ9dadu5B8DcZEEFa9TNoU
-
+//@controller=https://localhost:44326/api/itempemeriksaan
+@auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2MjkyMjA1OTEsImV4cCI6MTYyOTgyNTM5MSwiaWF0IjoxNjI5MjIwNTkxfQ.CvABPs7HmACBLms8t-ymFumq7-1SQEJQvDRPsnRIZYo
 
 
 POST {{controller}} HTTP/1.1
@@ -24,21 +23,19 @@ Authorization: {{auth}}
 ####
 
 
-PUT  {{controller}}?id=4 HTTP/1.1
+PUT  {{controller}}/2 HTTP/1.1
 Content-Type: application/json
 Authorization: {{auth}}
 
   {
-    "id": 4,
-    "name": "Test A",
+    "id": 2,
+    "name": "SIM",
     "items": [
       {
-        "kelengkapan": "Tes 1 Saja ",
-        "penjelasan": "Ini adalah penjelasan test"
-      },
-      {
-        "kelengkapan": "Tes 2 Saja ",
-        "penjelasan": "Ini adalah penjelasan test"
+        "id": 2,
+        "kelengkapan": "SIM",
+        "penjelasan": "Surat Izin Mengemudi",
+        "jenisPemeriksaan":"1"
       }
     ]
   }

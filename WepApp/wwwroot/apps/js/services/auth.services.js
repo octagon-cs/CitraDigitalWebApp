@@ -16,7 +16,7 @@ function AuthService($http, $q, StorageService, $state, helperServices, message)
         login: login,
         logOff: logoff,
         userIsLogin: userIsLogin,
-        getUserName: getUserName,
+        getUser: getUser,
         // userIsLogin: userIsLogin,
         userInRole: userInRole,
         getHeader: getHeader,
@@ -28,11 +28,9 @@ function AuthService($http, $q, StorageService, $state, helperServices, message)
 
     function login(user) {
         var def = $q.defer();
-        var a = helperServices.url;
-        var b = getHeader();
         $http({
             method: 'POST',
-            url: helperServices.url + "users/authenticate",
+            url: helperServices.url + "api/users/authenticate",
             data: user,
             headers: {
                 'Content-Type': 'application/json'
@@ -49,7 +47,6 @@ function AuthService($http, $q, StorageService, $state, helperServices, message)
     }
 
     function getHeader() {
-
         try {
             if (userIsLogin()) {
                 return {
@@ -71,10 +68,10 @@ function AuthService($http, $q, StorageService, $state, helperServices, message)
 
     }
 
-    function getUserName() {
+    function getUser() {
         if (userIsLogin) {
             var result = StorageService.getObject("user");
-            return result.Username;
+            return result;
         }
     }
 

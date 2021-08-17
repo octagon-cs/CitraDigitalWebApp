@@ -13,7 +13,7 @@ namespace WebApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Company, Approval1, Manager, HSE, Gate")]
+    [Authorize(Roles = "Administrator, Company, Approval1, Manager, HSE, Gate")]
     public class ApprovalController : ControllerBase
     {
         private IApproval approval;

@@ -1,7 +1,8 @@
-@controller=https://localhost:5001/api/Approval
-//@controller=https://localhost:44326/api/approval
-@authApproval1= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMiLCJuYmYiOjE2MjQ4ODA5NTIsImV4cCI6MTYyNTQ4NTc1MiwiaWF0IjoxNjI0ODgwOTUyfQ.cguH1q9fFwd4D8lCIwvcKTIuzzKYcbGDTMN2Ipq5xTs
-@authHSE=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUiLCJuYmYiOjE2MjUxOTAxNzEsImV4cCI6MTYyNTc5NDk3MSwiaWF0IjoxNjI1MTkwMTcxfQ.K14E2yxHl2T83IObXsfn-Xq0pQDcnpky4JMb-ARVcIg
+//@controller=https://localhost:5001/api/Approval
+@controller=http://localhost/api/approval
+@authAdmin=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2MjkxNTg5MzksImV4cCI6MTYyOTc2MzczOSwiaWF0IjoxNjI5MTU4OTM5fQ.riqL9y3KAzj5dtT_gmRgTeRnX13iE9V1tvJBhYyO2Go
+@authApproval1=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIiLCJuYmYiOjE2MjkxNTkxNzIsImV4cCI6MTYyOTc2Mzk3MiwiaWF0IjoxNjI5MTU5MTcyfQ.dHplz8eAQT0wbnlsrqTFQxPJ836syRO9s2wUqWKk6l0
+@authHSE=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMiLCJuYmYiOjE2MjkxNTkwNzMsImV4cCI6MTYyOTc2Mzg3MywiaWF0IjoxNjI5MTU5MDczfQ.lldpAMqbNV9dx1El1thWgCvTNqqsLyeqjE-IjvroEwg
 @authManager=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYiLCJuYmYiOjE2MjUxOTAyMTcsImV4cCI6MTYyNTc5NTAxNywiaWF0IjoxNjI1MTkwMjE3fQ.3NTYvAz_k7GrPDZVQiej_HgnSX3f99OCBwnwzof-dpI
 
 
@@ -11,7 +12,7 @@
 
 GET {{controller}}/GetPersetujuan HTTP/1.1
 Content-Type: application/json
-Authorization: {{authApproval1}}
+Authorization:{{authApproval1}}
 ####
 
 
@@ -28,4 +29,4 @@ Authorization: {{authApproval1}}
 
 GET {{controller}}/GetPenilaian/1 HTTP/1.1
 Content-Type: application/json
-Authorization: {{authApproval1}}
+Authorization:{{authAdmin}}

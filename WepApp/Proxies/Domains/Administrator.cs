@@ -12,7 +12,7 @@ namespace WebApp.Proxy.Domains
     public interface IAdministrator
     {
         Task<User> CreateUser(string roleName, User user);
-        Task<User> UpdateUser(int id,User user);
+        Task<User> UpdateUser(int id, User user);
         Task AddUserRole(int userId, string roleName);
         Task<Pemeriksaan> AddNewItemPemeriksaaan(Pemeriksaan item);
         Task<List<KIM>> GetAllKIMNotYetApproved();
@@ -42,23 +42,24 @@ namespace WebApp.Proxy.Domains
         }
         public Administrator(User userLogin, IUserService userService, DataContext context)
         {
-            _userLogin=userLogin;
+            _userLogin = userLogin;
             _userService = userService;
             _context = context;
 
         }
 
-        public async  Task<User> UpdateUser(int id, User user){
-             try
+        public async Task<User> UpdateUser(int id, User user)
+        {
+            try
             {
-               var data =  _context.Users.Where(x=>x.Id==user.Id).FirstOrDefault();
+                var data = _context.Users.Where(x => x.Id == user.Id).FirstOrDefault();
                 _context.Attach(data).State = EntityState.Modified;
                 data.FirstName = user.FirstName;
                 data.LastName = user.LastName;
                 data.Email = user.Email;
                 data.Status = user.Status;
                 var result = await _context.SaveChangesAsync();
-                if(result<=0)
+                if (result <= 0)
                     throw new SystemException("Not Saved ...!");
                 return user;
 
@@ -92,7 +93,7 @@ namespace WebApp.Proxy.Domains
                 if (user != null)
                 {
                     var role = _context.Roles.Where(x => x.Name == roleName).FirstOrDefault();
-                    user.UserRoles.Add(new UserRole { Role = role, User=user});
+                    user.UserRoles.Add(new UserRole { Role = role, User = user });
                 }
                 await _context.SaveChangesAsync();
 
@@ -106,26 +107,26 @@ namespace WebApp.Proxy.Domains
 
         public async Task<KIM> CreateNewKIM(int itempengajuanid, KIM kim)
         {
-           try
-           {
-            var pengajuanItem = _context.PengajuanItems.Where(xx => xx.Id == itempengajuanid)
-              .Include(x => x.Truck).FirstOrDefault();
-            var tracker = _context.ChangeTracker.Entries();
-            var truck = _context.Trucks.Where(xx => xx.Id == pengajuanItem.Truck.Id).Include(xx => xx.Kims).FirstOrDefault();
-             _context.ChangeTracker.Clear();
-            _context.Attach(truck);
-            truck.Kims.Add(kim);
-            var persetujuan = new Persetujuan{  User=_userLogin, StatusPersetujuan= Helpers.StatusPersetujuan.Complete, ApprovedBy=Helpers.UserType.Administrator, ApprovedDate=DateTime.Now };
-            _context.Entry(persetujuan.User).State = EntityState.Unchanged;
-            _context.Attach(pengajuanItem);
-            pengajuanItem.Persetujuans.Add(persetujuan);    
-            var result = await _context.SaveChangesAsync();
-            return kim;
-           }
-           catch (System.Exception ex)
-           {
-               throw new SystemException(ex.Message);
-           } 
+            try
+            {
+                var pengajuanItem = _context.PengajuanItems.Where(xx => xx.Id == itempengajuanid)
+                  .Include(x => x.Truck).FirstOrDefault();
+                var tracker = _context.ChangeTracker.Entries();
+                var truck = _context.Trucks.Where(xx => xx.Id == pengajuanItem.Truck.Id).Include(xx => xx.Kims).FirstOrDefault();
+                _context.ChangeTracker.Clear();
+                _context.Attach(truck);
+                truck.Kims.Add(kim);
+                var persetujuan = new Persetujuan { User = _userLogin, StatusPersetujuan = Helpers.StatusPersetujuan.Complete, ApprovedBy = Helpers.UserType.Administrator, ApprovedDate = DateTime.Now };
+                _context.Entry(persetujuan.User).State = EntityState.Unchanged;
+                _context.Attach(pengajuanItem);
+                pengajuanItem.Persetujuans.Add(persetujuan);
+                var result = await _context.SaveChangesAsync();
+                return kim;
+            }
+            catch (System.Exception ex)
+            {
+                throw new SystemException(ex.Message);
+            }
         }
 
         public async Task<User> CreateUser(string roleName, User user)
@@ -166,12 +167,12 @@ namespace WebApp.Proxy.Domains
 
         public Task<List<PengajuanItem>> GetPersetujuan()
         {
-              IEnumerable<PengajuanItem> pengajuanStrore = _context.PengajuanItems
-            .Include(x => x.Persetujuans)
-            .Include(x => x.Truck).ThenInclude(x => x.Kims)
-            .Include(x => x.HasilPemeriksaan)
-            .Include(x => x.Pengajuan).ThenInclude(x => x.Company).AsNoTracking().ToList();
-            var results = pengajuanStrore.Where(x => x.NextApprove==UserType.Administrator).ToList();
+            IEnumerable<PengajuanItem> pengajuanStrore = _context.PengajuanItems
+          .Include(x => x.Persetujuans)
+          .Include(x => x.Truck).ThenInclude(x => x.Kims)
+          .Include(x => x.HasilPemeriksaan)
+          .Include(x => x.Pengajuan).ThenInclude(x => x.Company).AsNoTracking().ToList();
+            var results = pengajuanStrore.Where(x => x.NextApprove == UserType.Administrator).ToList();
             return Task.FromResult(results);
         }
 
@@ -184,16 +185,14 @@ namespace WebApp.Proxy.Domains
         {
             try
             {
-                var item = _context.Pemeriksaans.Where(x => x.Id == id).Include(x => x.Items).FirstOrDefault();
+                _context.ChangeTracker.Clear();
+                var item = _context.Pemeriksaans.Include(x => x.Items).FirstOrDefault(x => x.Id == id);
                 if (item == null)
                     throw new SystemException("Item Pemeriksaan Not Found !");
 
-                _context.Attach(item).State = EntityState.Modified;
-                _context.Entry(item).CurrentValues.SetValues(model);
-
+                item.Name = model.Name;
                 foreach (var data in model.Items)
                 {
-
                     if (data.Id == 0)
                         item.Items.Add(data);
                     else
@@ -209,7 +208,16 @@ namespace WebApp.Proxy.Domains
                             item.Items.Add(data);
                         }
                     }
+                }
 
+                foreach (var data in item.Items.ToList())
+                {
+                    var existingChild = model.Items
+                                               .SingleOrDefault(c => c.Id == data.Id);
+                    if (existingChild == null)
+                    {
+                        item.Items.Remove(data);
+                    }
                 }
 
                 var result = await _context.SaveChangesAsync();
@@ -228,8 +236,8 @@ namespace WebApp.Proxy.Domains
         {
             try
             {
-                var manager = _context.Users.Where(x=>x.UserType== Helpers.UserType.Manager && x.Status).AsNoTracking().FirstOrDefault();
-                if(manager==null)
+                var manager = _context.Users.Where(x => x.UserType == Helpers.UserType.Manager && x.Status).AsNoTracking().FirstOrDefault();
+                if (manager == null)
                     return null;
                 return Task.FromResult(manager.FullName);
             }
@@ -241,13 +249,13 @@ namespace WebApp.Proxy.Domains
 
         public Task<object> GetDashboard()
         {
-           var trucks = _context.Trucks.Count();
-           var pengajuans = _context.PengajuanItems.Include(x=>x.Persetujuans).ToList();
-           var terima = pengajuans.Where(x=>x.Status== Helpers.StatusPersetujuan.Complete).Count();
-           var proses = pengajuans.Where(x=>x.Status== Helpers.StatusPersetujuan.Proccess).Count();
-           var tolak = pengajuans.Where(x=>x.Status== Helpers.StatusPersetujuan.Reject).Count();
-           var kims = _context.Trucks.Include(x=>x.Kims).ToList().Where(x=>x.KIM!=null).Count();
-           object data = new {Truck=trucks, Kim=kims, Pengajuan=pengajuans.Count, Terima=terima, Tolak=tolak, Proses=proses};
+            var trucks = _context.Trucks.Count();
+            var pengajuans = _context.PengajuanItems.Include(x => x.Persetujuans).ToList();
+            var terima = pengajuans.Where(x => x.Status == Helpers.StatusPersetujuan.Complete).Count();
+            var proses = pengajuans.Where(x => x.Status == Helpers.StatusPersetujuan.Proccess).Count();
+            var tolak = pengajuans.Where(x => x.Status == Helpers.StatusPersetujuan.Reject).Count();
+            var kims = _context.Trucks.Include(x => x.Kims).ToList().Where(x => x.KIM != null).Count();
+            object data = new { Truck = trucks, Kim = kims, Pengajuan = pengajuans.Count, Terima = terima, Tolak = tolak, Proses = proses };
             return Task.FromResult(data);
         }
 

@@ -1,5 +1,5 @@
-//@controller=http://localhost/api/users
-@controller=https://localhost:5001/api/users
+@controller=http://localhost/api/users
+//@controller=https://localhost:5001/api/users
 //@controller=https://localhost:44326/api/users
 //@controller=http://36.94.6.214/api/users
 
@@ -41,7 +41,7 @@ Content-Type: application/json
 
 {
     "UserName" : "Approval1",
-    "Password" : "Approval123"
+    "Password" : "Sony@77"
 }
 
 ###

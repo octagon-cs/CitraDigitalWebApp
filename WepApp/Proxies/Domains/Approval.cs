@@ -139,7 +139,6 @@ namespace WebApp.Models
                                 context.Entry(itemHasil).CurrentValues.SetValues(item);
                             }
                         }
-
                     }
                     else
                         itemPengajuan.HasilPemeriksaan = hasil;

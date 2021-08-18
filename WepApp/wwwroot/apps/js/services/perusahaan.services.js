@@ -6,7 +6,7 @@ angular.module('perusahaan.service', [])
     ;
 
 function CompanyServices($http, $q, helperServices, AuthService, message) {
-    var controller = helperServices.url + 'companyadministrator';
+    var controller = helperServices.url + 'api/companyadministrator';
     var service = {};
     service.data = [];
     service.instance = false;
@@ -63,7 +63,7 @@ function CompanyServices($http, $q, helperServices, AuthService, message) {
 }
 
 function ProfilePerusahaanServices($http, $q, helperServices, AuthService, message) {
-    var controller = helperServices.url + 'companyadministrator';
+    var controller = helperServices.url + 'api/companyadministrator';
     var service = {};
     service.data = [];
     service.instance = false;
@@ -136,7 +136,7 @@ function ProfilePerusahaanServices($http, $q, helperServices, AuthService, messa
 }
 
 function KendaraanServices($http, $q, helperServices, AuthService, message) {
-    var controller = helperServices.url + 'companyadministrator/trucks';
+    var controller = helperServices.url + 'api/companyadministrator/trucks';
     var service = {};
     service.data = [];
     service.instance = false;
@@ -213,7 +213,7 @@ function KendaraanServices($http, $q, helperServices, AuthService, message) {
     }
 }
 function PengajuanServices($http, $q, helperServices, AuthService, message) {
-    var controller = helperServices.url + 'companyadministrator';
+    var controller = helperServices.url + 'api/companyadministrator';
     var service = {};
     service.data = [];
     service.instance = false;

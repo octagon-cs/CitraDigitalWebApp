@@ -2,24 +2,6 @@
 <html lang="en">
 
 <head>
-    <meta name="description"
-        content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
-    <!-- Twitter meta-->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:site" content="@pratikborsadiya">
-    <meta property="twitter:creator" content="@pratikborsadiya">
-    <!-- Open Graph Meta-->
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Vali Admin">
-    <meta property="og:title" content="Vali - Free Bootstrap 4 admin theme">
-    <meta property="og:url" content="http://pratikborsadiya.in/blog/vali-admin">
-    <meta property="og:image" content="http://pratikborsadiya.in/blog/vali-admin/hero-social.png">
-    <meta property="og:description"
-        content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
-    <title>Vali Admin - Free Bootstrap 4 Admin Template</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="./assets/css/main.css">
     <link rel="stylesheet" type="text/css" href="./assets/css/styles.css">
@@ -30,10 +12,10 @@
     <link href="./assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css" rel="stylesheet" />
 </head>
 
-<body class="app sidebar-mini">
+<div class="app sidebar-mini">
     <!-- Navbar-->
     <header class="app-header">
-        <a class="app-header__logo" href="index.html"><img src="./assets/images/Logo.png" width="60%" alt=""></a>
+        <a class="app-header__logo" href="index.html"><img src="./assets/images/Logo.png" style="width: 100px" alt=""></a>
         <!-- Sidebar toggle button-->
         <a class="app-sidebar__toggle" href="" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
         <!-- Navbar Right Menu-->
@@ -75,35 +57,16 @@
                         class="app-menu__label">Pejabat</span></a></li> -->
             <!-- <li><a class="app-menu__item" ui-sref="kims"><i class="app-menu__icon fa fa-id-card-o"></i><span
                         class="app-menu__label">KIM</span></a></li> -->
-            <li><a class="app-menu__item" ui-sref="histori"><i class="app-menu__icon fa fa-history"></i><span
-                        class="app-menu__label">Histori Truck</span></a></li>
+            <!-- <li><a class="app-menu__item" ui-sref="histori"><i class="app-menu__icon fa fa-history"></i><span
+                        class="app-menu__label">Histori Truck</span></a></li> -->
         </ul>
     </aside>
     <main class="app-content">
 
         <ui-view></ui-view>
     </main>
-    <!-- Essential javascripts for application to work-->
-    <!-- <script src="./node_modules//jquery/dist/jquery.min.js"></script> -->
-    <!-- <script src="./assets/plugins/angular/angular.min.js"></script>
-  <script src="./assets/plugins/angular-ui-router/release/angular-ui-router.min.js"></script> -->
-    <!-- <script src="js/app.js"></script>
 
-  <script src="js/controllers/app.controller.js"></script>
-  <script src="js/controllers/admin.controllers.js"></script>
-
-  <script src="js/routers/app.router.js"></script>
-  <script src="js/routers/admin.router.js"></script>
-
-  <script src="js/services/app.services.js"></script>
-  <script src="js/services/admin.services.js"></script>
-  <script src="js/services/auth.services.js"></script>
-  <script src="js/services/helper.services.js"></script>
-  <script src="js/services/storage.services.js"></script> -->
-
-
-
-    <script src="./assets/js/popper.min.js"></script>
+    <script src="/assets/js/popper.min.js"></script>
     <script src="./assets/js/bootstrap.min.js"></script>
     <script src="./assets/js/main.js"></script>
     <script src="./assets/js/plugins/pace.min.js"></script>

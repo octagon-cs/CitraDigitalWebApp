@@ -4,8 +4,8 @@ angular.module("helper.service", [])
 
 function helperServices() {
     var service = {};
-    //service.url = "";
-    service.url = "http://192.168.1.2/";
+    service.url = "";
+    //service.url = "http://192.168.1.2/";
     service.jenisPengajuan = ['Baru', 'Perpanjangan'];
     service.roles = ['Company', 'Approval1', 'HSE', 'Manager', 'Gate'];
     function toRoman(num) {

@@ -4,12 +4,12 @@ angular.module('approval.service', [])
     ;
 
 function approvalServices($http, $q, helperServices, AuthService, message) {
-    var controller = helperServices.url + 'Approval';
+    var controller = helperServices.url + 'api/approval';
     var service = {};
     service.data = [];
     service.instance = false;
     return {
-        get: get, post: post
+        get: get, post: post, reject:reject
     };
 
     function get() {
@@ -55,10 +55,29 @@ function approvalServices($http, $q, helperServices, AuthService, message) {
         );
         return def.promise;
     }
+    function reject(item) {
+        var def = $q.defer();
+        $http({
+            method: 'post',
+            url: controller + "/reject/" + item.id,
+            data: item.hasilPemeriksaan,
+            headers: AuthService.getHeader()
+        }).then(
+            (res) => {
+                
+                def.resolve(res.data);
+            },
+            (err) => {
+                def.reject(err.data);
+
+            }
+        );
+        return def.promise;
+    }
 
 }
 function pengajuanBerkasController($http, $q, helperServices, AuthService, message) {
-    var controller = helperServices.url + 'approval/';
+    var controller = helperServices.url + '/api/approval';
     var service = {};
     service.data = [];
     service.instance = false;
@@ -73,7 +92,7 @@ function pengajuanBerkasController($http, $q, helperServices, AuthService, messa
         } else {
             $http({
                 method: 'get',
-                url: controller + "GetPersetujuan",
+                url: controller + "/GetPersetujuan",
                 headers: AuthService.getHeader()
             }).then(
                 (res) => {

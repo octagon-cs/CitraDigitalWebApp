@@ -22,13 +22,16 @@ function companyController($scope, ProfilePerusahaanServices, message, $state, A
             ProfilePerusahaanServices.get().then(x => {
                 // $scope.$emit("SendDown", "true");
                 $scope.profile = x;
-                $scope.profile.logo = helperServices.base + $scope.profile.logo;
+                $scope.profile.logo = $scope.profile.logo;
                 AuthService.addProfile($scope.profile);
+                console.log($scope.profile);
             }, (err) => {
                 message.dialogmessage("Mohon isi Profile terlebih dahulu").then(x => {
                     $state.go("profileperusahaan");
                 });
             })
+        }else{
+            console.log($scope.profile);
         }
         // $scope.$emit("SendUp", $scope.profile);
     };
@@ -53,7 +56,7 @@ function dashboardController($scope, DaftarUserServices, AuthService, helperServ
 }
 
 function profilePerusahaanController($scope, helperServices, message, AuthService, StorageService, ProfilePerusahaanServices) {
-    $scope.url = helperServices.base;
+    $scope.url = helperServices.url;
     $scope.statusProfile = false;
     $scope.test;
     $scope.model = {};
@@ -102,7 +105,7 @@ function profilePerusahaanController($scope, helperServices, message, AuthServic
 
 
 function kendaraanController($scope, KendaraanServices, helperServices, message) {
-    $scope.url = helperServices.base;
+    $scope.url = helperServices.url;
     $scope.datas = [];
     $scope.model = {};
     $scope.model.driverLicense = {};
@@ -194,7 +197,7 @@ function pengajuanController($scope, PengajuanServices, message) {
 }
 
 function tambahPengajuanController($scope, KendaraanServices, helperServices, PengajuanServices, message, $state, $stateParams, ListPemeriksaanServices, approvalServices) {
-    $scope.url = helperServices.base;
+    $scope.url = helperServices.url;
     $scope.jenisPengajuan = helperServices.jenisPengajuan;
     $scope.id = $stateParams.id;
     $scope.kendaraan = [];

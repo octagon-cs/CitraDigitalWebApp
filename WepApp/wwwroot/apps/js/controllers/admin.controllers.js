@@ -161,7 +161,22 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
     $scope.Proses = () => {
         message.dialogmessage("Anda Yakin").then(x => {
             approvalServices.post($scope.model).then(res => {
-                message.info("proses Berhasil");
+                message.dialogmessage("Proses Berhasil").then(x => {
+                    var index = $scope.datas.indexOf($scope.model);
+                    $scope.datas.splice(index, 1);
+                    document.location.href="/#!/index/berkaspengajuan";
+                })
+            })
+        });
+    }
+    $scope.reject = ()=>{
+        message.dialog("Anda Yakin").then(x => {
+            approvalServices.reject($scope.model).then(res => {
+                message.dialogmessage("Proses Berhasil").then(x => {
+                    var index = $scope.datas.indexOf($scope.model);
+                    $scope.datas.splice(index, 1);
+                    document.location.href="/#!/index/berkaspengajuan";
+                })
             })
         });
     }

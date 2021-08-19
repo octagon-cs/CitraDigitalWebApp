@@ -377,9 +377,9 @@ namespace WebApp.Proxy.Domains
 
         public Task<object> GetDashboard(int companyId)
         {
-           var trucks = context.Trucks.Include(x=>x.CompanyId==companyId);
-           var truck = trucks.Count();
+           var trucks = context.Trucks.Where(x=>x.CompanyId==companyId);
            var kims = trucks.Include(x=>x.Kims).ToList().Where(x=>x.KIM!=null).Count();
+           var truck = trucks.Count();
            var pengajuans = context.PengajuanItems
            .Include(x=>x.Truck).ThenInclude(x=>x.Company)
            .Include(x=>x.Persetujuans).ToList().Where(x=>x.Truck.Company.Id==companyId);

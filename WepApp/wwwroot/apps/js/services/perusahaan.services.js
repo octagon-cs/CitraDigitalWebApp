@@ -21,7 +21,7 @@ function CompanyServices($http, $q, helperServices, AuthService, message) {
         } else {
             $http({
                 method: 'get',
-                url: controller,
+                url: controller + "/GetDashBoard",
                 headers: AuthService.getHeader()
             }).then(
                 (res) => {
@@ -31,7 +31,7 @@ function CompanyServices($http, $q, helperServices, AuthService, message) {
                 },
                 (err) => {
                     def.reject(err.data);
-
+                    message.warning(err.data);
                 }
             );
         }

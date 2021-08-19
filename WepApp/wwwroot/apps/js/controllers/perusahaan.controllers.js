@@ -9,7 +9,7 @@ angular
     .controller('kimsController', kimsController)
     ;
 
-function companyController($scope, ProfilePerusahaanServices, message, $state, AuthService, helperServices) {
+function companyController($scope, ProfilePerusahaanServices, message, $state, AuthService, helperServices, CompanyServices) {
     $scope.hideside = () => {
         
     }
@@ -40,7 +40,7 @@ function companyController($scope, ProfilePerusahaanServices, message, $state, A
     }
 }
 
-function dashboardController($scope, DaftarUserServices, AuthService, helperServices) {
+function dashboardController($scope, CompanyServices, AuthService, helperServices) {
     $scope.datas = [];
     $scope.Title = 'Daftar User';
     // $scope.$on("SendUp", function (evt, data) {
@@ -50,9 +50,10 @@ function dashboardController($scope, DaftarUserServices, AuthService, helperServ
     //     console.log(data);
     // });
     $scope.profile = AuthService.getProfile();
-    DaftarUserServices.get().then(x => {
-        $scope.datas = x;
-    });
+    CompanyServices.get().then(dash=>{
+        $scope.data = dash;
+        console.log($scope.data);
+    })
 }
 
 function profilePerusahaanController($scope, helperServices, message, AuthService, StorageService, ProfilePerusahaanServices) {
@@ -226,11 +227,11 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
                 }
                 console.log($scope.model.letterNumber);
             } else {
-                $scope.model = itemPengajuan
+                $scope.model = itemPengajuan.find(x=>x.id == $stateParams.id);
                 ListPemeriksaanServices.get().then(pemeriksaan=>{
                     $scope.listPemeriksaan = pemeriksaan;
+                    console.log($scope.listPemeriksaan);
                 })
-                console.log($scope.model);
                 // console.log($scope.model);
             }
         })
@@ -269,13 +270,16 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
         }
     }
     $scope.detailPemeriksaan = (item)=>{
-        console.log($scope.listPemeriksaan);
         console.log(item);
         $scope.truck = item;
         $scope.listPemeriksaan.forEach(elementPemeriksaan => {
             elementPemeriksaan.hasilPemeriksaan = item.hasilPemeriksaan.filter(x=>x.itemPemeriksaan.pemeriksaan.id == elementPemeriksaan.id);              
         });
         console.log($scope.listPemeriksaan);
+        $scope.pemeriksaan1 = item.persetujuans.find(x=>x.approvedBy=='Administrator');
+        $scope.pemeriksaan2 = item.persetujuans.find(x=>x.approvedBy=='Approval1');
+        $scope.pemeriksaan3 = item.persetujuans.find(x=>x.approvedBy=='HSE');
+        $scope.pemeriksaan4 = item.persetujuans.find(x=>x.approvedBy=='Manager');
         $("#showPemeriksaan").modal('show');
     }
     $scope.pengajuan=(item)=>{

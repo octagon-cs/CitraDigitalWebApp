@@ -1,6 +1,7 @@
 angular
     .module('admin.controller', [])
     .controller('adminController', adminController)
+    .controller('adminHomeController', adminHomeController)
     .controller('adminDaftarUserController', adminDaftarUserController)
     .controller('adminlistpemeriksaanController', adminlistpemeriksaanController)
     .controller('adminBerkasPengajuanController', adminBerkasPengajuanController)
@@ -10,7 +11,7 @@ angular
     .controller('adminKimController', adminKimController)
     ;
 
-function adminController($scope, $state, AuthService, dashboardServices) {
+function adminController($scope, $state, AuthService) {
     $scope.profile = {};
     
     if (!AuthService.userIsLogin()) {
@@ -19,6 +20,14 @@ function adminController($scope, $state, AuthService, dashboardServices) {
     $scope.logout = () => {
         AuthService.logOff();
     }
+    // dashboardServices.get().then(res=>{
+    //     $scope.data = res
+    //     console.log(res);
+    // })
+}
+
+function adminHomeController($scope, $state, AuthService, dashboardServices) {
+    $scope.profile = {};
     dashboardServices.get().then(x=>{
         console.log(x);
         $scope.data = x;

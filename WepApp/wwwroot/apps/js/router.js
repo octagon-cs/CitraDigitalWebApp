@@ -30,7 +30,7 @@ angular.module("app.router", ["ui.router"])
             .state("home", {
                 url: '/home',
                 parent: 'index',
-                controller: "adminController",
+                controller: "adminHomeController",
                 templateUrl: 'apps/views/admin/home.html'
             })
 

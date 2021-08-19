@@ -12,13 +12,17 @@ angular
 
 function adminController($scope, $state, AuthService, dashboardServices) {
     $scope.profile = {};
-    $scope.data = {};
+    
     if (!AuthService.userIsLogin()) {
         $state.go("login");
     }
     $scope.logout = () => {
         AuthService.logOff();
     }
+    dashboardServices.get().then(x=>{
+        console.log(x);
+        $scope.data = x;
+    })
     // dashboardServices.get().then(res=>{
     //     $scope.data = res
     //     console.log(res);
@@ -65,6 +69,11 @@ function adminlistpemeriksaanController($scope, ListPemeriksaanServices, message
     $scope.model.items = [];
     $scope.tombolSimpan = true;
     ListPemeriksaanServices.get().then(x => {
+        x.forEach(element => {
+            element.items.forEach(detail => {
+                detail.jenisPemeriksaan = detail.jenisPemeriksaan.toString();
+            });   
+        });
         $scope.datas = x;
     })
     $scope.simpan = () => {

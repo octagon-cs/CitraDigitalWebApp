@@ -286,16 +286,19 @@
                     </tbody>
                     <tbody>
                         <tr>
-                            <td colspan="3" rowspan="4" class="align-self-start"><p>Kesimpulan:</p></td>
+                            <td colspan="3" rowspan="5" class="align-self-start"><p>Kesimpulan:</p></td>
                         </tr>
                         <tr>
-                            <td colspan="3">Diperiksa Pertama Tanggal <strong>1 Juli 2021</strong></td>
+                            <td colspan="3">Diperiksa Pertama Tanggal <strong>{{pemeriksaan1.approvedDate | date: 'd MMMM y'}}</strong></td>
                         </tr>
                         <tr>
-                            <td colspan="3">Diperiksa Kedua Tanggal <strong>1 Juli 2021</strong></td>
+                            <td colspan="3">Diperiksa Kedua Tanggal <strong>{{pemeriksaan2.approvedDate | date: 'd MMMM y'}}</strong></td>
                         </tr>
                         <tr>
-                            <td colspan="3">Diperiksa Ketiga Tanggal <strong>1 Juli 2021</strong></td>
+                            <td colspan="3">Diperiksa Ketiga Tanggal <strong>{{pemeriksaan3.approvedDate | date: 'd MMMM y'}}</strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">Diperiksa Keempat Tanggal <strong>{{pemeriksaan4.approvedDate | date: 'd MMMM y'}}</strong></td>
                         </tr>
                     </tbody>
                 </table>

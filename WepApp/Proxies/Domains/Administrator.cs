@@ -168,9 +168,10 @@ namespace WebApp.Proxy.Domains
         public Task<List<PengajuanItem>> GetPersetujuan()
         {
             IEnumerable<PengajuanItem> pengajuanStrore = _context.PengajuanItems
-          .Include(x => x.Persetujuans)
+          .Include(x => x.Persetujuans).ThenInclude(xx=>xx.User)
           .Include(x => x.Truck).ThenInclude(x => x.Kims)
-          .Include(x => x.HasilPemeriksaan)
+          .Include(x => x.HasilPemeriksaan).ThenInclude(x=>x.ItemPemeriksaan)
+            .ThenInclude(x=>x.Pemeriksaan)
           .Include(x => x.Pengajuan).ThenInclude(x => x.Company).AsNoTracking().ToList();
             var results = pengajuanStrore.Where(x => x.NextApprove == UserType.Administrator).ToList();
             return Task.FromResult(results);

@@ -225,7 +225,9 @@ namespace WebApp.Proxy.Domains
             var result = context.Pengajuans.Include(x=>x.Company)
             .Where(x => x.Company.Id == id)
             .Include(x => x.Items).ThenInclude(x=>x.HasilPemeriksaan)
-            .Include(x => x.Items).ThenInclude(x=>x.Persetujuans)
+            .ThenInclude(x=>x.ItemPemeriksaan)
+            .ThenInclude(x=>x.Pemeriksaan)
+            .Include(x => x.Items).ThenInclude(x=>x.Persetujuans).ThenInclude(x=>x.User)
             .Include(x => x.Items).ThenInclude(x=>x.Truck);
             return Task.FromResult(result.AsNoTracking().ToList());
         }

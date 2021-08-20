@@ -194,8 +194,13 @@ namespace WebApp.Proxy.Domains
                 item.Name = model.Name;
                 foreach (var data in model.Items)
                 {
+                   // data. Pemeriksaan = model;
+                  //  _context.Entry(data.Pemeriksaan).State = EntityState.Unchanged;
+                   
                     if (data.Id == 0)
+                   {
                         item.Items.Add(data);
+                   }
                     else
                     {
                         var existingChild = item.Items
@@ -208,16 +213,6 @@ namespace WebApp.Proxy.Domains
                         {
                             item.Items.Add(data);
                         }
-                    }
-                }
-
-                foreach (var data in item.Items.ToList())
-                {
-                    var existingChild = model.Items
-                                               .SingleOrDefault(c => c.Id == data.Id);
-                    if (existingChild == null)
-                    {
-                        item.Items.Remove(data);
                     }
                 }
 

@@ -14205,7 +14205,6 @@ be a descendant of the grid when it is being dragged.
 }
 
 .app-sidebar__user-name, .app-sidebar__user-designation {
-  white-space: nowrap;
   overflow: hidden;
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;

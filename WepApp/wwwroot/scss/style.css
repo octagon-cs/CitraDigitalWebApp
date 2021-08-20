@@ -2,6 +2,10 @@
    new debiture
 */
 
+.app-sidebar__user-name, .app-sidebar__user-designation {
+   white-space:normal;
+}
+
 .form-group1 {
   position: relative;
   margin-bottom: 1.5rem;

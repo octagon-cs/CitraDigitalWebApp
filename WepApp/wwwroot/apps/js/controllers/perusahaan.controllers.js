@@ -117,7 +117,11 @@ function kendaraanController($scope, KendaraanServices, helperServices, message)
     $scope.model.driverIDCard = {};
     $scope.kims = [];
     KendaraanServices.get().then(x => {
-        $scope.datas = x;
+        x.forEach(xx => {
+            xx.driverDateOfBirth = new Date(xx.driverDateOfBirth);
+            xx.assDriverDateOfBirth = new Date(xx.assDriverDateOfBirth);
+            $scope.datas.push(xx);
+        });
     })
     $scope.setFile = (item) => {
         console.log(item);

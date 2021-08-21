@@ -126,6 +126,12 @@ namespace WebApp.Proxy.Domains
         {
             try
             {
+                if (truck.DriverAge.Year > 50)
+                    throw new System.SystemException("Sopir Tidak Boleh Lebih Dari 50 !");
+
+                if (truck.AssDriverAge.Year > 55)
+                    throw new System.SystemException("Asisten Sopir Tidak Boleh Lebih Dari 55 !");
+
                 var dataTruck = await SaveFile(truck);
                 context.Trucks.Add(dataTruck);
                 var result = await context.SaveChangesAsync();
@@ -245,15 +251,24 @@ namespace WebApp.Proxy.Domains
         {
             try
             {
+                if (data.DriverAge.Year > 50)
+                    throw new System.SystemException("Sopir Tidak Boleh Lebih Dari 50 !");
+
+                if (data.AssDriverAge.Year> 55)
+                    throw new System.SystemException("Asisten Sopir Tidak Boleh Lebih Dari 55 !");
+
+
                 var truck = await SaveFile(data);
 
                 var truckExists = context.Trucks.Where(x => x.Id == truck.Id).FirstOrDefault();
                 if (truckExists == null)
-                    throw new System.SystemException("Truck Not Found !");
+                throw new System.SystemException("Truck Not Found !");
 
                 truckExists.AssdriverIDCard = truck.AssdriverIDCard;
                 truckExists.AssdriverLicense = truck.AssdriverLicense;
                 truckExists.AssdriverName = truck.AssdriverName;
+                truckExists.DriverDateOfBirth = truck.DriverDateOfBirth;
+                truckExists.AssDriverDateOfBirth= truck.AssDriverDateOfBirth;
                 truckExists.AssdriverPhoto = truck.AssdriverPhoto;
                 truckExists.DriverIDCard = truck.DriverIDCard;
                 truckExists.DriverLicense = truck.DriverLicense;

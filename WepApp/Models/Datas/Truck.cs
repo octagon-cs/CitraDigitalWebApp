@@ -22,9 +22,18 @@ namespace WebApp.Models
         public string TruckType { get; set; }
         public string TruckPhoto { get; set; }
         public string DriverName { get; set; }
+        public DateTime? DriverDateOfBirth { get; set; }
+        public DateTime? AssDriverDateOfBirth { get; set; }
 
         [NotMapped]
         public DataDocument DriverIDCard { get; set; }
+
+
+        [NotMapped]
+        public Age DriverAge => new Age(DriverDateOfBirth);
+
+        [NotMapped]
+        public Age AssDriverAge => new Age(AssDriverDateOfBirth);
 
 
         [JsonIgnore]

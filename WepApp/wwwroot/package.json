@@ -22,6 +22,7 @@
     "bootstrap-datepicker": "1.9.0",
     "datatables.net-bs4": "^1.10.19",
     "font-awesome": "^4.7.0",
-    "swangular": "^1.4.3"
+    "swangular": "^1.4.3",
+    "xlsx": "^0.17.1"
   }
 }

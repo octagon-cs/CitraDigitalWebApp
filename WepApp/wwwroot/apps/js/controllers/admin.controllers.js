@@ -13,7 +13,7 @@ angular
 
 function adminController($scope, $state, AuthService) {
     $scope.profile = {};
-    
+
     if (!AuthService.userIsLogin()) {
         $state.go("login");
     }
@@ -28,7 +28,7 @@ function adminController($scope, $state, AuthService) {
 
 function adminHomeController($scope, $state, AuthService, dashboardServices) {
     $scope.profile = {};
-    dashboardServices.get().then(x=>{
+    dashboardServices.get().then(x => {
         console.log(x);
         $scope.data = x;
     })
@@ -66,8 +66,8 @@ function adminDaftarUserController($scope, DaftarUserServices, helperServices, m
             })
         }
     }
-    $scope.checkUser=(item)=>{
-        if(item.indexOf(' ') >= 0){
+    $scope.checkUser = (item) => {
+        if (item.indexOf(' ') >= 0) {
             message.error("Penggunaan 'space' tidak diijinkan!!!", "OK")
         }
     }
@@ -86,7 +86,7 @@ function adminlistpemeriksaanController($scope, ListPemeriksaanServices, message
         x.forEach(element => {
             element.items.forEach(detail => {
                 detail.jenisPemeriksaan = detail.jenisPemeriksaan.toString();
-            });   
+            });
         });
         $scope.datas = x;
     })
@@ -128,6 +128,11 @@ function adminlistpemeriksaanController($scope, ListPemeriksaanServices, message
         $scope.tombolSimpan = true;
     }
 
+    $scope.exportExcel = () => {
+        var wb = XLSX.utils.table_to_book(document.getElementById('dataTable'));
+        XLSX.writeFile(wb, "export.xlsx");
+    }
+
 }
 
 function adminBerkasPengajuanController($scope, PersetujuanKimServices, message, $stateParams, helperServices, $sce, ListPemeriksaanServices, approvalServices) {
@@ -141,7 +146,7 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
     $scope.sim = {};
     $scope.kir = {};
     PersetujuanKimServices.get().then(x => {
-        $scope.datas = x;
+        $scope.datas = x.filter(x=>x.status != "Complete");
 
         ListPemeriksaanServices.get().then(res => {
             if ($stateParams.id) {
@@ -187,18 +192,18 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
                 message.dialogmessage("Proses Berhasil").then(x => {
                     var index = $scope.datas.indexOf($scope.model);
                     $scope.datas.splice(index, 1);
-                    document.location.href="/#!/index/berkaspengajuan";
+                    document.location.href = "/#!/index/berkaspengajuan";
                 })
             })
         });
     }
-    $scope.reject = ()=>{
+    $scope.reject = () => {
         message.dialog("Pengajuan akan di reject, \n Yakin??").then(x => {
             approvalServices.reject($scope.model).then(res => {
                 message.dialogmessage("Proses Berhasil").then(x => {
                     var index = $scope.datas.indexOf($scope.model);
                     $scope.datas.splice(index, 1);
-                    document.location.href="/#!/index/berkaspengajuan";
+                    document.location.href = "/#!/index/berkaspengajuan";
                 })
             })
         });
@@ -211,7 +216,7 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
         $scope.setPhotoDriver = "";
         $scope.setAssPhotoDriver = "";
         $scope.setKeurdllajr = "";
-        $scope.setStnk ="";
+        $scope.setStnk = "";
         if (set == 'KTP') {
             $scope.ktpDriver = $sce.trustAsResourceUrl(helperServices.url + $scope.model.truck.driverIDCard.document);
             $scope.setKtpDriver = $scope.model.truck.driverIDCard.document.split('.');
@@ -279,10 +284,12 @@ function adminpersetujuankimController($scope, PersetujuanKimServices, message) 
     $scope.Title = 'Persetujuan KIM';
     PersetujuanKimServices.get().then(x => {
         $scope.datas = x;
+        console.log(x);
     })
     $scope.setDataKim = (item) => {
         $scope.model.id = 0;
         $scope.model.pengajuan = item.id;
+        $scope.model.company = item.pengajuan.company;
         $scope.model.truck = item.truck;
     }
     $scope.save = (item) => {
@@ -304,12 +311,14 @@ function adminkim($scope) {
 
 }
 
-function adminKimController($scope, adminKimsServices, message) {
+function adminKimController($scope, adminKimsServices, message, helperServices) {
+    $scope.url = helperServices.url;
     $scope.datas = [];
     $scope.model = {};
     $scope.tanggalCreate = new Date();
     adminKimsServices.get().then(res => {
         $scope.datas = res;
+        console.log($scope.datas);
     })
     $scope.print = (item) => {
         item.beginDate = new Date(item.beginDate);
@@ -320,6 +329,36 @@ function adminKimController($scope, adminKimsServices, message) {
         }, 100);
     }
     $scope.Title = 'KIM'
+
+    $scope.detail = (item)=>{
+        $scope.showDetail = item;
+    }
+
+    $scope.exportToExcel =()=>{
+        var data = [];
+        $scope.datas.forEach((element, key) => {
+            var item = {
+                No: key+1,
+                KIMNumber: element.kimNumber,
+                Perusahaan: element.truck.company.name,
+                NoPolisi: element.truck.plateNumber,
+                Driver: element.truck.driverName,
+                AssistantDriver: element.truck.assdriverName,
+                JenisProduk: element.truck.truckType,
+                BerlakuDari: element.beginDate,
+                BerlakuSampai: element.endDate
+            };
+            data.push(angular.copy(item));
+        });
+        var ws = XLSX.utils.json_to_sheet(data);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Presidents");
+        XLSX.writeFile(wb, "sheetjs.xlsx");
+    }
+
+    $scope.kembali = ()=>{
+        $scope.showDetail = undefined;
+    }
 
 }
 

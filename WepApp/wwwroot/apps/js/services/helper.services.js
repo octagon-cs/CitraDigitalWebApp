@@ -7,7 +7,8 @@ function helperServices() {
     service.url = "";
     //service.url = "http://192.168.1.2/";
     service.jenisPengajuan = ['Baru', 'Perpanjangan'];
-    service.roles = ['Company', 'Approval1', 'HSE', 'Manager', 'Gate'];
+    // service.roles = [{role:'Company', nama: 'Company'}, {role:'Approval1', nama: 'Checker'}, {role:'HSE', nama: 'HSSE'}, {role:'Manager', nama:'Manager'}, {role:'Gate', nama: 'Gate'}];
+    service.roles = [{role:'Company', nama: 'Company'}, {role:'Approval1', nama: 'Checker'}, {role:'HSE', nama: 'HSSE'}, {role:'Manager', nama:'Manager'}];
     function toRoman(num) {
         if (typeof num !== 'number')
             return false;

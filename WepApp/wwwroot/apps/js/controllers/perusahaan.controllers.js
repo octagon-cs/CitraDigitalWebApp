@@ -215,7 +215,6 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
             $(".truck").select2();
         })
         $scope.kendaraan = x;
-        console.log(x[0]);
         // var test = atob(x[0].fileAssDriverLicense.data);
         // console.log(test);
         $scope.model.company = { id: $scope.kendaraan[0].companyId };
@@ -223,18 +222,18 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
             if ($stateParams.id == null) {
                 var d = new Date();
                 if (itemPengajuan.length == 0) {
-                    $scope.model.letterNumber = "1/" + $scope.kendaraan[0].company.name.toUpperCase().replace(/\s/g, '') + "/" + helperServices.toRoman(d.getDate()) + "/" + d.getFullYear();
+                    $scope.model.letterNumber = "1/" + $scope.kendaraan[0].company.name.toUpperCase().replace(/\s/g, '') + "/" + helperServices.toRoman(d.getMonth()) + "/" + d.getFullYear();
                 } else {
                     var itemnomor = itemPengajuan[itemPengajuan.length - 1];
                     var arraynomor = itemnomor.letterNumber.split('/');
-                    $scope.model.letterNumber = (parseInt(arraynomor[0]) + 1) + "/" + $scope.kendaraan[0].company.name.toUpperCase().replace(/\s/g, '') + "/" + helperServices.toRoman(d.getDate()) + "/" + d.getFullYear()
+                    $scope.model.letterNumber = (parseInt(arraynomor[0]) + 1) + "/" + $scope.kendaraan[0].company.name.toUpperCase().replace(/\s/g, '') + "/" + helperServices.toRoman(d.getMonth()) + "/" + d.getFullYear()
+                    console.log($scope.model);
                 }
-                console.log($scope.model.letterNumber);
             } else {
                 $scope.model = itemPengajuan.find(x=>x.id == $stateParams.id);
                 ListPemeriksaanServices.get().then(pemeriksaan=>{
                     $scope.listPemeriksaan = pemeriksaan;
-                    console.log($scope.listPemeriksaan);
+                    console.log($scope.model);
                 })
                 // console.log($scope.model);
             }
@@ -242,16 +241,20 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
     })
     $scope.setItem = (item) => {
         if ($stateParams.id == null) {
-            var itemPengajuan = { truck: item, }
-            $scope.model.items.push(itemPengajuan);
-            console.log($scope.model);
+            $scope.$applyAsync(x=>{
+                var itemPengajuan = { truck: item, }
+                $scope.model.items.push(itemPengajuan);
+                console.log($scope.model);
+            })
         } else {
-            item.attackStatus = item.attackStatus;
-            item.pengajuanId;
-            var truck = {};
-            truck.truck = item;
-            $scope.model.items.push(angular.copy(truck));
-            console.log($scope.model);
+            $scope.$applyAsync(x=>{
+                item.attackStatus = item.attackStatus;
+                item.pengajuanId;
+                var truck = {};
+                truck.truck = item;
+                $scope.model.items.push(angular.copy(truck));
+                console.log($scope.model);
+            })
         }
     }
     $scope.deleteItem = (item) => {
@@ -261,17 +264,19 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
     }
     $scope.simpan = () => {
         console.log($scope.model);
-        if ($scope.model.id) {
-            PengajuanServices.put($scope.model).then(x => {
-                message.info('Berhasil');
-                $state.go("pengajuan");
-            })
-        } else {
-            PengajuanServices.post($scope.model).then(x => {
-                message.info('Berhasil');
-                $state.go("pengajuan");
-            })
-        }
+        message.dialogmessage("Pastikan berkas kendaraan anda telah lengkap. Yakin mengajukan berkas ??", "Ya", "Tidak").then(x=>{
+            if ($scope.model.id) {
+                PengajuanServices.put($scope.model).then(x => {
+                    message.info('Berhasil');
+                    $state.go("pengajuan");
+                })
+            } else {
+                PengajuanServices.post($scope.model).then(x => {
+                    message.info('Berhasil');
+                    $state.go("pengajuan");
+                })
+            }
+        })
     }
     $scope.detailPemeriksaan = (item)=>{
         console.log(item);
@@ -287,7 +292,7 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
         $("#showPemeriksaan").modal('show');
     }
     $scope.pengajuan=(item)=>{
-        message.dialogmessage("Anda Yakin?", "Ya", "Tidak").then(x=>{
+        message.dialogmessage("Pastikan anda telah melengkapi berkas atau perlengkapan yang tidak 'Valid', Yakin mengajukan ulang berkas ??", "Ya", "Tidak").then(x=>{
             approvalServices.post(item).then(res=>{
                 message.info("Berhasil");
                 $state.go("pengajuan");

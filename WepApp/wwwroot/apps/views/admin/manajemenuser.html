@@ -16,7 +16,7 @@
                     <form ng-submit="save(model)">
                         <label for="iduser" class="control-label">Username</label>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" ng-model="model.userName" required
+                            <input type="text" class="form-control" ng-model="model.userName" ng-change="checkUser(model.userName)" ng-trim="true" required
                                 placeholder="Username" aria-label="Default" aria-describedby="inputGroup-sizing-default"
                                 autofocus>
                         </div>
@@ -44,7 +44,7 @@
                         </div>
                         <label ng-if="simpan" for="">Sebagai</label>
                         <div class="input-group sm-3" ng-if="simpan">
-                            <select ui-select2 class="form-control" ng-options="item as item for item in roles"
+                            <select ui-select2 class="form-control" ng-options="item as item.nama for item in roles"
                                 ng-model="model.roles">
                             </select>
                         </div><br>
@@ -86,7 +86,7 @@
                                     <td>{{item.userName}}</td>
                                     <td>{{item.firstName}} {{item.lastName}}</td>
                                     <td>{{item.email}}</td>
-                                    <td>{{item.userRoles[0].role.name}}</td>
+                                    <td>{{item.userRoles[0].role.name=='Approval1' ? 'Checker' : item.userRoles[0].role.name=='HSE' ? 'HSSE' : item.userRoles[0].role.name}}</td>
                                     <td>
                                         <a class="btn btn-warning btn-sm" ng-click="edit(item)"><i
                                                 class="fa fa-edit"></i> </a>

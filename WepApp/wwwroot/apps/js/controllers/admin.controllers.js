@@ -66,6 +66,11 @@ function adminDaftarUserController($scope, DaftarUserServices, helperServices, m
             })
         }
     }
+    $scope.checkUser=(item)=>{
+        if(item.indexOf(' ') >= 0){
+            message.error("Penggunaan 'space' tidak diijinkan!!!", "OK")
+        }
+    }
 }
 
 function adminlistpemeriksaanController($scope, ListPemeriksaanServices, message) {
@@ -177,7 +182,7 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
         $scope.model.truck = item.truck;
     }
     $scope.Proses = () => {
-        message.dialogmessage("Anda Yakin").then(x => {
+        message.dialogmessage("Yakin semua berkas telah Valid??", "YA", "TIDAK").then(x => {
             approvalServices.post($scope.model).then(res => {
                 message.dialogmessage("Proses Berhasil").then(x => {
                     var index = $scope.datas.indexOf($scope.model);
@@ -188,7 +193,7 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
         });
     }
     $scope.reject = ()=>{
-        message.dialog("Anda Yakin").then(x => {
+        message.dialog("Pengajuan akan di reject, \n Yakin??").then(x => {
             approvalServices.reject($scope.model).then(res => {
                 message.dialogmessage("Proses Berhasil").then(x => {
                     var index = $scope.datas.indexOf($scope.model);
@@ -199,16 +204,14 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
         });
     }
     $scope.detail = (item, set) => {
-        $scope.ktpDriver = {};
-        $scope.setKtpDriver = undefined;
-        $scope.simDriver = {};
-        $scope.setSimDriver = undefined;
-        $scope.photoDriver = {};
-        $scope.setPhotoDriver = undefined;
-        $scope.keurdllajr ={};
-        $scope.setKeurdllajr = undefined;
-        $scope.stnk = {};
-        $scope.setStnk =undefined;
+        $scope.setKtpDriver = "";
+        $scope.setAssKtpDriver = "";
+        $scope.setSimDriver = "";
+        $scope.setAssSimDriver = "";
+        $scope.setPhotoDriver = "";
+        $scope.setAssPhotoDriver = "";
+        $scope.setKeurdllajr = "";
+        $scope.setStnk ="";
         if (set == 'KTP') {
             $scope.ktpDriver = $sce.trustAsResourceUrl(helperServices.url + $scope.model.truck.driverIDCard.document);
             $scope.setKtpDriver = $scope.model.truck.driverIDCard.document.split('.');

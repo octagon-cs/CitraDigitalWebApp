@@ -342,7 +342,7 @@
                 </button>
             </div>
             <div class="modal-body" style="height: 90vh;">
-                <div class="form-group" ng-if="setKtpDriver">
+                <div class="form-group" ng-hide="setKtpDriver==''">
                     <label class="control-label">KTP DRIVER</label>
                     <div class="input-group mb-3">
                         <object ng-if="setKtpDriver=='pdf'" type="application/pdf" data="{{ktpDriver}}"
@@ -352,7 +352,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group" ng-if="setAssKtpDriver">
+                <div class="form-group" ng-hide="setAssKtpDriver==''">
                     <label class="control-label">KTP Assistant DRIVER</label>
                     <div class="input-group mb-3">
                         <object ng-if="setAssKtpDriver=='pdf'" type="application/pdf" data="{{ktpAssDriver}}"
@@ -362,7 +362,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group" ng-if="setSimDriver">
+                <div class="form-group" ng-hide="setSimDriver==''">
                     <label class="control-label">SIM DRIVER</label>
                     <div class="input-group mb-3">
                         <object ng-if="setSimDriver=='pdf'" type="application/pdf" data="{{simDriver}}"
@@ -372,7 +372,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group" ng-if="setAssSimDriver">
+                <div class="form-group" ng-hide="setAssSimDriver==''">
                     <label class="control-label">SIM Assistant DRIVER</label>
                     <div class="input-group mb-3">
                         <object ng-if="setAssSimDriver=='pdf'" type="application/pdf" data="{{simAssDriver}}"
@@ -382,7 +382,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group" ng-if="setPhotoDriver">
+                <div class="form-group" ng-hide="setPhotoDriver==''">
                     <label class="control-label">Photo DRIVER</label>
                     <div class="input-group mb-3">
                         <object ng-if="setPhotoDriver=='pdf'" type="application/pdf" data="{{photoDriver}}"
@@ -392,7 +392,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group" ng-if="setAssPhotoDriver">
+                <div class="form-group" ng-hide="setAssPhotoDriver==''">
                     <label class="control-label">Photo Assistant DRIVER</label>
                     <div class="input-group mb-3">
                         <object ng-if="setAssPhotoDriver=='pdf'" type="application/pdf" data="{{photoAssDriver}}"
@@ -402,7 +402,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group" ng-if="setKeurdllajr">
+                <div class="form-group" ng-hide="setKeurdllajr==''">
                     <label class="control-label">KEURDLLAJR</label>
                     <div class="input-group mb-3">
                         <object ng-if="setKeurdllajr=='pdf'" type="application/pdf" data="{{keurdllajr}}"
@@ -412,7 +412,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group" ng-if="setStnk">
+                <div class="form-group" ng-hide="setStnk==''">
                     <label class="control-label">STNK</label>
                     <div class="input-group mb-3">
                         <object ng-if="setStnk=='pdf'" type="application/pdf" data="{{stnk}}" style="height:500px"

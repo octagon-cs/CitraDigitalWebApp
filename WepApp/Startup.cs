@@ -59,6 +59,7 @@ namespace WebApp
 
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IEmailService, EmailService>();
             services.AddSwaggerDocument(config =>
             {
                 config.PostProcess = document =>

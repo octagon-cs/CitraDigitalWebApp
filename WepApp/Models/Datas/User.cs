@@ -28,10 +28,11 @@ namespace WebApp.Models
             {
                 if (UserRoles != null && UserRoles.Count() > 0)
                 {
-                    Role role = UserRoles.FirstOrDefault().Role;
-                    return (UserType)Enum.Parse(typeof(UserType), role.Name);
+                    UserRole userrole = UserRoles.FirstOrDefault();
+                    if(userrole!=null && userrole.Role!=null){
+                        return (UserType)Enum.Parse(typeof(UserType), userrole.Role.Name);
+                    }
                 }
-
                 return UserType.None;
             }
         }

@@ -57,7 +57,7 @@ namespace WebApp.Controllers
                     item.Password=string.Empty;
                 }
 
-                return Ok(listUsers);
+                return Ok(response);
             }
             catch (System.Exception ex)
             {

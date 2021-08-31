@@ -190,7 +190,7 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
         message.dialogmessage("Yakin semua berkas telah Valid??", "YA", "TIDAK").then(x => {
             approvalServices.post($scope.model).then(res => {
                 message.dialogmessage("Proses Berhasil").then(x => {
-                    var index = $scope.datas.indexOf($scope.model);
+                    document.location.href = "/#!/index/berkaspengajuan";
                     document.location.reload();
                 })
             })
@@ -200,7 +200,7 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
         message.dialog("Pengajuan akan di reject, \n Yakin??").then(x => {
             approvalServices.reject($scope.model).then(res => {
                 message.dialogmessage("Proses Berhasil").then(x => {
-                    var index = $scope.datas.indexOf($scope.model);
+                    document.location.href = "/#!/index/berkaspengajuan";
                     document.location.reload();
                 })
             })
@@ -299,7 +299,9 @@ function adminpersetujuankimController($scope, PersetujuanKimServices, message) 
         console.log(data);
         message.dialogmessage("Anda Yakin").then(x => {
             PersetujuanKimServices.post(data).then(res => {
-                message.info("proses Berhasil");
+                message.dialog("proses Berhasil").then(x=>{
+                    document.location.reload();
+                });
             })
         });
     }

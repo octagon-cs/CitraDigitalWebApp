@@ -23,7 +23,7 @@ function approvalServices($http, $q, helperServices, AuthService, message) {
                 headers: AuthService.getHeader()
             }).then(
                 (res) => {
-                    service.instance = true;
+                    // service.instance = true;
                     service.data = res.data;
                     def.resolve(res.data);
                 },
@@ -96,7 +96,7 @@ function pengajuanBerkasController($http, $q, helperServices, AuthService, messa
                 headers: AuthService.getHeader()
             }).then(
                 (res) => {
-                    service.instance = true;
+                    // service.instance = true;
                     service.data = res.data;
                     def.resolve(res.data);
                 },

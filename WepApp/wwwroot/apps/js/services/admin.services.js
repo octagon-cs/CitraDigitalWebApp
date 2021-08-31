@@ -27,7 +27,7 @@ function dashboardServices($http, $q, StorageService, $state, helperServices, Au
                 headers: AuthService.getHeader()
             }).then(
                 (res) => {
-                    service.instance = true;
+                    // service.instance = true;
                     service.data = res.data;
                     def.resolve(res.data);
                 },
@@ -61,7 +61,7 @@ function DaftarUserServices($http, $q, StorageService, $state, helperServices, A
                 headers: AuthService.getHeader()
             }).then(
                 (res) => {
-                    service.instance = true;
+                    // service.instance = true;
                     service.data = res.data;
                     def.resolve(res.data);
                 },
@@ -140,7 +140,7 @@ function ListPemeriksaanServices($http, $q, StorageService, $state, helperServic
                 headers: AuthService.getHeader()
             }).then(
                 (res) => {
-                    service.instance = true;
+                    // service.instance = true;
                     service.data = res.data;
                     def.resolve(res.data);
                 },
@@ -218,7 +218,7 @@ function AdministratorServices($http, $q, StorageService, $state, helperServices
                 headers: AuthService.getHeader()
             }).then(
                 (res) => {
-                    service.instance = true;
+                    // service.instance = true;
                     service.data = res.data;
                     def.resolve(res.data);
                 },
@@ -296,7 +296,7 @@ function PersetujuanKimServices($http, $q, StorageService, $state, helperService
                 headers: AuthService.getHeader()
             }).then(
                 (res) => {
-                    service.instance = true;
+                    // service.instance = true;
                     service.data = res.data;
                     def.resolve(res.data);
                 },

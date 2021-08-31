@@ -53,7 +53,7 @@ namespace WebApp.Controllers
                 
                 foreach (var item in response)
                 {
-                    listUsers.Add(new {FirstName=item.FirstName, UserName=item.UserName, Email=item.Email,item.LastName, item.Status, item.UserRoles });
+                    listUsers.Add(new {FirstName=item.FirstName, Username=item.UserName, Email=item.Email,item.LastName, item.Status, item.UserRoles });
                 }
 
                 return Ok(listUsers);

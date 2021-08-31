@@ -283,7 +283,8 @@ function adminpersetujuankimController($scope, PersetujuanKimServices, message) 
     $scope.model = {};
     $scope.Title = 'Persetujuan KIM';
     PersetujuanKimServices.get().then(x => {
-        $scope.datas = x;
+        $scope.datas = x.filter(x=>x.status == "Complete");
+        // $scope.datas = x;
         console.log(x);
     })
     $scope.setDataKim = (item) => {

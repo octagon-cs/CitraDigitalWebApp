@@ -77,9 +77,6 @@
                                 <th>Berkas Truk</th>
                                 <th>Berkas Supir</th>
                                 <th>Berkas Kernet</th>
-                                <th>Jenis Pengajuan</th>
-                                <th>Status</th>
-                                <th><i class="fa fa-gear"></i></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -141,7 +138,7 @@
                                     <ol>
                                         <li><a href="{{url+showDetail.truck.driverIDCard.document}}" target="_blank">KTP</a>
                                         <li><a href="{{url+showDetail.truck.driverLicense.document}}" target="_blank">SIM</a>
-                                        <li><a href="{{url+showDetail.truck.driverPhoto.document}}" target="_blank">Photo</a>
+                                        <li><a href="{{url+showDetail.truck.driverPhoto}}" target="_blank">Photo</a>
                                     </ol>
                                 </td>
                                 <td>
@@ -150,7 +147,7 @@
                                                 target="_blank">KTP</a>
                                         <li><a href="{{url+showDetail.truck.assdriverLicense.document}}"
                                                 target="_blank">SIM</a>
-                                        <li><a href="{{url+showDetail.truck.assdriverPhoto.document}}"
+                                        <li><a href="{{url+showDetail.truck.assdriverPhoto}}"
                                                 target="_blank">Photo</a>
                                     </ol>
                                 </td>
@@ -160,14 +157,10 @@
                                             class="fa fa-trash-o"></i></a>
                                 </td>
                             </tr>
-
                         </tbody>
                         <!-- <?php endforeach; ?> -->
                     </table>
                 </div>
-            </div>
-            <div class="card-body">
-                <button type="submit" class="btn btn-primary btn-sm pull-right">Simpan</button>
             </div>
         </div>
     </div>

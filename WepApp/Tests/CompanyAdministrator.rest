@@ -1,7 +1,8 @@
-@controller=http://localhost/api/companyadministrator
+//@controller=http://localhost/api/companyadministrator
+@controller=https://kimprt.com/api/companyadministrator
 //@controller=https://localhost:5001/api/companyadministrator
 //@controller=https://localhost:44326/api/companyadministrator
-@auth=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUiLCJuYmYiOjE2Mjg4MDIxMjUsImV4cCI6MTYyOTQwNjkyNSwiaWF0IjoxNjI4ODAyMTI1fQ.OVAiBRQS2zccv_7BSSwcXJgSlEN4CqHaqhxM73JzKRs
+@auth=bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjgiLCJuYmYiOjE2MzAzODUxMTQsImV4cCI6MTYzMDk4OTkxNCwiaWF0IjoxNjMwMzg1MTE0fQ.7BrReAP-XBxbe79fo4ZDjW63uPlPncL0VgNfr7xgt6o
 
 POST {{controller}}/createprofile HTTP/1.1
 Content-Type: application/json

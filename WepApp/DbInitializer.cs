@@ -43,6 +43,14 @@ namespace WebApp
                         Name = "KEURDLLAJR",
                         Items = new List<Models.ItemPemeriksaan> { new Models.ItemPemeriksaan { Kelengkapan = "KEURDLLAJR", Penjelasan = "KEUR ", JenisPemeriksaan = Models.JenisPemeriksaan.Dokumen } }
                     });
+                    dataContext.Pemeriksaans.Add(new Models.Pemeriksaan
+                    {
+                        Name = "Surat Tera Metrologi",
+                        Items = new List<Models.ItemPemeriksaan> { new Models.ItemPemeriksaan { Kelengkapan = "Surat Tera Metrologi", Penjelasan = "TERA ", JenisPemeriksaan = Models.JenisPemeriksaan.Dokumen } }
+                    });
+
+
+                    
 
                     dataContext.SaveChanges();
                 }

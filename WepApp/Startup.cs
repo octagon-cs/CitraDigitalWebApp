@@ -55,6 +55,7 @@ namespace WebApp
 
             // configure strongly typed settings object
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
 
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();

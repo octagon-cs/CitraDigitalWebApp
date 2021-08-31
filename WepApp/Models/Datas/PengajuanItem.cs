@@ -24,17 +24,11 @@ namespace WebApp.Models
         {
             get
             {
-                if(Persetujuans.Where(xxx=>xxx.ApprovedBy== UserType.Administrator).FirstOrDefault()!=null){
-                    return StatusPersetujuan.Complete;
+                
+                var lastApproval = Persetujuans.Last();
+                if(lastApproval!=null){
+                    return lastApproval.StatusPersetujuan;
                 }
-
-                if(Persetujuans.Where(xxx=>xxx.ApprovedBy== UserType.Manager).FirstOrDefault()!=null){
-                    return StatusPersetujuan.Approved;
-                }
-
-                if (Persetujuans.Where(xx => xx.StatusPersetujuan == StatusPersetujuan.Reject).Count() > 0)
-                    return StatusPersetujuan.Reject;
-
                 return StatusPersetujuan.Proccess;
             }
         }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace WebApp.Services
 {
@@ -14,9 +15,13 @@ namespace WebApp.Services
 
 
 
-    public class EmailService
+    public class EmailService : IEmailService
     {
-
+        private readonly MailSettings _mailSettings;
+        public EmailService(IOptions<MailSettings> mailSettings)
+        {
+            _mailSettings = mailSettings.Value;
+        }
     }
 
     public class MailRequest

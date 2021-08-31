@@ -191,8 +191,7 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
             approvalServices.post($scope.model).then(res => {
                 message.dialogmessage("Proses Berhasil").then(x => {
                     var index = $scope.datas.indexOf($scope.model);
-                    $scope.datas.splice(index, 1);
-                    document.location.href = "/#!/index/berkaspengajuan";
+                    document.location.reload();
                 })
             })
         });
@@ -202,8 +201,7 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
             approvalServices.reject($scope.model).then(res => {
                 message.dialogmessage("Proses Berhasil").then(x => {
                     var index = $scope.datas.indexOf($scope.model);
-                    $scope.datas.splice(index, 1);
-                    document.location.href = "/#!/index/berkaspengajuan";
+                    document.location.reload();
                 })
             })
         });

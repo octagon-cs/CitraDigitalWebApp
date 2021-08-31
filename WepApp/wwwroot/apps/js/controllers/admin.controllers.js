@@ -281,7 +281,12 @@ function adminpersetujuankimController($scope, PersetujuanKimServices, message) 
     $scope.model = {};
     $scope.Title = 'Persetujuan KIM';
     PersetujuanKimServices.get().then(x => {
-        $scope.datas = x.filter(x=>x.status == "Complete");
+        x.forEach(element => {
+            var lastApproval = element.persetujuans[element.persetujuans.length-1];  
+            if(element.nextApprove == "Administrator" && lastApproval.approvedBy =="Manager"){
+                $scope.datas.push(element);
+            }
+        });
         // $scope.datas = x;
         console.log(x);
     })

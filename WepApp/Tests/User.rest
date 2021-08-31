@@ -1,7 +1,7 @@
 //@controller=http://localhost/api/users
-//@controller=https://localhost:5001/api/users
+@controller=https://localhost:5001/api/users
 //@controller=https://localhost:44326/api/users
-@controller=https://kimprt.com/api/users
+//@controller=https://kimprt.com/api/users
 
 @auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2MzAzNzI4MDQsImV4cCI6MTYzMDk3NzYwNCwiaWF0IjoxNjMwMzcyODA0fQ.KUuqtkfAWKc393sisEUJFBMkzgg1peDEQ-jrmp7t8zc
 

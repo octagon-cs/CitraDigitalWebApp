@@ -1,4 +1,5 @@
- @controller=https://localhost:5001/api/administrator
+ @controller=https://kimprt.com/api/administrator
+ //@controller=https://localhost:5001/api/administrator
 //@controller=https://localhost:44326/api/administrator
 @auth= bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJuYmYiOjE2MzAzNzI4MDQsImV4cCI6MTYzMDk3NzYwNCwiaWF0IjoxNjMwMzcyODA0fQ.KUuqtkfAWKc393sisEUJFBMkzgg1peDEQ-jrmp7t8zc
 POST {{controller}}/createuser/Company HTTP/1.1

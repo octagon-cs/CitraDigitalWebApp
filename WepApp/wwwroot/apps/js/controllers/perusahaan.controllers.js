@@ -19,17 +19,20 @@ function companyController($scope, ProfilePerusahaanServices, message, $state, A
     } else {
         $scope.profile = AuthService.getProfile();
         if (!$scope.profile) {
-            ProfilePerusahaanServices.get().then(x => {
-                // $scope.$emit("SendDown", "true");
-                $scope.profile = x;
-                $scope.profile.logo = $scope.profile.logo;
-                AuthService.addProfile($scope.profile);
-                console.log($scope.profile);
-            }, (err) => {
-                message.dialogmessage("Mohon isi Profile terlebih dahulu").then(x => {
-                    $state.go("profileperusahaan");
-                });
-            })
+            setTimeout(() => {
+                ProfilePerusahaanServices.get().then(x => {
+                    // $scope.$emit("SendDown", "true");
+                    $scope.profile = x;
+                    $scope.profile.logo = $scope.profile.logo;
+                    AuthService.addProfile($scope.profile);
+                    console.log($scope.profile);
+                    
+                }, (err) => {
+                    message.dialogmessage("Mohon isi Profile terlebih dahulu").then(x => {
+                        $state.go("profileperusahaan");
+                    });
+                })
+            }, 500);
         }else{
             console.log($scope.profile);
         }

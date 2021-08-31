@@ -59,8 +59,8 @@ namespace WebApp.Services
 
             try
             {
-                var user = context.Users.Where(x => x.UserName == model.UserName && x.Password
-                == MD5Hash.ToMD5Hash(model.Password)).Include(x => x.UserRoles).ThenInclude(x => x.Role).SingleOrDefault();
+                var hastPassword = MD5Hash.ToMD5Hash(model.Password);
+                var user = context.Users.Where(x => x.UserName == model.UserName && x.Password == hastPassword).Include(x => x.UserRoles).ThenInclude(x => x.Role).SingleOrDefault();
 
                 if (user == null)
                 {

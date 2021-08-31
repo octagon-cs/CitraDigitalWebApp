@@ -54,7 +54,7 @@ namespace WebApp.Models
                     {
                         foreach (var item in hasil)
                         {
-                            var itemHasil = itemPengajuan.HasilPemeriksaan.Where(x => x.ItemPemeriksaanId == item.ItemPemeriksaanId && x.ItemPengajuanId == id).FirstOrDefault();
+                            var itemHasil = itemPengajuan.HasilPemeriksaan.Where(x => x.Id == item.Id).FirstOrDefault();
                             if (itemHasil == null)
                             {
                                 context.Entry(item.ItemPemeriksaan).State = EntityState.Unchanged;

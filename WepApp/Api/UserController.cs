@@ -48,6 +48,11 @@ namespace WebApp.Controllers
             try
             {
                 var response = await _userService.GetAll();
+                foreach (var item in response)
+                {
+                    item.Password=string.Empty;
+                }
+
                 return Ok(response);
             }
             catch (System.Exception ex)

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Models;
@@ -48,12 +49,14 @@ namespace WebApp.Controllers
             try
             {
                 var response = await _userService.GetAll();
+                var listUsers = new List<object>();
+                
                 foreach (var item in response)
                 {
-                    item.Password=string.Empty;
+                    listUsers.Add(new {FirstName=item.FirstName, Username=item.UserName, Email=item.Email,item.LastName, item.Status, item.UserRoles });
                 }
 
-                return Ok(response);
+                return Ok(listUsers);
             }
             catch (System.Exception ex)
             {

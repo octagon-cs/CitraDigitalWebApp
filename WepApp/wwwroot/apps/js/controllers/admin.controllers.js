@@ -146,7 +146,17 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
     $scope.sim = {};
     $scope.kir = {};
     PersetujuanKimServices.get().then(x => {
-        $scope.datas = x.filter(x=>x.status != "Complete");
+        x.forEach(element => {
+            if(element.persetujuans != null && element.persetujuans.length >0){
+                var lastApproval = element.persetujuans[element.persetujuans.length-1];  
+                if((element.nextApprove == "Administrator" && lastApproval.statusPersetujuan =="Fixed")){
+                    $scope.datas.push(element);
+                }
+            }else{
+                $scope.datas.push(element);
+            }
+        });
+        // $scope.datas = x.filter(x=>x.status != "Complete");
 
         ListPemeriksaanServices.get().then(res => {
             if ($stateParams.id) {

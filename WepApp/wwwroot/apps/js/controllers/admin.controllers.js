@@ -146,7 +146,17 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
     $scope.sim = {};
     $scope.kir = {};
     PersetujuanKimServices.get().then(x => {
-        $scope.datas = x.filter(x=>x.status != "Complete");
+        x.forEach(element => {
+            if(element.persetujuans != null && element.persetujuans.length >0){
+                var lastApproval = element.persetujuans[element.persetujuans.length-1];  
+                if((element.nextApprove == "Administrator" && lastApproval.statusPersetujuan =="Fixed")){
+                    $scope.datas.push(element);
+                }
+            }else{
+                $scope.datas.push(element);
+            }
+        });
+        // $scope.datas = x.filter(x=>x.status != "Complete");
 
         ListPemeriksaanServices.get().then(res => {
             if ($stateParams.id) {
@@ -190,7 +200,7 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
         message.dialogmessage("Yakin semua berkas telah Valid??", "YA", "TIDAK").then(x => {
             approvalServices.post($scope.model).then(res => {
                 message.dialogmessage("Proses Berhasil").then(x => {
-                    var index = $scope.datas.indexOf($scope.model);
+                    document.location.href = "/#!/index/berkaspengajuan";
                     document.location.reload();
                 })
             })
@@ -200,7 +210,7 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
         message.dialog("Pengajuan akan di reject, \n Yakin??").then(x => {
             approvalServices.reject($scope.model).then(res => {
                 message.dialogmessage("Proses Berhasil").then(x => {
-                    var index = $scope.datas.indexOf($scope.model);
+                    document.location.href = "/#!/index/berkaspengajuan";
                     document.location.reload();
                 })
             })
@@ -281,7 +291,12 @@ function adminpersetujuankimController($scope, PersetujuanKimServices, message) 
     $scope.model = {};
     $scope.Title = 'Persetujuan KIM';
     PersetujuanKimServices.get().then(x => {
-        $scope.datas = x.filter(x=>x.status == "Complete");
+        x.forEach(element => {
+            var lastApproval = element.persetujuans[element.persetujuans.length-1];  
+            if(element.nextApprove == "Administrator" && lastApproval.approvedBy =="Manager"){
+                $scope.datas.push(element);
+            }
+        });
         // $scope.datas = x;
         console.log(x);
     })
@@ -299,7 +314,9 @@ function adminpersetujuankimController($scope, PersetujuanKimServices, message) 
         console.log(data);
         message.dialogmessage("Anda Yakin").then(x => {
             PersetujuanKimServices.post(data).then(res => {
-                message.info("proses Berhasil");
+                message.dialog("proses Berhasil").then(x=>{
+                    document.location.reload();
+                });
             })
         });
     }

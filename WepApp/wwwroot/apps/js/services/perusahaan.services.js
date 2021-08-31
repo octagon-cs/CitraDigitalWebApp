@@ -272,7 +272,6 @@ function PengajuanServices($http, $q, helperServices, AuthService, message) {
             headers: AuthService.getHeader()
         }).then(
             (res) => {
-                service.instance = true;
                 service.data.push(res.data);
                 def.resolve(res.data);
             },
@@ -292,7 +291,6 @@ function PengajuanServices($http, $q, helperServices, AuthService, message) {
             headers: AuthService.getHeader()
         }).then(
             (res) => {
-                service.instance = true;
                 service.data.push(res.data);
                 def.resolve(res.data);
             },

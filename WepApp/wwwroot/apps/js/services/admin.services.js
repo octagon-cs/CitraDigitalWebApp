@@ -77,7 +77,7 @@ function DaftarUserServices($http, $q, StorageService, $state, helperServices, A
         var def = $q.defer();
         $http({
             method: 'post',
-            url: helperServices.url+'api/administrator/createuser/' + param.roles,
+            url: helperServices.url+'api/administrator/createuser/' + param.roles.role,
             data: param,
             headers: AuthService.getHeader()
         }).then(

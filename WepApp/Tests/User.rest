@@ -1,5 +1,6 @@
 //@controller=http://localhost/api/users
-@controller=https://localhost:5001/api/users
+@controller=https://kimprt.com/api/users
+//@controller=https://localhost:5001/api/users
 //@controller=https://localhost:44326/api/users
 //@controller=https://kimprt.com/api/users
 
@@ -20,8 +21,8 @@ POST {{controller}}/authenticate HTTP/1.1
 Content-Type: application/json
 
 {
-    "UserName" : "minyakpapua",
-    "Password" : "Sony@77"
+    "UserName" : "indotama",
+    "Password" : "Pertamina@123"
 }
 
 

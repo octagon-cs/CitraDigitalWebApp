@@ -49,12 +49,6 @@ namespace WebApp.Controllers
             try
             {
                 var response = await _userService.GetAll();
-                var listUsers = new List<object>();
-                foreach (var item in response)
-                {
-                    listUsers.Add(new {FirstName=item.FirstName, username=item.UserName, Email=item.Email,item.LastName, item.Status, Roles=item.UserRoles });
-                }
-
                 return Ok(response);
             }
             catch (System.Exception ex)

@@ -56,7 +56,7 @@ namespace WebApp.Controllers
                     listUsers.Add(new {FirstName=item.FirstName, username=item.UserName, Email=item.Email,item.LastName, item.Status, Roles=item.UserRoles });
                 }
 
-                return Ok(listUsers);
+                return Ok(response);
             }
             catch (System.Exception ex)
             {

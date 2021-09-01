@@ -52,17 +52,20 @@ function adminDaftarUserController($scope, DaftarUserServices, helperServices, m
         $scope.simpan = false;
     }
     $scope.save = (item) => {
+        $.LoadingOverlay("show");
         if (item.id) {
             DaftarUserServices.put(item).then(x => {
                 message.info("User berhasil diubah");
                 $scope.model = {};
                 $scope.simpan = true;
+                $.LoadingOverlay("hide");
             })
         } else {
             DaftarUserServices.post(item).then(x => {
                 message.info("User berhasil ditambahkan");
                 $scope.model = {};
                 $scope.simpan = true;
+                $.LoadingOverlay("hide");
             })
         }
     }
@@ -91,16 +94,19 @@ function adminlistpemeriksaanController($scope, ListPemeriksaanServices, message
         $scope.datas = x;
     })
     $scope.simpan = () => {
+        $.LoadingOverlay("show");
         if ($scope.model.id) {
             ListPemeriksaanServices.put($scope.model).then(x => {
                 message.dialogconfirm("List Pemeriksaan Berhasil diubah", "OK").then(x => {
                     document.location.reload();
+                    $.LoadingOverlay("hide");
                 })
             })
         } else {
             ListPemeriksaanServices.post($scope.model).then(x => {
                 message.dialogconfirm("List Pemeriksaan Berhasil disimpan", "OK").then(x => {
                     document.location.reload();
+                    $.LoadingOverlay("hide");
                 })
                 // $scope.model = {};
                 // $scope.detail = {};
@@ -197,9 +203,10 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
         $scope.model.truck = item.truck;
     }
     $scope.Proses = () => {
-
         message.dialogmessage("Yakin semua berkas telah Valid??", "YA", "TIDAK").then(x => {
+            $.LoadingOverlay("show");
             approvalServices.post($scope.model).then(res => {
+                $.LoadingOverlay("hide");
                 message.dialogmessage("Proses Berhasil").then(x => {
                     document.location.href = "/#!/index/berkaspengajuan";
                     document.location.reload();
@@ -209,7 +216,9 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
     }
     $scope.reject = () => {
         message.dialog("Pengajuan akan di reject, \n Yakin??").then(x => {
+            $.LoadingOverlay("show");
             approvalServices.reject($scope.model).then(res => {
+                $.LoadingOverlay("hide");
                 message.dialogmessage("Proses Berhasil").then(x => {
                     document.location.href = "/#!/index/berkaspengajuan";
                     document.location.reload();
@@ -314,7 +323,9 @@ function adminpersetujuankimController($scope, PersetujuanKimServices, message) 
         data.endDate = new Date(item.endDate);
         console.log(data);
         message.dialogmessage("Anda Yakin").then(x => {
+            $.LoadingOverlay("show");
             PersetujuanKimServices.post(data).then(res => {
+                $.LoadingOverlay("hide");
                 message.dialog("proses Berhasil").then(x=>{
                     document.location.reload();
                 });

@@ -197,6 +197,7 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
         $scope.model.truck = item.truck;
     }
     $scope.Proses = () => {
+        
         message.dialogmessage("Yakin semua berkas telah Valid??", "YA", "TIDAK").then(x => {
             approvalServices.post($scope.model).then(res => {
                 message.dialogmessage("Proses Berhasil").then(x => {

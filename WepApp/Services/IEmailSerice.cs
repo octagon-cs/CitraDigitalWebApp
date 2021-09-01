@@ -54,7 +54,8 @@ namespace WebApp.Services
             email.Sender.Name=_mailSettings.DisplayName;
             email.Body = builder.ToMessageBody();
             using var smtp = new SmtpClient();
-           await smtp.ConnectAsync(_mailSettings.Host, _mailSettings.Port, false);
+            smtp.CheckCertificateRevocation = false;
+            smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
             //await smtp.ConnectAsync(_mailSettings.SmtpServer, _mailSettings.Port, false);
             smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
             await smtp.SendAsync(email);

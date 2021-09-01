@@ -160,6 +160,7 @@ function KendaraanServices($http, $q, helperServices, AuthService, message) {
                     def.resolve(res.data);
                 },
                 (err) => {
+                    $.LoadingOverlay("hide");
                     message.error(err.data);
                     def.reject(err.data);
                 }
@@ -181,6 +182,7 @@ function KendaraanServices($http, $q, helperServices, AuthService, message) {
                 def.resolve(res.data);
             },
             (err) => {
+                $.LoadingOverlay("hide");
                 message.error(err.data);
                 def.reject(err.data);
             }
@@ -205,6 +207,7 @@ function KendaraanServices($http, $q, helperServices, AuthService, message) {
                 def.resolve(res.data);
             },
             (err) => {
+                $.LoadingOverlay("hide");
                 message.error(err.data);
                 def.reject(err);
             }
@@ -237,6 +240,7 @@ function PengajuanServices($http, $q, helperServices, AuthService, message) {
                     def.resolve(res.data);
                 },
                 (err) => {
+                    $.LoadingOverlay("hide");
                     message.error(err.data);
                     def.reject(err.data);
                 }
@@ -256,6 +260,7 @@ function PengajuanServices($http, $q, helperServices, AuthService, message) {
                 def.resolve(res.data);
             },
             (err) => {
+                $.LoadingOverlay("hide");
                 message.error(err.data);
                 def.reject(err.data);
             }
@@ -276,6 +281,7 @@ function PengajuanServices($http, $q, helperServices, AuthService, message) {
                 def.resolve(res.data);
             },
             (err) => {
+                $.LoadingOverlay("hide");
                 message.error(err.data);
                 def.reject(err.data);
             }
@@ -295,6 +301,7 @@ function PengajuanServices($http, $q, helperServices, AuthService, message) {
                 def.resolve(res.data);
             },
             (err) => {
+                $.LoadingOverlay("hide");
                 message.error(err.data);
                 def.reject(err.data);
             }
@@ -314,6 +321,7 @@ function PengajuanServices($http, $q, helperServices, AuthService, message) {
                 def.resolve(res.data);
             },
             (err) => {
+                $.LoadingOverlay("hide");
                 message.error(err.data);
                 def.reject(err.data);
             }

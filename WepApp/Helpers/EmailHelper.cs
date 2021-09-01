@@ -57,11 +57,7 @@ namespace WepApp.Helpers
                     height: 100vh !important;
                     font-family: 'Lato';
                     margin: 0 !important;
-                    padding: 50 !important;
                     width: 100% !important;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
                 }
 
                 /* iOS BLUE LINKS */
@@ -89,7 +85,8 @@ namespace WepApp.Helpers
 
                 .mail-body {
                     width: 600px;
-                    margin: 20px;
+                    margin: auto;
+                    margin-top: 20px;
                     padding: 30px;
                     border-radius: 20px;
                     background-color: white;
@@ -110,14 +107,14 @@ namespace WepApp.Helpers
                 .btn {
                     width: 50%;
                     background: #acc42a;
-                    font-size: 20px;
+                    font-size: 17px;
                     color: #ffffff;
                     text-decoration: none;
-                    padding: 10px 25px;
+                    padding: 7px 25px;
                     border-radius: 30px;
                     border: 1px solid #00a8e6;
                     display: inline-block;
-                    margin: 20px;
+                    margin: auto;
                     text-align: center;
                 }
 
@@ -126,17 +123,14 @@ namespace WepApp.Helpers
                 }
 
                 .footer {
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
+                    text-align: center;
                     width: 100%;
+                    margin: auto;
                 }
             </style>
         </head>
 
-        <body style='background-color: #00a8e6; margin: 0 !important; padding: 0 !important;'>
-
+        <body style='background-color: #00a8e6; padding:30px'>
             <div class='mail-body'>
                 <div class='header'>
                     <img src='https://kimprt.com/assets/images/Logo.png' class='logo' />
@@ -148,7 +142,7 @@ namespace WepApp.Helpers
                     <div>
                         <a href='[confirm]' target='_blank' class='btn'>[btnTitle] </a>
                     </div>
-                    <div>PERTAMINA JAYAPURA </div>
+                    <div><h3>PERTAMINA JAYAPURA </h3></div>
                 </div>
             </div>
         </body>
@@ -157,7 +151,7 @@ namespace WepApp.Helpers
 
         public static string GetUserCreatedTemplate(string url, User user, string password)
         {
-            var template= templateHeader+ @" <h1>[judul]</h1>
+            var template= templateHeader+ @" <h2>[judul]</h2>
             <div class='inputData'>
                 <label>Nama</label>
                 <h4>[nama]</h4>
@@ -244,7 +238,7 @@ namespace WepApp.Helpers
         public static string ChangePasswordTemplate(string url)
         {
 
-          var template=  templateHeader + @" <h1>[judul]</h1>
+          var template=  templateHeader + @" <h2>[judul]</h2>
             <h4>Silahkan Reset Password Anda !</h4>"
             + footerTemplate ;
             template = template.Replace("[judul]","Reset Password !").Replace("[confirm]", url).Replace("[btnTitle]","Reset Password !");

@@ -44,13 +44,11 @@ namespace WebApp.Services
         {
             try
             {
-
-                user.Status = false;
                 var newPassword = MD5Hash.ToMD5Hash(DateTime.Now.Ticks.ToString()).Substring(1,6);
                 user.Password = MD5Hash.ToMD5Hash(newPassword);
                 var role = context.Roles.Where(x => x.Name == roleName).FirstOrDefault();
                 user.UserRoles.Add(new UserRole { Role = role});
-                user.Status = true;
+                user.Status = false;
                 context.Users.Add(user);
                 await context.SaveChangesAsync();
 
@@ -175,8 +173,11 @@ namespace WebApp.Services
                 var user = context.Users.SingleOrDefault(x => x.Email == email);
                 if (user == null)
                     throw new SystemException("Account Anda Tidak Ditemukan !");
+                if(!user.Status)
+                    throw new SystemException("Account Anda Tidak Aktif, Silahkan hubungi Administrator !");
+
                 var token = EmailHelper. GenerateJwtToken(user, _appSettings);
-                var template = EmailHelper.ChangePasswordTemplate($"{url}/#!/account/changepassword/token={token}");
+                var template = EmailHelper.ChangePasswordTemplate($"{url}/#!/account/changepassword/{token}");
                 var sendedEmail = await _mailService.SendEmail(new MailRequest { Body = template, Subject = "Change Password", ToEmail = email });
                 return true;
 

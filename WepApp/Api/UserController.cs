@@ -25,11 +25,11 @@ namespace WebApp.Controllers
                 var response = await _userService.Authenticate(model);
                 if (response == null)
                 {
-                    return Unauthorized(new { message = "Username or password is incorrect" });
+                    return Unauthorized("Username or password is incorrect");
                 }
 
                 if(!response.Status){
-                    return Unauthorized(new { message = "You are account not active, Contact Administrator" });
+                    return Unauthorized("You account not yet confirm, Or Please Contact Administrator !" );
                 }
 
                 return Ok(response);

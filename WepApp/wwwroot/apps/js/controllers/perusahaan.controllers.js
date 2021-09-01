@@ -93,8 +93,8 @@ function profilePerusahaanController($scope, helperServices, message, AuthServic
             ProfilePerusahaanServices.post($scope.model).then(x => {
                 message.dialogconfirm("Profile Perusahaan telah dibuat!!! Silahkan Login Ulang Untuk Melanjutkan", "OK").then(x => {
                     AuthService.logOff()
+                    message.info("Berhasil Menyimpan");
                 })
-                message.info("Berhasil Menyimpan");
             })
         }
         console.log($scope.model);
@@ -131,28 +131,37 @@ function kendaraanController($scope, KendaraanServices, helperServices, message)
     }
     $scope.simpan = () => {
         if ($scope.model.id) {
+            $.LoadingOverlay("show");
             KendaraanServices.put($scope.model).then(x => {
-                message.info("Data berhasil di tambahkan");
-                $('#myTab li:first-child a').tab('show')
-                $scope.model = {};
-                $scope.model.driverLicense = {};
-                $scope.model.assdriverLicense = {};
-                $scope.model.vehicleRegistration = {};
-                $scope.model.keurDLLAJR = {};
-                $scope.model.assdriverIDCard = {};
-                $scope.model.driverIDCard = {};
+                $.LoadingOverlay("hide");
+                message.dialogmessage("Data berhasil di tambahkan", "OK").then(x=>{
+                    $('#myTab li:first-child a').tab('show')
+                    document.location.reload();
+                });
+
+                // $scope.model = {};
+                // $scope.model.driverLicense = {};
+                // $scope.model.assdriverLicense = {};
+                // $scope.model.vehicleRegistration = {};
+                // $scope.model.keurDLLAJR = {};
+                // $scope.model.assdriverIDCard = {};
+                // $scope.model.driverIDCard = {};
             })
         } else {
+            $.LoadingOverlay("show");
             KendaraanServices.post($scope.model).then(x => {
-                message.info("Data berhasil di tambahkan");
-                $('#myTab li:first-child a').tab('show')
-                $scope.model = {};
-                $scope.model.driverLicense = {};
-                $scope.model.assdriverLicense = {};
-                $scope.model.vehicleRegistration = {};
-                $scope.model.keurDLLAJR = {};
-                $scope.model.assdriverIDCard = {};
-                $scope.model.driverIDCard = {};
+                message.dialogmessage("Data berhasil di tambahkan").then(x=>{
+                    $.LoadingOverlay("hide");
+                    $('#myTab li:first-child a').tab('show')
+                    document.location.reload()
+                });
+                // $scope.model = {};
+                // $scope.model.driverLicense = {};
+                // $scope.model.assdriverLicense = {};
+                // $scope.model.vehicleRegistration = {};
+                // $scope.model.keurDLLAJR = {};
+                // $scope.model.assdriverIDCard = {};
+                // $scope.model.driverIDCard = {};
             })
         }
     }
@@ -213,6 +222,7 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
     $scope.model.items = []
     $scope.listPemeriksaan = [];
     $scope.truck = {};
+    $.LoadingOverlay("show");
     KendaraanServices.get().then(x => {
         $scope.$applyAsync(x=>{
             $(".truck").select2();
@@ -240,6 +250,7 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
                 })
                 // console.log($scope.model);
             }
+            $.LoadingOverlay("hide");
         })
     })
     $scope.setItem = (item) => {
@@ -268,15 +279,18 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
     $scope.simpan = () => {
         console.log($scope.model);
         message.dialogmessage("Pastikan berkas kendaraan anda telah lengkap. Yakin mengajukan berkas ??", "Ya", "Tidak").then(x=>{
+            $.LoadingOverlay("show");
             if ($scope.model.id) {
                 PengajuanServices.put($scope.model).then(x => {
                     message.info('Berhasil');
                     $state.go("pengajuan");
+                    $.LoadingOverlay("hide");
                 })
             } else {
                 PengajuanServices.post($scope.model).then(x => {
                     message.info('Berhasil');
                     $state.go("pengajuan");
+                    $.LoadingOverlay("hide");
                 })
             }
         })
@@ -304,14 +318,15 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
     }
 }
 function kimsController($scope, helperServices) {
+    $.LoadingOverlay("show");
     $scope.simpan = () => {
         if ($scope.model.id) {
             PengajuanServices.put($scope.model).then(x => {
-
+                $.LoadingOverlay("hide");
             })
         } else {
             PengajuanServices.post($scope.model).then(x => {
-
+                $.LoadingOverlay("hide");
             })
         }
     }

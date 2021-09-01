@@ -131,9 +131,7 @@ function kendaraanController($scope, KendaraanServices, helperServices, message)
     }
     $scope.simpan = () => {
         if ($scope.model.id) {
-            $.LoadingOverlay("show");
             KendaraanServices.put($scope.model).then(x => {
-                $.LoadingOverlay("hide");
                 message.dialogmessage("Data berhasil di tambahkan", "OK").then(x=>{
                     $('#myTab li:first-child a').tab('show')
                     document.location.reload();
@@ -148,10 +146,8 @@ function kendaraanController($scope, KendaraanServices, helperServices, message)
                 // $scope.model.driverIDCard = {};
             })
         } else {
-            $.LoadingOverlay("show");
             KendaraanServices.post($scope.model).then(x => {
                 message.dialogmessage("Data berhasil di tambahkan").then(x=>{
-                    $.LoadingOverlay("hide");
                     $('#myTab li:first-child a').tab('show')
                     document.location.reload()
                 });
@@ -222,7 +218,6 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
     $scope.model.items = []
     $scope.listPemeriksaan = [];
     $scope.truck = {};
-    $.LoadingOverlay("show");
     KendaraanServices.get().then(x => {
         $scope.$applyAsync(x=>{
             $(".truck").select2();
@@ -250,7 +245,6 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
                 })
                 // console.log($scope.model);
             }
-            $.LoadingOverlay("hide");
         })
     })
     $scope.setItem = (item) => {
@@ -279,18 +273,15 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
     $scope.simpan = () => {
         console.log($scope.model);
         message.dialogmessage("Pastikan berkas kendaraan anda telah lengkap. Yakin mengajukan berkas ??", "Ya", "Tidak").then(x=>{
-            $.LoadingOverlay("show");
             if ($scope.model.id) {
                 PengajuanServices.put($scope.model).then(x => {
                     message.info('Berhasil');
                     $state.go("pengajuan");
-                    $.LoadingOverlay("hide");
                 })
             } else {
                 PengajuanServices.post($scope.model).then(x => {
                     message.info('Berhasil');
                     $state.go("pengajuan");
-                    $.LoadingOverlay("hide");
                 })
             }
         })
@@ -309,26 +300,21 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
         $("#showPemeriksaan").modal('show');
     }
     $scope.pengajuan=(item)=>{
-        $.LoadingOverlay("show");
         message.dialogmessage("Pastikan anda telah melengkapi berkas atau perlengkapan yang tidak 'Valid', Yakin mengajukan ulang berkas ??", "Ya", "Tidak").then(x=>{
             approvalServices.post(item).then(res=>{
                 message.info("Berhasil");
                 $state.go("pengajuan");
-                $.LoadingOverlay("hide");
             })
         })
     }
 }
 function kimsController($scope, helperServices) {
-    $.LoadingOverlay("show");
     $scope.simpan = () => {
         if ($scope.model.id) {
             PengajuanServices.put($scope.model).then(x => {
-                $.LoadingOverlay("hide");
             })
         } else {
             PengajuanServices.post($scope.model).then(x => {
-                $.LoadingOverlay("hide");
             })
         }
     }

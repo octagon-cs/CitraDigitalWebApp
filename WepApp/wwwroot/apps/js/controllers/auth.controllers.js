@@ -3,7 +3,8 @@ angular.module("auth.controller", [])
   .controller("LoginController", LoginController)
   .controller("AccountController", AccountController)
   .controller("registerController", registerController)
-  .controller("resetController", resetController);
+  .controller("resetController", resetController)
+  .controller("confirmEmailController", confirmEmailController);
 
 function LoginController($scope, $state, AuthService, message) {
   $scope.model = {};
@@ -64,6 +65,20 @@ function resetController($scope, $state, AuthService, $stateParams, message) {
       $scope.error = false;
     }
   }
+  
+}
+
+function confirmEmailController($scope, $state, AuthService, $stateParams, message) {
+  $scope.model = {}
+  console.log($stateParams);
+  $scope.error = false;
+  $.LoadingOverlay("show");
+  AuthService.confirmEmail($scope.model, $stateParams.token).then(res=>{
+    $.LoadingOverlay("hide");
+    message.dialog("Account Anda Sudah Aktif, Anda Ingin Login ?").then(x=>{
+      $state.go("login");
+    })
+  })   
   
 }
 

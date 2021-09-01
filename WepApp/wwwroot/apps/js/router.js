@@ -36,6 +36,13 @@ angular.module("app.router", ["ui.router"])
                 templateUrl: 'apps/views/accounts/reset.html'
             })
 
+            .state("confirmemail", {
+                url: '/confirmemail/:token',
+                parent: 'account',
+                controller: "confirmEmailController",
+                templateUrl: 'apps/views/accounts/confirmemail.html'
+            })
+
             .state('index', {
                 url: '/index',
                 controller: 'adminController',

@@ -25,7 +25,8 @@ function AuthService($http, $q, StorageService, $state, helperServices, message)
         addProfile : addProfile,
         getProfile : getProfile,
         resetPassword:resetPassword,
-        changePassword: changePassword
+        changePassword: changePassword,
+        confirmEmail: confirmEmail,
     }
 
     function login(user) {
@@ -148,6 +149,23 @@ function AuthService($http, $q, StorageService, $state, helperServices, message)
         $http({
             method: 'PUT',
             url: helperServices.url + "api/users/changepassword/",
+            headers: Auth,
+            data: params
+        }).then(res => {
+            def.resolve(res.data);
+        }, err => {
+            $.LoadingOverlay("hide");
+            def.reject(err);
+            message.error(err.data);
+        });
+        return def.promise;
+    }
+    function confirmEmail(params, token) {
+        var def = $q.defer();
+        var Auth = getHeaderToken(token)
+        $http({
+            method: 'PUT',
+            url: helperServices.url + "api/users/confirmemail/",
             headers: Auth,
             data: params
         }).then(res => {

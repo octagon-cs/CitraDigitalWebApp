@@ -115,6 +115,23 @@ namespace WebApp.Controllers
             }
         }
 
+         [Authorize]
+        [HttpPut("confirmemail")]
+        public async Task<IActionResult> ConfirmEmail()
+        {
+            try
+            {
+                var user = await Request.GetUser();
+                var response = await _userService.ConfirmEmail(user);
+                return Ok(response);
+            }
+            catch (System.Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+
 
     }
 }

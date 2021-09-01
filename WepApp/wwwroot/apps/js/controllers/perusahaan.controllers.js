@@ -309,10 +309,12 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
         $("#showPemeriksaan").modal('show');
     }
     $scope.pengajuan=(item)=>{
+        $.LoadingOverlay("show");
         message.dialogmessage("Pastikan anda telah melengkapi berkas atau perlengkapan yang tidak 'Valid', Yakin mengajukan ulang berkas ??", "Ya", "Tidak").then(x=>{
             approvalServices.post(item).then(res=>{
                 message.info("Berhasil");
                 $state.go("pengajuan");
+                $.LoadingOverlay("hide");
             })
         })
     }

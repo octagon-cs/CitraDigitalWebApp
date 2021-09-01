@@ -45,12 +45,11 @@ function approvalServices($http, $q, helperServices, AuthService, message) {
             headers: AuthService.getHeader()
         }).then(
             (res) => {
-                
                 def.resolve(res.data);
             },
             (err) => {
                 def.reject(err.data);
-
+                message.error(err.data);
             }
         );
         return def.promise;

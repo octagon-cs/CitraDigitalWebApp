@@ -229,12 +229,11 @@ namespace WebApp.Proxy.Domains
         public Task<List<Pengajuan>> GetSubmissionByCompanyId(int id)
         {
             var result = context.Pengajuans.Include(x=>x.Company)
-            .Where(x => x.Company.Id == id)
             .Include(x => x.Items).ThenInclude(x=>x.HasilPemeriksaan)
             .ThenInclude(x=>x.ItemPemeriksaan)
             .ThenInclude(x=>x.Pemeriksaan)
             .Include(x => x.Items).ThenInclude(x=>x.Persetujuans).ThenInclude(x=>x.User)
-            .Include(x => x.Items).ThenInclude(x=>x.Truck);
+            .Include(x => x.Items).ThenInclude(x=>x.Truck) .Where(x => x.Company.Id == id);
             return Task.FromResult(result.AsNoTracking().ToList());
         }
 

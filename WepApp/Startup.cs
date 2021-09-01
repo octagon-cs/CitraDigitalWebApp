@@ -48,7 +48,9 @@ namespace WebApp
             services.AddDbContext<DataContext>(options =>
             {
                 var constring = Configuration.GetConnectionString("DefaultConnection");
-                options.UseMySql(constring, ServerVersion.AutoDetect(constring));
+                options.UseMySql(constring, ServerVersion.AutoDetect(constring),acction=>{
+                        acction.EnableRetryOnFailure();
+                });
                 options.EnableDetailedErrors();
                 options.EnableSensitiveDataLogging();
             });
@@ -59,6 +61,7 @@ namespace WebApp
 
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IEmailService, EmailService>();
             services.AddSwaggerDocument(config =>
             {
                 config.PostProcess = document =>

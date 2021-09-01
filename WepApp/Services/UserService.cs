@@ -28,11 +28,13 @@ namespace WebApp.Services
         // users hardcoded for simplicity, store in a db with hashed passwords in production applications
         private readonly AppSettings _appSettings;
         private readonly DataContext context;
+        private readonly IEmailService _mailService;
 
-        public UserService(IOptions<AppSettings> appSettings, DataContext _context)
+        public UserService(IOptions<AppSettings> appSettings, DataContext _context, IEmailService mailService)
         {
             _appSettings = appSettings.Value;
             context = _context;
+            _mailService = mailService;
         }
 
 
@@ -123,6 +125,9 @@ namespace WebApp.Services
 
                 if (result <= 0)
                     throw new SystemException("Data Not Saved .... !");
+
+                 var sended = await _mailService.SendEmail(new MailRequest{ ToEmail= "ocph23@gmail.com", Subject="Chage User", Body="User Change"  });   
+
                 return true;
             }
             catch (System.Exception ex)

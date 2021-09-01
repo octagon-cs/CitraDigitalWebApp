@@ -21,7 +21,9 @@ function LoginController($scope, $state, AuthService, message) {
   }
   $scope.reset = (email) => {
     message.dialog("Yakin ingin mereset password?", "YA").then(x => {
+      $.LoadingOverlay("show");
       AuthService.resetPassword(email).then(res => {
+        $.LoadingOverlay("hide");
         message.info("Periksa Email anda!!", "OK");
       })
     })

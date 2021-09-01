@@ -48,9 +48,7 @@ namespace WebApp
             services.AddDbContext<DataContext>(options =>
             {
                 var constring = Configuration.GetConnectionString("DefaultConnection");
-                options.UseMySql(constring, ServerVersion.AutoDetect(constring),acction=>{
-                        acction.EnableRetryOnFailure();
-                });
+                options.UseMySql(constring, ServerVersion.AutoDetect(constring));
                 options.EnableDetailedErrors();
                 options.EnableSensitiveDataLogging();
             });

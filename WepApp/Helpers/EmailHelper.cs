@@ -156,7 +156,10 @@ namespace WepApp.Helpers
                 <label>Nama</label>
                 <h4>[nama]</h4>
             </div>
-
+            <div class='inputData'>
+                <label>User Name</label>
+                <h4>[username]</h4>
+            </div>
             <div class='inputData'>
                 <label>Email</label>
                 <h4>[email]</h4>
@@ -169,6 +172,7 @@ namespace WepApp.Helpers
 
             template = template
                 .Replace("[nama]", user.FullName)
+                .Replace("[username]", user.UserName)
                 .Replace("[email]", user.Email)
                 .Replace("[password]", password)
                 .Replace("[judul]", "Confirm Account !")

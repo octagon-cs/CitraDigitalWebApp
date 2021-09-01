@@ -30,7 +30,7 @@ namespace WebApp.Services
           try
           {
             var email = new MimeMessage();
-            email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
+            email.Sender = new MailboxAddress(_mailSettings.DisplayName, _mailSettings.Mail);
             email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
             email.Subject = mailRequest.Subject;
             var builder = new BodyBuilder();
@@ -51,6 +51,7 @@ namespace WebApp.Services
                 }
             }
             builder.HtmlBody = mailRequest.Body;
+            email.Sender.Name=_mailSettings.DisplayName;
             email.Body = builder.ToMessageBody();
             using var smtp = new SmtpClient();
             smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTlsWhenAvailable);

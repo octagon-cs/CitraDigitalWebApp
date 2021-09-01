@@ -24,7 +24,7 @@ function adminController($scope, $state, AuthService) {
         message.dialog("Yakin ingin mereset password?", "YA").then(x => {
             $.LoadingOverlay("show");
             AuthService.resetPassword(email).then(res => {
-                $.LoadingOverlay("show");
+                $.LoadingOverlay("hide");
                 message.dialog("Periksa Email anda!!", "OK").then(x => {
                     AuthService.logOff();
                 })

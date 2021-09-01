@@ -47,7 +47,8 @@ namespace WebApp.Controllers
         {
             try
             {
-                var user = await administrator.UpdateUser(id, model);
+                var baseUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+                var user = await administrator.UpdateUser(baseUrl, id, model);
                 if (user == null)
                     return BadRequest(new { message = "Not Saved ...!" });
                 return Ok(user);

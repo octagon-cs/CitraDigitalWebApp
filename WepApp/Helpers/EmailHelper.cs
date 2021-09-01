@@ -14,193 +14,173 @@ namespace WepApp.Helpers
 {
     public static class EmailHelper
     {
-        public static string GetUserCreatedTemplate()
+
+        public static string templateHeader = @"<!DOCTYPE html>
+        <html>
+        <head>
+            <title></title>
+            <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+            <meta name='viewport' content='width=device-width, initial-scale=1'>
+            <meta http-equiv='X-UA-Compatible' content='IE=edge' />
+            <style type='text/css'>
+                @media screen {
+                    @font-face {
+                        font-family: 'Lato';
+                        font-style: normal;
+                        font-weight: 400;
+                        src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v11/qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA.woff) format('woff');
+                    }
+                }
+
+                /* CLIENT-SPECIFIC STYLES */
+                body,
+                table,
+                td,
+                a {
+                    -webkit-text-size-adjust: 100%;
+                    -ms-text-size-adjust: 100%;
+                }
+
+                img {
+                    -ms-interpolation-mode: bicubic;
+                }
+
+                /* RESET STYLES */
+                img {
+                    border: 0;
+                    height: auto;
+                    line-height: 100%;
+                    outline: none;
+                    text-decoration: none;
+                }
+                body {
+                    height: 100vh !important;
+                    font-family: 'Lato';
+                    margin: 0 !important;
+                    padding: 50 !important;
+                    width: 100% !important;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                /* iOS BLUE LINKS */
+                a[x-apple-data-detectors] {
+                    color: inherit !important;
+                    text-decoration: none !important;
+                    font-size: inherit !important;
+                    font-family: inherit !important;
+                    font-weight: inherit !important;
+                    line-height: inherit !important;
+                }
+
+                /* MOBILE STYLES */
+                @media screen and (max-width:600px) {
+                    h1 {
+                        font-size: 32px !important;
+                        line-height: 32px !important;
+                    }
+                }
+
+                /* ANDROID CENTER FIX */
+                div[style*='margin: 16px 0;'] {
+                    margin: 0 !important;
+                }
+
+                .mail-body {
+                    width: 600px;
+                    margin: 20px;
+                    padding: 30px;
+                    border-radius: 20px;
+                    background-color: white;
+                }
+
+
+                .inputData {
+                    width: 100%;
+                    line-height: 0px;
+                    border-bottom: 0.5px silver solid;
+                    margin-bottom: 30px;
+                }
+
+                .inputData>label {
+                    font-size: smaller;
+                }
+
+                .btn {
+                    width: 50%;
+                    background: #acc42a;
+                    font-size: 20px;
+                    color: #ffffff;
+                    text-decoration: none;
+                    padding: 10px 25px;
+                    border-radius: 30px;
+                    border: 1px solid #00a8e6;
+                    display: inline-block;
+                    margin: 20px;
+                    text-align: center;
+                }
+
+                .logo {
+                    width: 40%;
+                }
+
+                .footer {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
+                }
+            </style>
+        </head>
+
+        <body style='background-color: #00a8e6; margin: 0 !important; padding: 0 !important;'>
+
+            <div class='mail-body'>
+                <div class='header'>
+                    <img src='https://kimprt.com/assets/images/Logo.png' class='logo' />
+                   ";
+        
+        private static string footerTemplate= @"
+                </div>
+                <div class='footer'>
+                    <div>
+                        <a href='[confirm]' target='_blank' class='btn'>[btnTitle] </a>
+                    </div>
+                    <div>PERTAMINA JAYAPURA </div>
+                </div>
+            </div>
+        </body>
+        </html>";
+
+
+        public static string GetUserCreatedTemplate(string url, User user, string password)
         {
-            return @"<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
-    <style type='text/css'>
-    @media screen {
-        @font-face {
-            font-family: 'Lato';
-            font-style: normal;
-            font-weight: 400;
-            src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v11/qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA.woff) format('woff');
-        }
+            var template= templateHeader+ @" <h1>[judul]</h1>
+            <div class='inputData'>
+                <label>Nama</label>
+                <h4>[nama]</h4>
+            </div>
 
-        @font-face {
-            font-family: 'Lato';
-            font-style: normal;
-            font-weight: 700;
-            src: local('Lato Bold'), local('Lato-Bold'), url(https://fonts.gstatic.com/s/lato/v11/qdgUG4U09HnJwhYI-uK18wLUuEpTyoUstqEm5AMlJo4.woff) format('woff');
-        }
+            <div class='inputData'>
+                <label>Email</label>
+                <h4>[email]</h4>
+            </div>
+            <div class='inputData'>
+                <label>Password</label>
+                <h4>[password]</h4>
+            </div>"
+            +footerTemplate;
 
-        @font-face {
-            font-family: 'Lato';
-            font-style: italic;
-            font-weight: 400;
-            src: local('Lato Italic'), local('Lato-Italic'), url(https://fonts.gstatic.com/s/lato/v11/RYyZNoeFgb0l7W3Vu1aSWOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');
-        }
-
-        @font-face {
-            font-family: 'Lato';
-            font-style: italic;
-            font-weight: 700;
-            src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url(https://fonts.gstatic.com/s/lato/v11/HkF_qI1x_noxlxhrhMQYELO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
-        }
-    }
-
-    /* CLIENT-SPECIFIC STYLES */
-    body,
-    table,
-    td,
-    a {
-        -webkit-text-size-adjust: 100%;
-        -ms-text-size-adjust: 100%;
-    }
-
-    table,
-    td {
-        mso-table-lspace: 0pt;
-        mso-table-rspace: 0pt;
-    }
-
-    img {
-        -ms-interpolation-mode: bicubic;
-    }
-
-    /* RESET STYLES */
-    img {
-        border: 0;
-        height: auto;
-        line-height: 100%;
-        outline: none;
-        text-decoration: none;
-    }
-
-    table {
-        border-collapse: collapse !important;
-    }
-
-    body {
-        height: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        width: 100% !important;
-    }
-
-    /* iOS BLUE LINKS */
-    a[x-apple-data-detectors] {
-        color: inherit !important;
-        text-decoration: none !important;
-        font-size: inherit !important;
-        font-family: inherit !important;
-        font-weight: inherit !important;
-        line-height: inherit !important;
-    }
-
-    /* MOBILE STYLES */
-    @media screen and (max-width:600px) {
-        h1 {
-            font-size: 32px !important;
-            line-height: 32px !important;
-        }
-    }
-
-    /* ANDROID CENTER FIX */
-    div[style*='margin: 16px 0;'] {
-        margin: 0 !important;
-    }
-    </style>
-</head>
-
-<body style='background-color: #00a8e6; margin: 0 !important; padding: 0 !important;'>
-    <table border='0' cellpadding='0' cellspacing='0' width='100%'>
-        <tr>
-            <td bgcolor='#00a8e6' align='center'>
-                <table border='0' cellpadding='0' cellspacing='0' width='100%' style='max-width: 600px;'>
-                    <tr>
-                        <td align='center' valign='top' style='padding: 40px 10px 40px 10px;'> </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor='#00a8e6' align='center' style='padding: 0px 10px 0px 10px;'>
-                <table border='0' cellpadding='0' cellspacing='0' width='100%' style='max-width: 600px;'>
-                    <tr>
-                        <td bgcolor='#ffffff' align='center' valign='top'
-                            style='padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;'>
-                            <h1 style='font-size: 48px; font-weight: 400; margin: 2;'>Welcome!</h1> <img
-                                src=' https://imgcdn.rri.co.id/__srct/b763d32e20ec5d473fd182b5c78d0964/828088/LOGO_RRI.png?v=1.0.3' width='125' height='120'
-                                style='display: block; border: 0px;' />
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor='#f4f4f4' align='center' style='padding: 0px 10px 0px 10px;'>
-                <table border='0' cellpadding='0' cellspacing='0' width='100%' style='max-width: 600px;'>
-                    <tr>
-                        <td bgcolor='#ffffff' align='left'
-                            style='padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
-                            Informasi Akun <br>
-                            <table width='30%' style='font-size: 14px;'>
-                                <tr><td>Nama</td><td>:</td><td>[nama]</td></tr>
-                                <tr><td>Username</td><td>:</td><td>[username]</td></tr>
-                                <tr><td>Email</td><td>:</td><td>[password]</td></tr>
-                            </table><br>
-                            <p style='margin: 0;'>Untuk konfirmasi akun anda silahkan klik tombol dibawah</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td bgcolor='#ffffff' align='left'>
-                            <table width='100%' border='0' cellspacing='0' cellpadding='0'>
-                                <tr>
-                                    <td bgcolor='#ffffff' align='center' style='padding: 20px 30px 60px 30px;'>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td align='center' style='border-radius: 3px;' bgcolor='#00a8e6'><a
-                                                        href='[confirm]' target='_blank'
-                                                        style='font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #00a8e6; display: inline-block;'>Confirm
-                                                        Account</a></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr> <!-- COPY -->
-                    <tr>
-                        <td bgcolor='#ffffff' align='left'
-                            style='padding: 0px 30px 0px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
-                            <p style='margin: 0;'>Jika klik tombol tidak berhasil, salin dan tempel tautan berikut di browser Anda:</p>
-                        </td>
-                    </tr> <!-- COPY -->
-                    <tr>
-                        <td bgcolor='#ffffff' align='left'
-                            style='padding: 20px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
-                            <p style='margin: 0;'><a href='#' target='_blank'
-                                    style='color: #00a8e6;'><?= base_url('auth/confirm?token=').$tokenconfirm;?></a></p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td bgcolor='#ffffff' align='left'
-                            style='padding: 0px 30px 40px 30px; border-radius: 0px 0px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
-                            <p style='margin: 0;'>Salam,<br>admin RRI</p>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</body>
-</html>";
+            template = template
+                .Replace("[nama]", user.FullName)
+                .Replace("[email]", user.Email)
+                .Replace("[password]", password)
+                .Replace("[judul]", "Confirm Account !")
+                .Replace("[confirm]", url)
+                .Replace("[btnTitle]", "Confirm Email !");
+            return template;
         }
 
         internal static string ConfirmEmailTemplate(string url, User user, string token)
@@ -263,189 +243,11 @@ namespace WepApp.Helpers
 
         public static string ChangePasswordTemplate(string url)
         {
-            var template= @"<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge' />
-    <style type='text/css'>
-    @media screen {
-        @font-face {
-            font-family: 'Lato';
-            font-style: normal;
-            font-weight: 400;
-            src: local('Lato Regular'), local('Lato-Regular'), url(https://fonts.gstatic.com/s/lato/v11/qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA.woff) format('woff');
-        }
 
-        @font-face {
-            font-family: 'Lato';
-            font-style: normal;
-            font-weight: 700;
-            src: local('Lato Bold'), local('Lato-Bold'), url(https://fonts.gstatic.com/s/lato/v11/qdgUG4U09HnJwhYI-uK18wLUuEpTyoUstqEm5AMlJo4.woff) format('woff');
-        }
-
-        @font-face {
-            font-family: 'Lato';
-            font-style: italic;
-            font-weight: 400;
-            src: local('Lato Italic'), local('Lato-Italic'), url(https://fonts.gstatic.com/s/lato/v11/RYyZNoeFgb0l7W3Vu1aSWOvvDin1pK8aKteLpeZ5c0A.woff) format('woff');
-        }
-
-        @font-face {
-            font-family: 'Lato';
-            font-style: italic;
-            font-weight: 700;
-            src: local('Lato Bold Italic'), local('Lato-BoldItalic'), url(https://fonts.gstatic.com/s/lato/v11/HkF_qI1x_noxlxhrhMQYELO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
-        }
-    }
-
-    /* CLIENT-SPECIFIC STYLES */
-    body,
-    table,
-    td,
-    a {
-        -webkit-text-size-adjust: 100%;
-        -ms-text-size-adjust: 100%;
-    }
-
-    table,
-    td {
-        mso-table-lspace: 0pt;
-        mso-table-rspace: 0pt;
-    }
-
-    img {
-        -ms-interpolation-mode: bicubic;
-    }
-
-    /* RESET STYLES */
-    img {
-        border: 0;
-        height: auto;
-        line-height: 100%;
-        outline: none;
-        text-decoration: none;
-    }
-
-    table {
-        border-collapse: collapse !important;
-    }
-
-    body {
-        height: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        width: 100% !important;
-    }
-
-    /* iOS BLUE LINKS */
-    a[x-apple-data-detectors] {
-        color: inherit !important;
-        text-decoration: none !important;
-        font-size: inherit !important;
-        font-family: inherit !important;
-        font-weight: inherit !important;
-        line-height: inherit !important;
-    }
-
-    /* MOBILE STYLES */
-    @media screen and (max-width:600px) {
-        h1 {
-            font-size: 32px !important;
-            line-height: 32px !important;
-        }
-    }
-
-    /* ANDROID CENTER FIX */
-    div[style*='margin: 16px 0;'] {
-        margin: 0 !important;
-    }
-    </style>
-</head>
-
-<body style='background-color: #00a8e6; margin: 0 !important; padding: 0 !important;'>
-    <table border='0' cellpadding='0' cellspacing='0' width='100%'>
-        <tr>
-            <td bgcolor='#00a8e6' align='center'>
-                <table border='0' cellpadding='0' cellspacing='0' width='100%' style='max-width: 600px;'>
-                    <tr>
-                        <td align='center' valign='top' style='padding: 40px 10px 40px 10px;'> </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor='#00a8e6' align='center' style='padding: 0px 10px 0px 10px;'>
-                <table border='0' cellpadding='0' cellspacing='0' width='100%' style='max-width: 600px;'>
-                    <tr>
-                        <td bgcolor='#ffffff' align='center' valign='top'
-                            style='padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;'>
-                            <h1 style='font-size: 48px; font-weight: 400; margin: 2;'>Welcome!</h1> <img
-                                src=' https://imgcdn.rri.co.id/__srct/b763d32e20ec5d473fd182b5c78d0964/828088/LOGO_RRI.png?v=1.0.3' width='125' height='120'
-                                style='display: block; border: 0px;' />
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor='#f4f4f4' align='center' style='padding: 0px 10px 0px 10px;'>
-                <table border='0' cellpadding='0' cellspacing='0' width='100%' style='max-width: 600px;'>
-                    <tr>
-                        <td bgcolor='#ffffff' align='left'
-                            style='padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
-                            Silahkan Umbah Password Anda ! <br>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td bgcolor='#ffffff' align='left'>
-                            <table width='100%' border='0' cellspacing='0' cellpadding='0'>
-                                <tr>
-                                    <td bgcolor='#ffffff' align='center' style='padding: 20px 30px 60px 30px;'>
-                                        <table border='0' cellspacing='0' cellpadding='0'>
-                                            <tr>
-                                                <td align='center' style='border-radius: 3px;' bgcolor='#00a8e6'><a
-                                                        href='[confirm]' target='_blank'
-                                                        style='font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #00a8e6; display: inline-block;'>Confirm
-                                                        Account</a></td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr> <!-- COPY -->
-                    <tr>
-                        <td bgcolor='#ffffff' align='left'
-                            style='padding: 0px 30px 0px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
-                            <p style='margin: 0;'>Jika klik tombol tidak berhasil, salin dan tempel tautan berikut di browser Anda:</p>
-                        </td>
-                    </tr> <!-- COPY -->
-                    <tr>
-                        <td bgcolor='#ffffff' align='left'
-                            style='padding: 20px 30px 20px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
-                            <p style='margin: 0;'><a href='#' target='_blank'
-                                    style='color: #00a8e6;'><?= base_url('auth/confirm?token=').$tokenconfirm;?></a></p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td bgcolor='#ffffff' align='left'
-                            style='padding: 0px 30px 40px 30px; border-radius: 0px 0px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;'>
-                            <p style='margin: 0;'>Salam,<br>admin RRI</p>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</body>
-
-</html>";
-
-            template = template.Replace("[confirm]", url);
-
+          var template=  templateHeader + @" <h1>[judul]</h1>
+            <h4>Silahkan Reset Password Anda !</h4>"
+            + footerTemplate ;
+            template = template.Replace("[judul]","Reset Password !").Replace("[confirm]", url).Replace("[btnTitle]","Reset Password !");
             return template;
 
         }

@@ -13,7 +13,7 @@ namespace WebApp.Proxy.Domains
     public interface IAdministrator
     {
         Task<User> CreateUser(string baseUrl, string roleName, User user);
-        Task<User> UpdateUser(int id, User user);
+        Task<User> UpdateUser(string baseUrl, int id, User user);
         Task AddUserRole(int userId, string roleName);
         Task<Pemeriksaan> AddNewItemPemeriksaaan(Pemeriksaan item);
         Task<List<KIM>> GetAllKIMNotYetApproved();
@@ -52,7 +52,7 @@ namespace WebApp.Proxy.Domains
             _mailService = mailService;
         }
 
-        public async Task<User> UpdateUser(int id, User user)
+        public async Task<User> UpdateUser(string url, int id, User user)
         {
             try
             {
@@ -66,9 +66,7 @@ namespace WebApp.Proxy.Domains
                 if (result <= 0)
                     throw new SystemException("Not Saved ...!");
 
-
-
-                var sended = await _mailService.SendEmail(new MailRequest { ToEmail = "ocph23@gmail.com", Subject = "Chage User", Body = EmailHelper.GetUserCreatedTemplate() });
+               
                 return user;
 
             }

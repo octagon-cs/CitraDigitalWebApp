@@ -44,6 +44,8 @@ namespace WebApp.Services
         {
             try
             {
+
+                user.Status = false;
                 var newPassword = MD5Hash.ToMD5Hash(DateTime.Now.Ticks.ToString()).Substring(1,6);
                 user.Password = MD5Hash.ToMD5Hash(newPassword);
                 var role = context.Roles.Where(x => x.Name == roleName).FirstOrDefault();
@@ -53,12 +55,8 @@ namespace WebApp.Services
                 await context.SaveChangesAsync();
 
                 var token = EmailHelper.GenerateJwtToken(user, _appSettings);
-                var template = EmailHelper.ConfirmEmailTemplate(url, user, token);
-                var sendedEmail = await _mailService.SendEmail(new MailRequest { Body = template, Subject = "Confirm Email", ToEmail = user.Email });
-                return true;
-
-
-
+                var template = EmailHelper.GetUserCreatedTemplate(url+"/#!/account/confirmemail/token={token}", user, newPassword);
+                var sended = await _mailService.SendEmail(new MailRequest { ToEmail = user.Email, Subject = "Confirm Account", Body = template });
                 return user;
             }
             catch (System.Exception ex)

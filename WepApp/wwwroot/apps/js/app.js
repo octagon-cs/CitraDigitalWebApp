@@ -25,9 +25,9 @@ angular.module("app", [
     "720kb.datepicker"
 
 
-]).controller("homeController", homeController)
-
-    ;
+])
+    .controller("homeController", homeController)
+    .directive("compareTo", compareTo);
 
 
 function homeController($scope, AuthService) {
@@ -35,3 +35,21 @@ function homeController($scope, AuthService) {
         AuthService.logOff();
     }
 }
+
+function compareTo() {
+    return {
+        require: "ngModel",
+        scope:
+        {
+            confirmPassword: "=compareTo"
+        },
+        link: function (scope, element, attributes, modelVal) {
+            modelVal.$validators.compareTo = function (val) {
+                return val == scope.confirmPassword;
+            };
+            scope.$watch("confirmPassword", function () {
+                modelVal.$validate();
+            });
+        }
+    };
+};

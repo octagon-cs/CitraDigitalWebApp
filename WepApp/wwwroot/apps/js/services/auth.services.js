@@ -23,7 +23,9 @@ function AuthService($http, $q, StorageService, $state, helperServices, message)
         getToken: getToken,
         getUserId: getUserId,
         addProfile : addProfile,
-        getProfile : getProfile
+        getProfile : getProfile,
+        resetPassword:resetPassword,
+        changePassword: changePassword
     }
 
     function login(user) {
@@ -63,18 +65,9 @@ function AuthService($http, $q, StorageService, $state, helperServices, message)
     }
 
     function getHeaderToken(token) {
-        try {
-            if (userIsLogin()) {
-                return {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                }
-            }
-            throw new Error("Not Found Token");
-        } catch {
-            return {
-                'Content-Type': 'application/json'
-            }
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
         }
     }
 
@@ -129,5 +122,41 @@ function AuthService($http, $q, StorageService, $state, helperServices, message)
         if (result) {
             return result;
         }
+    }
+
+    function resetPassword(email) {
+        var def = $q.defer();
+        $http({
+            method: 'GET',
+            url: helperServices.url + "api/users/forgotpassword/" + email,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => {
+            def.resolve(res.data);
+        }, err => {
+            $.LoadingOverlay("hide");
+            def.reject(err);
+            message.error(err.data);
+        });
+        return def.promise;
+    }
+
+    function changePassword(params, token) {
+        var def = $q.defer();
+        var Auth = getHeaderToken(token)
+        $http({
+            method: 'PUT',
+            url: helperServices.url + "api/users/changepassword/",
+            headers: Auth,
+            data: params
+        }).then(res => {
+            def.resolve(res.data);
+        }, err => {
+            $.LoadingOverlay("hide");
+            def.reject(err);
+            message.error(err.data);
+        });
+        return def.promise;
     }
 }

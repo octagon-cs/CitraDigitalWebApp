@@ -20,10 +20,17 @@ function adminController($scope, $state, AuthService) {
     $scope.logout = () => {
         AuthService.logOff();
     }
-    // dashboardServices.get().then(res=>{
-    //     $scope.data = res
-    //     console.log(res);
-    // })
+    $scope.reset = (email) => {
+        message.dialog("Yakin ingin mereset password?", "YA").then(x => {
+            $.LoadingOverlay("show");
+            AuthService.resetPassword(email).then(res => {
+                $.LoadingOverlay("show");
+                message.dialog("Periksa Email anda!!", "OK").then(x => {
+                    AuthService.logOff();
+                })
+            })
+        })
+    }
 }
 
 function adminHomeController($scope, $state, AuthService, dashboardServices) {
@@ -153,12 +160,12 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
     $scope.kir = {};
     PersetujuanKimServices.get().then(x => {
         x.forEach(element => {
-            if(element.persetujuans != null && element.persetujuans.length >0){
-                var lastApproval = element.persetujuans[element.persetujuans.length-1];  
-                if((element.nextApprove == "Administrator" && lastApproval.statusPersetujuan =="Fixed")){
+            if (element.persetujuans != null && element.persetujuans.length > 0) {
+                var lastApproval = element.persetujuans[element.persetujuans.length - 1];
+                if ((element.nextApprove == "Administrator" && lastApproval.statusPersetujuan == "Fixed")) {
                     $scope.datas.push(element);
                 }
-            }else{
+            } else {
                 $scope.datas.push(element);
             }
         });
@@ -302,8 +309,8 @@ function adminpersetujuankimController($scope, PersetujuanKimServices, message) 
     $scope.Title = 'Persetujuan KIM';
     PersetujuanKimServices.get().then(x => {
         x.forEach(element => {
-            var lastApproval = element.persetujuans[element.persetujuans.length-1];  
-            if(element.nextApprove == "Administrator" && lastApproval.approvedBy =="Manager"){
+            var lastApproval = element.persetujuans[element.persetujuans.length - 1];
+            if (element.nextApprove == "Administrator" && lastApproval.approvedBy == "Manager") {
                 $scope.datas.push(element);
             }
         });
@@ -326,7 +333,7 @@ function adminpersetujuankimController($scope, PersetujuanKimServices, message) 
             $.LoadingOverlay("show");
             PersetujuanKimServices.post(data).then(res => {
                 $.LoadingOverlay("hide");
-                message.dialog("proses Berhasil").then(x=>{
+                message.dialog("proses Berhasil").then(x => {
                     document.location.reload();
                 });
             })
@@ -358,15 +365,15 @@ function adminKimController($scope, adminKimsServices, message, helperServices) 
     }
     $scope.Title = 'KIM'
 
-    $scope.detail = (item)=>{
+    $scope.detail = (item) => {
         $scope.showDetail = item;
     }
 
-    $scope.exportToExcel =()=>{
+    $scope.exportToExcel = () => {
         var data = [];
         $scope.datas.forEach((element, key) => {
             var item = {
-                No: key+1,
+                No: key + 1,
                 KIMNumber: element.kimNumber,
                 Perusahaan: element.truck.company.name,
                 BerlakuDari: element.beginDate,
@@ -407,7 +414,7 @@ function adminKimController($scope, adminKimsServices, message, helperServices) 
         XLSX.writeFile(wb, "sheetjs.xlsx");
     }
 
-    $scope.kembali = ()=>{
+    $scope.kembali = () => {
         $scope.showDetail = undefined;
     }
 

@@ -58,14 +58,17 @@
                     aria-label="Open Profile Menu"><i class="fa fa-user fa-lg"></i> Administrator <i
                         class="fa fa-caret-down fa-lg" aria-hidden="true"></i></a>
                 <ul class="dropdown-menu settings-menu dropdown-menu-right">
-                    <li><a class="dropdown-item" href="page-user.html"><i class="fa fa-cog fa-lg"></i> Settings</a></li>
-                    <li><a class="dropdown-item" href="page-user.html"><i class="fa fa-user fa-lg"></i> Profile</a></li>
+                    <!-- <li><a class="dropdown-item" href="page-user.html"><i class="fa fa-cog fa-lg"></i> Settings</a></li> -->
+                    <li><a class="dropdown-item" href="javascript:void()" data-toggle="modal" data-target="#changePass"><i class="fa fa-unlock fa-lg"></i> Change Password</a></li>
                     <li><a class="dropdown-item" href="javascript:void()" ng-click="logout()"><i
                                 class="fa fa-sign-out fa-lg"></i> Logout</a>
                     </li>
                 </ul>
             </li>
         </ul>
+        <!-- Button trigger modal -->
+        <!-- Modal -->
+        
     </header>
     <!-- Sidebar menu-->
     <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
@@ -108,6 +111,31 @@
     <main class="app-content">
         <ui-view></ui-view>
     </main>
+    <div class="modal fade" id="changePass" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="login-head modal-title"><i class="fa fa-lg fa-fw fa-lock"></i>Change Password</h3>
+                    <!-- <h5 class=""></h5> -->
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <div class="modal-body">
+                    <form class="forget-form" ng-submit="reset(email)">
+                        
+                        <div class="form-group">
+                          <label class="control-label">EMAIL</label>
+                          <input class="form-control" type="email" placeholder="Masukkan Email Anda" ng-model="email" required>
+                        </div>
+                        <div class="form-group btn-container">
+                          <button type="submit"  class="btn btn-primary btn-block"><i class="fa fa-unlock fa-lg fa-fw"></i>RESET</button>
+                        </div>
+                      </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="./assets/js/popper.min.js"></script>
     <script src="./assets/js/bootstrap.min.js"></script>
     <script src="./assets/js/main.js"></script>

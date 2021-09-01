@@ -11,7 +11,7 @@ angular
 
 function companyController($scope, ProfilePerusahaanServices, message, $state, AuthService, helperServices, CompanyServices) {
     $scope.hideside = () => {
-        
+
     }
     $scope.profile = {};
     if (!AuthService.userIsLogin()) {
@@ -26,20 +26,32 @@ function companyController($scope, ProfilePerusahaanServices, message, $state, A
                     $scope.profile.logo = $scope.profile.logo;
                     AuthService.addProfile($scope.profile);
                     console.log($scope.profile);
-                    
+
                 }, (err) => {
                     message.dialogmessage("Mohon isi Profile terlebih dahulu").then(x => {
                         $state.go("profileperusahaan");
                     });
                 })
             }, 500);
-        }else{
+        } else {
             console.log($scope.profile);
         }
         // $scope.$emit("SendUp", $scope.profile);
     };
     $scope.logout = () => {
         AuthService.logOff();
+    }
+
+    $scope.reset = (email) => {
+        message.dialog("Yakin ingin mereset password?", "YA").then(x => {
+            $.LoadingOverlay("show");
+            AuthService.resetPassword(email).then(res => {
+                $.LoadingOverlay("hide");
+                message.dialog("Periksa Email anda!!", "OK").then(x => {
+                    AuthService.logOff();
+                })
+            })
+        })
     }
 }
 
@@ -53,7 +65,7 @@ function dashboardController($scope, CompanyServices, AuthService, helperService
     //     console.log(data);
     // });
     $scope.profile = AuthService.getProfile();
-    CompanyServices.get().then(dash=>{
+    CompanyServices.get().then(dash => {
         $scope.data = dash;
         console.log($scope.data);
     })
@@ -134,7 +146,7 @@ function kendaraanController($scope, KendaraanServices, helperServices, message)
             $.LoadingOverlay("show");
             KendaraanServices.put($scope.model).then(x => {
                 $.LoadingOverlay("hide");
-                message.dialogmessage("Data berhasil di tambahkan", "OK").then(x=>{
+                message.dialogmessage("Data berhasil di tambahkan", "OK").then(x => {
                     $('#myTab li:first-child a').tab('show')
                     document.location.reload();
                 });
@@ -150,7 +162,7 @@ function kendaraanController($scope, KendaraanServices, helperServices, message)
         } else {
             $.LoadingOverlay("show");
             KendaraanServices.post($scope.model).then(x => {
-                message.dialogmessage("Data berhasil di tambahkan").then(x=>{
+                message.dialogmessage("Data berhasil di tambahkan").then(x => {
                     $.LoadingOverlay("hide");
                     $('#myTab li:first-child a').tab('show')
                     document.location.reload()
@@ -184,11 +196,11 @@ function kendaraanController($scope, KendaraanServices, helperServices, message)
         $scope.model.carCreated = $scope.model.carCreated.toString();
         console.log($scope.model);
     }
-    $scope.showKims = (item)=>{
+    $scope.showKims = (item) => {
         $scope.kims = item;
         $("#dataKims").modal('show');
     }
-    
+
 }
 
 function pengajuanController($scope, PengajuanServices, message) {
@@ -203,14 +215,14 @@ function pengajuanController($scope, PengajuanServices, message) {
             message.info('Berhasil');
         })
     }
-    $scope.checkStatus = (item)=>{
+    $scope.checkStatus = (item) => {
         var status = true;
         item.forEach(element => {
-            status = element.status=='Reject' ? false : true;
+            status = element.status == 'Reject' ? false : true;
         });
         return status;
     }
-   
+
 }
 
 function tambahPengajuanController($scope, KendaraanServices, helperServices, PengajuanServices, message, $state, $stateParams, ListPemeriksaanServices, approvalServices) {
@@ -224,7 +236,7 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
     $scope.truck = {};
     $.LoadingOverlay("show");
     KendaraanServices.get().then(x => {
-        $scope.$applyAsync(x=>{
+        $scope.$applyAsync(x => {
             $(".truck").select2();
         })
         $scope.kendaraan = x;
@@ -243,8 +255,8 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
                     console.log($scope.model);
                 }
             } else {
-                $scope.model = itemPengajuan.find(x=>x.id == $stateParams.id);
-                ListPemeriksaanServices.get().then(pemeriksaan=>{
+                $scope.model = itemPengajuan.find(x => x.id == $stateParams.id);
+                ListPemeriksaanServices.get().then(pemeriksaan => {
                     $scope.listPemeriksaan = pemeriksaan;
                     console.log($scope.model);
                 })
@@ -255,13 +267,13 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
     })
     $scope.setItem = (item) => {
         if ($stateParams.id == null) {
-            $scope.$applyAsync(x=>{
+            $scope.$applyAsync(x => {
                 var itemPengajuan = { truck: item, }
                 $scope.model.items.push(itemPengajuan);
                 console.log($scope.model);
             })
         } else {
-            $scope.$applyAsync(x=>{
+            $scope.$applyAsync(x => {
                 item.attackStatus = item.attackStatus;
                 item.pengajuanId;
                 var truck = {};
@@ -278,7 +290,7 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
     }
     $scope.simpan = () => {
         console.log($scope.model);
-        message.dialogmessage("Pastikan berkas kendaraan anda telah lengkap. Yakin mengajukan berkas ??", "Ya", "Tidak").then(x=>{
+        message.dialogmessage("Pastikan berkas kendaraan anda telah lengkap. Yakin mengajukan berkas ??", "Ya", "Tidak").then(x => {
             $.LoadingOverlay("show");
             if ($scope.model.id) {
                 PengajuanServices.put($scope.model).then(x => {
@@ -295,23 +307,23 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
             }
         })
     }
-    $scope.detailPemeriksaan = (item)=>{
+    $scope.detailPemeriksaan = (item) => {
         console.log(item);
         $scope.truck = item;
         $scope.listPemeriksaan.forEach(elementPemeriksaan => {
-            elementPemeriksaan.hasilPemeriksaan = item.hasilPemeriksaan.filter(x=>x.itemPemeriksaan.pemeriksaan.id == elementPemeriksaan.id);              
+            elementPemeriksaan.hasilPemeriksaan = item.hasilPemeriksaan.filter(x => x.itemPemeriksaan.pemeriksaan.id == elementPemeriksaan.id);
         });
         console.log($scope.listPemeriksaan);
-        $scope.pemeriksaan1 = item.persetujuans.find(x=>x.approvedBy=='Administrator');
-        $scope.pemeriksaan2 = item.persetujuans.find(x=>x.approvedBy=='Approval1');
-        $scope.pemeriksaan3 = item.persetujuans.find(x=>x.approvedBy=='HSE');
-        $scope.pemeriksaan4 = item.persetujuans.find(x=>x.approvedBy=='Manager');
+        $scope.pemeriksaan1 = item.persetujuans.find(x => x.approvedBy == 'Administrator');
+        $scope.pemeriksaan2 = item.persetujuans.find(x => x.approvedBy == 'Approval1');
+        $scope.pemeriksaan3 = item.persetujuans.find(x => x.approvedBy == 'HSE');
+        $scope.pemeriksaan4 = item.persetujuans.find(x => x.approvedBy == 'Manager');
         $("#showPemeriksaan").modal('show');
     }
-    $scope.pengajuan=(item)=>{
+    $scope.pengajuan = (item) => {
         $.LoadingOverlay("show");
-        message.dialogmessage("Pastikan anda telah melengkapi berkas atau perlengkapan yang tidak 'Valid', Yakin mengajukan ulang berkas ??", "Ya", "Tidak").then(x=>{
-            approvalServices.post(item).then(res=>{
+        message.dialogmessage("Pastikan anda telah melengkapi berkas atau perlengkapan yang tidak 'Valid', Yakin mengajukan ulang berkas ??", "Ya", "Tidak").then(x => {
+            approvalServices.post(item).then(res => {
                 message.info("Berhasil");
                 $state.go("pengajuan");
                 $.LoadingOverlay("hide");

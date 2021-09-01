@@ -23,6 +23,7 @@ namespace WebApp.Services
         Task<bool> UpdateUser(int id, User user);
         Task<bool> ChangePassword(User user, ChangePasswordModel email);
         Task<bool> ForgotPassword(string url, string email);
+        Task<bool> ConfirmEmail(User user);
     }
 
     public class UserService : IUserService
@@ -53,7 +54,7 @@ namespace WebApp.Services
                 await context.SaveChangesAsync();
 
                 var token = EmailHelper.GenerateJwtToken(user, _appSettings);
-                var template = EmailHelper.GetUserCreatedTemplate(url+"/#!/account/confirmemail/token={token}", user, newPassword);
+                var template = EmailHelper.GetUserCreatedTemplate(url+$"/#!/account/confirmemail/{token}", user, newPassword);
                 var sended = await _mailService.SendEmail(new MailRequest { ToEmail = user.Email, Subject = "Confirm Account", Body = template });
                 return user;
             }
@@ -184,6 +185,28 @@ namespace WebApp.Services
             }
             catch (Exception ex)
             {
+                throw new SystemException(ex.Message);
+            }
+        }
+
+         public async Task<bool> ConfirmEmail(User user)
+        {
+            try
+            {
+                var dataUSer = context.Users.Where(x => x.Id == user.Id).SingleOrDefault();
+                if (dataUSer == null)
+                    throw new SystemException("User Tidak Ditemukan !");
+
+                dataUSer.Status = true;
+                var result = await context.SaveChangesAsync();
+
+                if (result <= 0)
+                    throw new SystemException("Data Tidak Tersimpan .... !");
+                return true;
+            }
+            catch (System.Exception ex)
+            {
+
                 throw new SystemException(ex.Message);
             }
         }

@@ -41,14 +41,14 @@ namespace WebApp.Services
         }
 
 
-        public async Task<User> Register(string url,string roleName, User user)
+        public async Task<User> Register(string url, string roleName, User user)
         {
             try
             {
-                var newPassword = MD5Hash.ToMD5Hash(DateTime.Now.Ticks.ToString()).Substring(1,6);
+                var newPassword = MD5Hash.ToMD5Hash(DateTime.Now.Ticks.ToString()).Substring(1, 6);
                 user.Password = MD5Hash.ToMD5Hash(newPassword);
                 var role = context.Roles.Where(x => x.Name == roleName).FirstOrDefault();
-                user.UserRoles.Add(new UserRole { Role = role});
+                user.UserRoles.Add(new UserRole { Role = role });
                 user.Status = false;
                 context.Users.Add(user);
                 await context.SaveChangesAsync();
@@ -134,7 +134,7 @@ namespace WebApp.Services
                 if (result <= 0)
                     throw new SystemException("Data Not Saved .... !");
 
-                 var sended = await _mailService.SendEmail(new MailRequest{ ToEmail= "ocph23@gmail.com", Subject="Chage User", Body="User Change"  });   
+                var sended = await _mailService.SendEmail(new MailRequest { ToEmail = "ocph23@gmail.com", Subject = "Chage User", Body = "User Change" });
 
                 return true;
             }
@@ -153,6 +153,8 @@ namespace WebApp.Services
                 if (dataUSer == null)
                     throw new SystemException("User Not Found !");
 
+                if (dataUSer.Password == MD5Hash.ToMD5Hash(email.Password))
+                    throw new SystemException("Password yang anda masukkan sudah pernah digunakan!");
                 dataUSer.Password = MD5Hash.ToMD5Hash(email.Password);
                 var result = await context.SaveChangesAsync();
 
@@ -174,10 +176,10 @@ namespace WebApp.Services
                 var user = context.Users.SingleOrDefault(x => x.Email == email);
                 if (user == null)
                     throw new SystemException("Account Anda Tidak Ditemukan !");
-                if(!user.Status)
+                if (!user.Status)
                     throw new SystemException("Account Anda Tidak Aktif, Silahkan hubungi Administrator !");
 
-                var token = EmailHelper. GenerateJwtToken(user, _appSettings);
+                var token = EmailHelper.GenerateJwtToken(user, _appSettings);
                 var template = EmailHelper.ChangePasswordTemplate($"{url}/#!/account/changepassword/{token}");
                 var sendedEmail = await _mailService.SendEmail(new MailRequest { Body = template, Subject = "Change Password", ToEmail = email });
                 return true;

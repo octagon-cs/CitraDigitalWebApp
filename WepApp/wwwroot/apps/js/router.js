@@ -21,6 +21,18 @@ angular.module("app.router", ["ui.router"])
                 templateUrl: '../apps/views/accounts/register.html'
             })
 
+            .state("forgotpassword", {
+                url: '/forgotpassword',
+                parent: 'account',
+                templateUrl: '../apps/views/accounts/register.html'
+            })
+
+            .state("changepassword", {
+                url: '/changepassword/:token',
+                parent: 'account',
+                templateUrl: '../apps/views/accounts/register.html'
+            })
+
             .state('index', {
                 url: '/index',
                 controller: 'adminController',

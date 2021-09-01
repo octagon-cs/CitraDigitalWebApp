@@ -28,7 +28,10 @@ namespace WebApp.Controllers
         {
             try
             {
-                var user = await administrator.CreateUser(roleName, model);
+
+                var baseUrl = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+
+                var user = await administrator.CreateUser(baseUrl, roleName, model);
                 if (user == null)
                     return BadRequest(new { message = "Username or password is incorrect" });
                 return Ok(user);

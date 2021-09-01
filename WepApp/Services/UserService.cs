@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebApp.Helpers;
 using WebApp.Models;
+using WepApp.Helpers;
 
 namespace WebApp.Services
 {
@@ -18,9 +19,10 @@ namespace WebApp.Services
         Task<AuthenticateResponse> Authenticate(AuthenticateRequest model);
         Task<IEnumerable<User>> GetAll();
         Task<User> GetById(int id);
-
-        Task<User> Register(string roleName, User user);
+        Task<User> Register(string url, string roleName, User user);
         Task<bool> UpdateUser(int id, User user);
+        Task<bool> ChangePassword(User user, ChangePasswordModel email);
+        Task<bool> ForgotPassword(string url, string email);
     }
 
     public class UserService : IUserService
@@ -38,16 +40,25 @@ namespace WebApp.Services
         }
 
 
-        public async Task<User> Register(string roleName, User user)
+        public async Task<User> Register(string url,string roleName, User user)
         {
             try
             {
-                user.Password = MD5Hash.ToMD5Hash(user.Password);
+                var newPassword = MD5Hash.ToMD5Hash(DateTime.Now.Ticks.ToString()).Substring(1,6);
+                user.Password = MD5Hash.ToMD5Hash(newPassword);
                 var role = context.Roles.Where(x => x.Name == roleName).FirstOrDefault();
                 user.UserRoles.Add(new UserRole { Role = role});
                 user.Status = true;
                 context.Users.Add(user);
                 await context.SaveChangesAsync();
+
+                var token = EmailHelper.GenerateJwtToken(user, _appSettings);
+                var template = EmailHelper.ConfirmEmailTemplate(url, user, token);
+                var sendedEmail = await _mailService.SendEmail(new MailRequest { Body = template, Subject = "Confirm Email", ToEmail = user.Email });
+                return true;
+
+
+
                 return user;
             }
             catch (System.Exception ex)
@@ -133,6 +144,47 @@ namespace WebApp.Services
             catch (System.Exception ex)
             {
 
+                throw new SystemException(ex.Message);
+            }
+        }
+
+        public async Task<bool> ChangePassword(User user, ChangePasswordModel email)
+        {
+            try
+            {
+                var dataUSer = context.Users.Where(x => x.Id == user.Id).SingleOrDefault();
+                if (dataUSer == null)
+                    throw new SystemException("User Not Found !");
+
+                dataUSer.Password = MD5Hash.ToMD5Hash(email.Password);
+                var result = await context.SaveChangesAsync();
+
+                if (result <= 0)
+                    throw new SystemException("Data Not Saved .... !");
+                return true;
+            }
+            catch (System.Exception ex)
+            {
+
+                throw new SystemException(ex.Message);
+            }
+        }
+
+        public async Task<bool> ForgotPassword(string url, string email)
+        {
+            try
+            {
+                var user = context.Users.SingleOrDefault(x => x.Email == email);
+                if (user == null)
+                    throw new SystemException("Account Anda Tidak Ditemukan !");
+                var token = EmailHelper. GenerateJwtToken(user, _appSettings);
+                var template = EmailHelper.ChangePasswordTemplate($"{url}/#!/account/changepassword/token={token}");
+                var sendedEmail = await _mailService.SendEmail(new MailRequest { Body = template, Subject = "Change Password", ToEmail = email });
+                return true;
+
+            }
+            catch (Exception ex)
+            {
                 throw new SystemException(ex.Message);
             }
         }

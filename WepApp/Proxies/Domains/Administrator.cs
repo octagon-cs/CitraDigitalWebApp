@@ -6,12 +6,13 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 using WebApp.Services;
 using WebApp.Helpers;
+using WepApp.Helpers;
 
 namespace WebApp.Proxy.Domains
 {
     public interface IAdministrator
     {
-        Task<User> CreateUser(string roleName, User user);
+        Task<User> CreateUser(string baseUrl, string roleName, User user);
         Task<User> UpdateUser(int id, User user);
         Task AddUserRole(int userId, string roleName);
         Task<Pemeriksaan> AddNewItemPemeriksaaan(Pemeriksaan item);
@@ -34,18 +35,21 @@ namespace WebApp.Proxy.Domains
         private User _userLogin;
         private IUserService _userService;
         private DataContext _context;
-        public Administrator(IUserService userService, DataContext context)
+        private IEmailService _mailService;
+
+        public Administrator(IUserService userService, DataContext context, IEmailService emailService)
         {
             _userService = userService;
             _context = context;
+            _mailService = emailService;
 
         }
-        public Administrator(User userLogin, IUserService userService, DataContext context)
+        public Administrator(User userLogin, IUserService userService, DataContext context, IEmailService mailService)
         {
             _userLogin = userLogin;
             _userService = userService;
             _context = context;
-
+            _mailService = mailService;
         }
 
         public async Task<User> UpdateUser(int id, User user)
@@ -61,6 +65,10 @@ namespace WebApp.Proxy.Domains
                 var result = await _context.SaveChangesAsync();
                 if (result <= 0)
                     throw new SystemException("Not Saved ...!");
+
+
+
+                var sended = await _mailService.SendEmail(new MailRequest { ToEmail = "ocph23@gmail.com", Subject = "Chage User", Body = EmailHelper.GetUserCreatedTemplate() });
                 return user;
 
             }
@@ -129,11 +137,11 @@ namespace WebApp.Proxy.Domains
             }
         }
 
-        public async Task<User> CreateUser(string roleName, User user)
+        public async Task<User> CreateUser(string baseurl,string roleName, User user)
         {
             try
             {
-                var result = await _userService.Register(roleName, user);
+                var result = await _userService.Register(baseurl, roleName, user);
                 if (result != null)
                     return result;
                 return null;

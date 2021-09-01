@@ -14,7 +14,8 @@ namespace WebApp.Proxy
         public static IAdministrator GetAdministratorProxy(User userLogin, IUserService userService)
         {
             var context = GetServiceProvider.Instance.GetRequiredService<DataContext>();
-            return new Administrator(userLogin, userService, context);
+            var mailService = GetServiceProvider.Instance.GetRequiredService<IEmailService>();
+            return new Administrator(userLogin, userService, context, mailService);
         }
 
         public static ICompanyAdministrator GetCompanyAdministratorProxy()

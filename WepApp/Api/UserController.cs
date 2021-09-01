@@ -58,6 +58,12 @@ namespace WebApp.Controllers
             }
         }
 
+
+
+
+
+
+
         [Authorize]
         [HttpPut]
         public async Task<IActionResult> Put(int id, User user)
@@ -73,6 +79,42 @@ namespace WebApp.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
+        [HttpGet("forgotpassword/{email}")]
+        public async Task<IActionResult> ForgotPasword(string email)
+        {
+            try
+            {
+               var baseUrl= $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
+                var response = await _userService.ForgotPassword(baseUrl, email);
+                return Ok(response);
+            }
+            catch (System.Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [Authorize]
+        [HttpPut("changepassword")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
+        {
+            try
+            {
+                var user = await Request.GetUser();
+                var response = await _userService.ChangePassword(user, model);
+                return Ok(response);
+            }
+            catch (System.Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+
 
     }
 }

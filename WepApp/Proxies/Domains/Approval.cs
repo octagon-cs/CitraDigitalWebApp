@@ -32,7 +32,11 @@ namespace WebApp.Models
         public async Task<Persetujuan> Approve(int id, List<HasilPemeriksaan> hasil)
         {
 
-            await using var transaction = await context.Database.BeginTransactionAsync();
+            var executionStrategy = _context.db.CreateExecutionStrategy();
+
+            executionStrategy.Execute(()=>{
+                using(var transaction = _context.Database.BeginTransaction()) 
+        {
             try
             {
                 context.ChangeTracker.Clear();
@@ -106,6 +110,12 @@ namespace WebApp.Models
                 await transaction.RollbackAsync();
                 throw new SystemException(ex.Message);
             }
+        }
+            });
+
+
+
+           
         }
 
         public async Task<Persetujuan> Reject(int id, List<HasilPemeriksaan> hasil)

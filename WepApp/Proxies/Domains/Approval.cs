@@ -31,13 +31,9 @@ namespace WebApp.Models
 
         public async Task<Persetujuan> Approve(int id, List<HasilPemeriksaan> hasil)
         {
-
-            var executionStrategy = _context.db.CreateExecutionStrategy();
-
-            executionStrategy.Execute(()=>{
-                using(var transaction = _context.Database.BeginTransaction()) 
-        {
-            try
+            
+            using(var transaction = await context.Database.BeginTransactionAsync()){
+  try
             {
                 context.ChangeTracker.Clear();
 
@@ -110,19 +106,17 @@ namespace WebApp.Models
                 await transaction.RollbackAsync();
                 throw new SystemException(ex.Message);
             }
-        }
-            });
+            }
 
-
-
-           
+          
         }
 
         public async Task<Persetujuan> Reject(int id, List<HasilPemeriksaan> hasil)
         {
 
-            await using var transaction = await context.Database.BeginTransactionAsync();
-            try
+            using(var transaction = await context.Database.BeginTransactionAsync())
+            {
+             try
             {
                 context.ChangeTracker.Clear();
                 if (hasil == null || hasil.Count <= 0)
@@ -179,6 +173,8 @@ namespace WebApp.Models
                 await transaction.RollbackAsync();
                 throw new SystemException(ex.Message);
             }
+            }
+          
         }
 
         public List<KIM> Checked(Pengajuan kim)

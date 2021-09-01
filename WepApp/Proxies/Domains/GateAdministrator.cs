@@ -61,8 +61,8 @@ namespace WebApp.Proxy.Domains
 
         public async Task<TruckIncomming> Approve(int id, List<HasilPemeriksaan> hasil, bool status)
         {
-            await using var transaction = await _context.Database.BeginTransactionAsync();
-            try
+using(var transaction = await _context.Database.BeginTransactionAsync()){
+try
             {
                 if (hasil == null || hasil.Count <= 0)
                     throw new SystemException("Hasil Pemeriksaan Tidak Ditekuan..!");
@@ -107,6 +107,9 @@ namespace WebApp.Proxy.Domains
                 await transaction.RollbackAsync();
                 throw new SystemException(ex.Message);
             }
+}
+
+            
         }
 
         public Task<Truck> TruckHistrories(int id)

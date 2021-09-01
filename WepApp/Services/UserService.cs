@@ -45,17 +45,17 @@ namespace WebApp.Services
         {
             try
             {
-                var newPassword = MD5Hash.ToMD5Hash(DateTime.Now.Ticks.ToString()).Substring(1, 6);
-                user.Password = MD5Hash.ToMD5Hash(newPassword);
+                //var newPassword = MD5Hash.ToMD5Hash(DateTime.Now.Ticks.ToString()).Substring(1, 6);
+                user.Password = MD5Hash.ToMD5Hash(user.Password);
                 var role = context.Roles.Where(x => x.Name == roleName).FirstOrDefault();
                 user.UserRoles.Add(new UserRole { Role = role });
-                user.Status = false;
+                user.Status = true;
                 context.Users.Add(user);
                 await context.SaveChangesAsync();
 
-                var token = EmailHelper.GenerateJwtToken(user, _appSettings);
-                var template = EmailHelper.GetUserCreatedTemplate(url+$"/#!/account/confirmemail/{token}", user, newPassword);
-                var sended = await _mailService.SendEmail(new MailRequest { ToEmail = user.Email, Subject = "Confirm Account", Body = template });
+                //var token = EmailHelper.GenerateJwtToken(user, _appSettings);
+                //var template = EmailHelper.GetUserCreatedTemplate(url+$"/#!/account/confirmemail/{token}", user, user.Password);
+                //var sended = await _mailService.SendEmail(new MailRequest { ToEmail = user.Email, Subject = "Confirm Account", Body = template });
                 return user;
             }
             catch (System.Exception ex)

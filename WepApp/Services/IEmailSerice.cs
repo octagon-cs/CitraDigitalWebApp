@@ -35,7 +35,7 @@ namespace WebApp.Services
                 string to = mailRequest.ToEmail;
                 string from = _mailSettings.Mail;
                 MailMessage message = new MailMessage(from, to);
-                message.Subject = "Using the new SMTP client.";
+                message.Subject = mailRequest.Subject;
 
                 var builder = new BodyBuilder();
                 if (mailRequest.Attachments != null)

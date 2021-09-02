@@ -57,6 +57,7 @@ namespace WebApp.Services
                 builder.HtmlBody =  mailRequest.Body;
                 message.Body = mailRequest.Body;
                 message.IsBodyHtml = true;
+                message.From = new MailAddress(_mailSettings.Mail, _mailSettings.DisplayName);
                 SmtpClient smtp = new SmtpClient(_mailSettings.Host,_mailSettings.Port);
                 smtp.Credentials = new NetworkCredential(_mailSettings.Mail, _mailSettings.Password);
                 smtp.EnableSsl = true; 

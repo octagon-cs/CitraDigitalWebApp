@@ -62,7 +62,7 @@ namespace WebApp.Services
 
                 smtp.EnableSsl = true;
 
-                smtp.UseDefaultCredentials = false;
+                //smtp.UseDefaultCredentials = false;
 
                 smtp.Credentials = new NetworkCredential(_mailSettings.Mail, _mailSettings.Password);
                 // =========================================================

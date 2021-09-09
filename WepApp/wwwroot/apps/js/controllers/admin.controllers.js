@@ -11,7 +11,7 @@ angular
     .controller('adminKimController', adminKimController)
     ;
 
-function adminController($scope, $state, AuthService) {
+function adminController($scope, $state, AuthService, message) {
     $scope.profile = {};
 
     if (!AuthService.userIsLogin()) {

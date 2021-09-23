@@ -181,6 +181,29 @@ namespace WepApp.Helpers
             return template;
         }
 
+
+
+
+        public static string CreateNotification(string message)
+        {
+            var template = templateHeader +message
+            + @"
+                </div>
+                <div class='footer'>
+                    <div><h3>PERTAMINA JAYAPURA </h3></div>
+                </div>
+            </div>
+        </body>
+        </html>";
+            return template;
+        }
+
+
+
+
+
+
+
         internal static string ConfirmEmailTemplate(string url, User user, string token)
         {
             throw new NotImplementedException();

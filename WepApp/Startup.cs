@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebApp.Helpers;
 using WebApp.Services;
+using WepApp.Services;
 
 namespace WebApp
 {
@@ -81,6 +82,13 @@ namespace WebApp
                     };
                 };
             });
+
+
+            //background 
+            services.AddHostedService<TimedHostedService>();
+
+            services.AddSignalR();
+
         }
 
 
@@ -126,6 +134,7 @@ namespace WebApp
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+                endpoints.MapHub<KimHub>("/chatHub");
             });
         }
 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 //using MimeKit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using MimeKit;
+//using MimeKit;
 
 namespace WebApp.Services
 {
@@ -32,47 +32,47 @@ namespace WebApp.Services
         {
           try
           {
-                string to = mailRequest.ToEmail;
-                string from = _mailSettings.Mail;
-                MailMessage message = new MailMessage(from, to);
-                message.Subject = mailRequest.Subject;
+                //string to = mailRequest.ToEmail;
+                //string from = _mailSettings.Mail;
+                //MailMessage message = new MailMessage(from, to);
+                //message.Subject = mailRequest.Subject;
 
-                var builder = new BodyBuilder();
-                if (mailRequest.Attachments != null)
-                {
-                    byte[] fileBytes;
-                    foreach (var file in mailRequest.Attachments)
-                    {
-                        if (file.Length > 0)
-                        {
-                            using (var ms = new MemoryStream())
-                            {
-                                file.CopyTo(ms);
-                                fileBytes = ms.ToArray();
-                            }
-                            builder.Attachments.Add(file.FileName, fileBytes, ContentType.Parse(file.ContentType));
-                        }
-                    }
-                }
-                builder.HtmlBody =  mailRequest.Body;
-                message.Body = mailRequest.Body;
-                message.IsBodyHtml = true;
-                message.From = new MailAddress(_mailSettings.Mail, _mailSettings.DisplayName);
-                SmtpClient smtp = new SmtpClient(_mailSettings.Host,_mailSettings.Port);
-                smtp.Credentials = new NetworkCredential(_mailSettings.Mail, _mailSettings.Password);
-                smtp.EnableSsl = true; 
-                smtp.UseDefaultCredentials = false;
-                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                //var builder = new BodyBuilder();
+                //if (mailRequest.Attachments != null)
+                //{
+                //    byte[] fileBytes;
+                //    foreach (var file in mailRequest.Attachments)
+                //    {
+                //        if (file.Length > 0)
+                //        {
+                //            using (var ms = new MemoryStream())
+                //            {
+                //                file.CopyTo(ms);
+                //                fileBytes = ms.ToArray();
+                //            }
+                //            builder.Attachments.Add(file.FileName, fileBytes, ContentType.Parse(file.ContentType));
+                //        }
+                //    }
+                //}
+                //builder.HtmlBody =  mailRequest.Body;
+                //message.Body = mailRequest.Body;
+                //message.IsBodyHtml = true;
+                //message.From = new MailAddress(_mailSettings.Mail, _mailSettings.DisplayName);
+                //SmtpClient smtp = new SmtpClient(_mailSettings.Host,_mailSettings.Port);
+                //smtp.Credentials = new NetworkCredential(_mailSettings.Mail, _mailSettings.Password);
+                //smtp.EnableSsl = true; 
+                //smtp.UseDefaultCredentials = false;
+                //smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
 
-                try
-                {
-                    smtp.Send(message);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Exception caught in CreateTestMessage2(): {0}",
-                        ex.ToString());
-                }
+                //try
+                //{
+                //    smtp.Send(message);
+                //}
+                //catch (Exception ex)
+                //{
+                //    Console.WriteLine("Exception caught in CreateTestMessage2(): {0}",
+                //        ex.ToString());
+                //}
 
                 //var email = new MimeMessage();
                 //email.Sender = MailboxAddress.Parse(_mailSettings.Mail);

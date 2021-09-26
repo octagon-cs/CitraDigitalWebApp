@@ -182,7 +182,6 @@ namespace WepApp.Services
                                         <label>Nama Asisten Supir/Kernet</label>
                                         <h4>[assopir]</h4>
                                         </div>
-
                                         <div class='inputData'>
                                         <label>Tanggal Berakhir Kim</label>
                                         <h4>[tanggal]</h4>

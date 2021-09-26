@@ -6,10 +6,12 @@ using System.Collections.Generic;
 using System.Linq;                                                                                                                      
 using System.Threading;
 using System.Threading.Tasks;
+using WebApp.Helpers;
 using WebApp.Models;
 using WebApp.Proxy;
 using WebApp.Proxy.Domains;
 using WebApp.Services;
+using WepApp.Models;
 
 namespace WepApp.Services
 {
@@ -33,7 +35,7 @@ namespace WepApp.Services
             states = new List<KIMState>();
             _logger.LogInformation("Timed Hosted Service running.");
             _timer = new Timer(DoWork, null, TimeSpan.Zero,
-                TimeSpan.FromMinutes(1));
+                TimeSpan.FromDays(1));
             return Task.CompletedTask;
         }
 
@@ -59,7 +61,7 @@ namespace WepApp.Services
         {
             if (kimState == null)
             {
-                kimState = new KIMState();
+                kimState = new KIMState() { Id=item.Id};
                 states.Add(kimState);
             }
 
@@ -75,6 +77,9 @@ namespace WepApp.Services
             }
 
 
+          
+
+
             if (!kimState.Truck)
             {
                 if ((DateTime.Now.Year - item.Truck.TahunPembuatan) <= 1)
@@ -88,8 +93,8 @@ namespace WepApp.Services
            
             if (!kimState.Driver)
             {
-                var ageOfDriver = new Age(item.Truck.DriverDateOfBirth.Value);
-                if (ageOfDriver.Years == 44 && ageOfDriver.Months >= 11)
+                var ageOfDriver = item.Truck.DriverAge;
+                if (ageOfDriver.Years == 49 && ageOfDriver.Months >= 11)
                 {
                     SendMessageOFKIM(item, ageOfDriver, "Driver");
                     kimState.Driver= true;
@@ -102,8 +107,8 @@ namespace WepApp.Services
 
             if (!kimState.AssDriver)
             {
-                var ageOfAssDriver = new Age(item.Truck.AssDriverDateOfBirth.Value);
-                if (ageOfAssDriver.Years == 44 && ageOfAssDriver.Months >= 11)
+                var ageOfAssDriver = item.Truck.AssDriverAge;
+                if (ageOfAssDriver.Years == 54 && ageOfAssDriver.Months >= 11)
                 {
                     SendMessageOFKIM(item, ageOfAssDriver, "AssDriver");
                     kimState.AssDriver= true;
@@ -238,70 +243,5 @@ namespace WepApp.Services
     }
 
 
-    public class Age
-    {
-        public int Years;
-        public int Months;
-        public int Days;
-
-        public Age(DateTime Bday)
-        {
-            this.Count(Bday);
-        }
-
-        public Age(DateTime Bday, DateTime Cday)
-        {
-            this.Count(Bday, Cday);
-        }
-
-        public Age Count(DateTime Bday)
-        {
-            return this.Count(Bday, DateTime.Today);
-        }
-
-        public Age Count(DateTime Bday, DateTime Cday)
-        {
-            if ((Cday.Year - Bday.Year) > 0 ||
-                (((Cday.Year - Bday.Year) == 0) && ((Bday.Month < Cday.Month) ||
-                  ((Bday.Month == Cday.Month) && (Bday.Day <= Cday.Day)))))
-            {
-                int DaysInBdayMonth = DateTime.DaysInMonth(Bday.Year, Bday.Month);
-                int DaysRemain = Cday.Day + (DaysInBdayMonth - Bday.Day);
-
-                if (Cday.Month > Bday.Month)
-                {
-                    this.Years = Cday.Year - Bday.Year;
-                    this.Months = Cday.Month - (Bday.Month + 1) + Math.Abs(DaysRemain / DaysInBdayMonth);
-                    this.Days = (DaysRemain % DaysInBdayMonth + DaysInBdayMonth) % DaysInBdayMonth;
-                }
-                else if (Cday.Month == Bday.Month)
-                {
-                    if (Cday.Day >= Bday.Day)
-                    {
-                        this.Years = Cday.Year - Bday.Year;
-                        this.Months = 0;
-                        this.Days = Cday.Day - Bday.Day;
-                    }
-                    else
-                    {
-                        this.Years = (Cday.Year - 1) - Bday.Year;
-                        this.Months = 11;
-                        this.Days = DateTime.DaysInMonth(Bday.Year, Bday.Month) - (Bday.Day - Cday.Day);
-                    }
-                }
-                else
-                {
-                    this.Years = (Cday.Year - 1) - Bday.Year;
-                    this.Months = Cday.Month + (11 - Bday.Month) + Math.Abs(DaysRemain / DaysInBdayMonth);
-                    this.Days = (DaysRemain % DaysInBdayMonth + DaysInBdayMonth) % DaysInBdayMonth;
-                }
-            }
-            else
-            {
-                throw new ArgumentException("Birthday date must be earlier than current date");
-            }
-            return this;
-        }
-    }
-
+  
 }

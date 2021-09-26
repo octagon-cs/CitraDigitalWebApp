@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using WebApp.Helpers;
+using WepApp.Models;
 
 namespace WebApp.Models
 {
@@ -25,5 +26,10 @@ namespace WebApp.Models
                 return Helpers.AutoSystem.Expired(EndDate);
             }
         }
+
+        [NotMapped]
+        public Age AgeOfKIM => new Age(DateTime.Now, this.EndDate);
+
+
     }
 }

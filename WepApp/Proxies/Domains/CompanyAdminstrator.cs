@@ -126,10 +126,10 @@ namespace WebApp.Proxy.Domains
         {
             try
             {
-                if (truck.DriverAge.Year > 50)
+                if (truck.DriverAge.Years > 50)
                     throw new System.SystemException("Umur Sopir Tidak Boleh Lebih Dari 50 Tahun !");
 
-                if (truck.AssDriverAge.Year > 55)
+                if (truck.AssDriverAge.Years > 55)
                     throw new System.SystemException("Umur Asisten Sopir Tidak Boleh Lebih Dari 55 Tahun !");
 
                 var dataTruck = await SaveFile(truck);
@@ -250,10 +250,10 @@ namespace WebApp.Proxy.Domains
         {
             try
             {
-                if (data.DriverAge.Year > 50)
+                if (data.DriverAge.Years > 50)
                     throw new System.SystemException("Umur Sopir Tidak Boleh Lebih Dari 50 Tahun !");
 
-                if (data.AssDriverAge.Year> 55)
+                if (data.AssDriverAge.Years> 55)
                     throw new System.SystemException("Umur Asisten Sopir Tidak Boleh Lebih Dari 55 Tahun !");
 
 

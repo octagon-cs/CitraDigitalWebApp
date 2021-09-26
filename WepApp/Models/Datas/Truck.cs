@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Newtonsoft.Json;
 using WebApp.Helpers;
+using WepApp.Models;
 
 namespace WebApp.Models
 {

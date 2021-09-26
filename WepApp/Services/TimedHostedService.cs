@@ -35,7 +35,7 @@ namespace WepApp.Services
         public async Task StartAsync(CancellationToken stoppingToken)
         {
             startDate = DateTime.Now;
-            await Task.Delay(5000);
+            await Task.Delay(10000);
             states = new List<KIMState>();
             _logger.LogInformation("Timed Hosted Service running.");
             _timer = new Timer(DoWork, null, TimeSpan.Zero,

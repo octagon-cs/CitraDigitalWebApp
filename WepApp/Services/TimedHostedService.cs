@@ -97,7 +97,7 @@ namespace WepApp.Services
 
             if (!kimState.Truck)
             {
-                if ((DateTime.Now.Year - item.Truck.TahunPembuatan) <= 1)
+                if ((DateTime.Now.Year - item.Truck.CarCreated) <= 1)
                 {
                     SendMessageOFKIM(item,null, "Kendaraan");
                     kimState.Truck= true;

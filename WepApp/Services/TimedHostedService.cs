@@ -18,6 +18,8 @@ namespace WepApp.Services
     public class TimedHostedService : IHostedService, IDisposable
     {
         private int executionCount = 0;
+        private DateTime startDate;
+
         private List<KIMState> states;
         private readonly ILogger<TimedHostedService> _logger;
         private readonly IServiceProvider _serviceProvider;
@@ -30,30 +32,45 @@ namespace WepApp.Services
             _serviceProvider = serviceProvider;
         }
 
-        public Task StartAsync(CancellationToken stoppingToken)
+        public async Task StartAsync(CancellationToken stoppingToken)
         {
+            startDate = DateTime.Now;
+            await Task.Delay(5000);
             states = new List<KIMState>();
             _logger.LogInformation("Timed Hosted Service running.");
             _timer = new Timer(DoWork, null, TimeSpan.Zero,
                 TimeSpan.FromDays(1));
-            return Task.CompletedTask;
         }
 
         private void DoWork(object state)
         {
-            using (IServiceScope scope = _serviceProvider.CreateScope())
+            try
             {
-                IUserService userService =
-                    scope.ServiceProvider.GetRequiredService<IUserService>();
-
-               var administrator = UserProxy.GetAdministratorProxy(null, userService);
-                var kims = administrator.GetAllKIM().Result;
-
-                foreach (var item in kims)
+                var clearDate = new Age(startDate);
+                if (clearDate.Months >= 1)
                 {
-                    ProccessKIM(item, states.Where(x=>x.Id==item.Id).FirstOrDefault());
+                    startDate = DateTime.Now;
+                    this.states.Clear();
                 }
 
+                using (IServiceScope scope = _serviceProvider.CreateScope())
+                {
+                    IUserService userService =
+                        scope.ServiceProvider.GetRequiredService<IUserService>();
+
+                    var administrator = UserProxy.GetAdministratorProxy(null, userService);
+                    var kims = administrator.GetAllKIM().Result;
+
+                    foreach (var item in kims.Where(x=>x.Expired!=ExpireStatus.Expire))
+                    {
+                        ProccessKIM(item, states.Where(x => x.Id == item.Id).FirstOrDefault());
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation($"{ex.Message}");
             }
         }
 
@@ -76,8 +93,6 @@ namespace WepApp.Services
                 }
             }
 
-
-          
 
 
             if (!kimState.Truck)

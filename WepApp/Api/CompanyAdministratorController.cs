@@ -241,6 +241,24 @@ namespace WebApp.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
+
+        [HttpGet("GetAllKim")]
+        public async Task<IActionResult> GetAllKim()
+        {
+            try
+            {
+                var adminUser = await Request.GetUser();
+                var company = await adminUser.GetCompany();
+                var result = await administrator.GetAllKim(company.Id);
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
         #endregion
     }
 }

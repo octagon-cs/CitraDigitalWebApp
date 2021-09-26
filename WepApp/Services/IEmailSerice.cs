@@ -4,12 +4,8 @@ using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-//using MailKit.Net.Smtp;
-//using MailKit.Security;
-//using MimeKit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using MimeKit;
 
 namespace WebApp.Services
 {
@@ -34,10 +30,11 @@ namespace WebApp.Services
           {
                 string to = mailRequest.ToEmail;
                 string from = _mailSettings.Mail;
+               // MailMessage message = new MailMessage(addressFrom, addressTo);
                 MailMessage message = new MailMessage(from, to);
                 message.Subject = mailRequest.Subject;
 
-                var builder = new BodyBuilder();
+              //  var builder = new BodyBuilder();
                 if (mailRequest.Attachments != null)
                 {
                     byte[] fileBytes;
@@ -49,12 +46,11 @@ namespace WebApp.Services
                             {
                                 file.CopyTo(ms);
                                 fileBytes = ms.ToArray();
+                            message.Attachments.Add(new Attachment(ms, file.FileName, file.ContentType));
                             }
-                            builder.Attachments.Add(file.FileName, fileBytes, ContentType.Parse(file.ContentType));
                         }
                     }
                 }
-                builder.HtmlBody =  mailRequest.Body;
                 message.Body = mailRequest.Body;
                 message.IsBodyHtml = true;
                 message.From = new MailAddress(_mailSettings.Mail, _mailSettings.DisplayName);
@@ -74,34 +70,6 @@ namespace WebApp.Services
                         ex.ToString());
                 }
 
-                //var email = new MimeMessage();
-                //email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
-                //email.To.Add(MailboxAddress.Parse(mailRequest.ToEmail));
-                //email.Subject = mailRequest.Subject;
-                //var builder = new BodyBuilder();
-                //if (mailRequest.Attachments != null)
-                //{
-                //    byte[] fileBytes;
-                //    foreach (var file in mailRequest.Attachments)
-                //    {
-                //        if (file.Length > 0)
-                //        {
-                //            using (var ms = new MemoryStream())
-                //            {
-                //                file.CopyTo(ms);
-                //                fileBytes = ms.ToArray();
-                //            }
-                //            builder.Attachments.Add(file.FileName, fileBytes, ContentType.Parse(file.ContentType));
-                //        }
-                //    }
-                //}
-                //builder.HtmlBody = "Ini pesan senderhana !";// mailRequest.Body;
-                //email.Body =  builder.ToMessageBody();
-                //using var smtp = new SmtpClient();
-                //smtp.Connect(_mailSettings.Host, _mailSettings.Port, SecureSocketOptions.StartTls);
-                //smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
-                //await smtp.SendAsync(email);
-                //smtp.Disconnect(true);
                 return Task.FromResult(true);
           }
           catch (System.Exception ex)

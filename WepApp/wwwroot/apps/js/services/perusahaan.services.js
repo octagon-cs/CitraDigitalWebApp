@@ -11,7 +11,7 @@ function CompanyServices($http, $q, helperServices, AuthService, message) {
     service.data = [];
     service.instance = false;
     return {
-        get: get, createProfile: createProfile
+        get: get, createProfile: createProfile, getAllKim:getAllKim
     };
 
     function get() {
@@ -54,7 +54,26 @@ function CompanyServices($http, $q, helperServices, AuthService, message) {
             },
             (err) => {
                 def.reject(err.data);
+                $.LoadingOverlay("hide");
+            }
+        );
+        return def.promise;
+    }
 
+    function getAllKim() {
+        var def = $q.defer();
+        $http({
+            method: 'get',
+            url: controller + "/GetAllKim",
+            headers: AuthService.getHeader()
+        }).then(
+            (res) => {
+                def.resolve(res.data);
+            },
+            (err) => {
+                def.reject(err.data);
+                message.warning(err.data);
+                $.LoadingOverlay("hide");
             }
         );
         return def.promise;
@@ -215,6 +234,7 @@ function KendaraanServices($http, $q, helperServices, AuthService, message) {
         return def.promise;
     }
 }
+
 function PengajuanServices($http, $q, helperServices, AuthService, message) {
     var controller = helperServices.url + 'api/companyadministrator';
     var service = {};

@@ -13,6 +13,8 @@ function companyController($scope, ProfilePerusahaanServices, message, $state, A
     $scope.hideside = () => {
 
     }
+    $scope.warningkim = 0;
+    $scope.warningkendaraan = 0;
     $scope.profile = {};
     if (!AuthService.userIsLogin()) {
         $state.go("login");
@@ -25,8 +27,40 @@ function companyController($scope, ProfilePerusahaanServices, message, $state, A
                     $scope.profile = x;
                     $scope.profile.logo = $scope.profile.logo;
                     AuthService.addProfile($scope.profile);
-                    console.log($scope.profile);
+                    CompanyServices.getAllKim().then(res => {
+                        res.forEach(element => {
+                            var carCreated = moment(element.truck.carCreated + "-01-01", 'YYYY-MM-DD');
+                            var newDate = moment();
+                            var duration = moment.duration(newDate.diff(carCreated));
+                            var text = "";
+                            if (element.ageOfKIM.months == 0 && element.ageOfKIM.days > 0) {
+                                $scope.warningkim += 1;
+                            } else if (element.ageOfKIM.months <= 0 && element.ageOfKIM.days <= 0) {
+                                $scope.warningkim += 1;
+                            }
 
+                            if (element.truck.assDriverAge.years >= 54 && element.truck.assDriverAge.months >= 11 && element.truck.assDriverAge.days >= 1 && element.truck.assDriverAge.days <= 31) {
+                                $scope.warningkendaraan += 1;
+                            }
+
+                            if (element.truck.driverAge.years >= 54 && element.truck.driverAge.months >= 11 && element.truck.driverAge.days >= 1 && element.truck.driverAge.days <= 31) {
+                                $scope.warningkendaraan += 1;
+                            }
+
+                            if (element.truck.driverAge.years >= 54 && element.truck.driverAge.months >= 11 && element.truck.driverAge.days >= 1 && element.truck.driverAge.days <= 31) {
+                                $scope.warningkendaraan += 1;
+                            }
+
+                            if (duration._data.years == 10 && duration._data.months == 11 && (duration._data.days > 1 && duration._data.days < 31)) {
+                                $scope.warningkendaraan += 1;
+                            } else if (duration._data.years > 10) {
+                                $scope.warningkendaraan += 1;
+                            }
+                        });
+                        if ($scope.warningkendaraan > 0 || $scope.warningkim > 0) {
+                            message.warning("Terdapat Berkas yang akan expire");
+                        }
+                    })
                 }, (err) => {
                     message.dialogmessage("Mohon isi Profile terlebih dahulu").then(x => {
                         $state.go("profileperusahaan");
@@ -34,7 +68,42 @@ function companyController($scope, ProfilePerusahaanServices, message, $state, A
                 })
             }, 500);
         } else {
-            console.log($scope.profile);
+            setTimeout(() => {
+                CompanyServices.getAllKim().then(res => {
+                    res.forEach(element => {
+                        var carCreated = moment(element.truck.carCreated + "-01-01", 'YYYY-MM-DD');
+                        var newDate = moment();
+                        var duration = moment.duration(newDate.diff(carCreated));
+                        var text = "";
+                        if (element.ageOfKIM.months == 0 && element.ageOfKIM.days > 0) {
+                            $scope.warningkim += 1;
+                        } else if (element.ageOfKIM.months <= 0 && element.ageOfKIM.days <= 0) {
+                            $scope.warningkim += 1;
+                        }
+
+                        if (element.truck.assDriverAge.years >= 54 && element.truck.assDriverAge.months >= 11 && element.truck.assDriverAge.days >= 1 && element.truck.assDriverAge.days <= 31) {
+                            $scope.warningkendaraan += 1;
+                        }
+
+                        if (element.truck.driverAge.years >= 54 && element.truck.driverAge.months >= 11 && element.truck.driverAge.days >= 1 && element.truck.driverAge.days <= 31) {
+                            $scope.warningkendaraan += 1;
+                        }
+
+                        if (element.truck.driverAge.years >= 54 && element.truck.driverAge.months >= 11 && element.truck.driverAge.days >= 1 && element.truck.driverAge.days <= 31) {
+                            $scope.warningkendaraan += 1;
+                        }
+
+                        if (duration._data.years == 10 && duration._data.months == 11 && (duration._data.days > 1 && duration._data.days < 31)) {
+                            $scope.warningkendaraan += 1;
+                        } else if (duration._data.years > 10) {
+                            $scope.warningkendaraan += 1;
+                        }
+                    });
+                    if ($scope.warningkendaraan > 0 || $scope.warningkim > 0) {
+                        message.warning("Terdapat Berkas yang akan expire");
+                    }
+                })
+            }, 300);
         }
         // $scope.$emit("SendUp", $scope.profile);
     };
@@ -53,6 +122,7 @@ function companyController($scope, ProfilePerusahaanServices, message, $state, A
             })
         })
     }
+
 }
 
 function dashboardController($scope, CompanyServices, AuthService, helperServices) {
@@ -65,6 +135,7 @@ function dashboardController($scope, CompanyServices, AuthService, helperService
     //     console.log(data);
     // });
     $scope.profile = AuthService.getProfile();
+
     CompanyServices.get().then(dash => {
         $scope.data = dash;
         console.log($scope.data);
@@ -132,11 +203,37 @@ function kendaraanController($scope, KendaraanServices, helperServices, message)
     $scope.model.driverIDCard = {};
     $scope.kims = [];
     KendaraanServices.get().then(x => {
-        x.forEach(xx => {
-            xx.driverDateOfBirth = new Date(xx.driverDateOfBirth);
-            xx.assDriverDateOfBirth = new Date(xx.assDriverDateOfBirth);
-            $scope.datas.push(xx);
+        x.forEach(element => {
+            element.driverDateOfBirth = new Date(element.driverDateOfBirth);
+            element.assDriverDateOfBirth = new Date(element.assDriverDateOfBirth);
+            if (element.kim) {
+                var carCreated = moment(element.carCreated + "-01-01", 'YYYY-MM-DD');
+                var newDate = moment();
+                var duration = moment.duration(newDate.diff(carCreated));
+                var text = "";
+
+                if (element.assDriverAge.years >= 54 && element.assDriverAge.months >= 11 && element.assDriverAge.days >= 1 && element.assDriverAge.days <= 31) {
+                    element.color = 'yellow';
+                    text += "- Umur Assistant Driver akan melewati batas<br>";
+                }
+
+                if (element.driverAge.years >= 54 && element.driverAge.months >= 11 && element.driverAge.days >= 1 && element.driverAge.days <= 31) {
+                    element.color = 'yellow';
+                    text += "- Umur Driver akan melewati batas<br>";
+                }
+                
+                if (duration._data.years == 10 && duration._data.months == 11 && (duration._data.days > 1 && duration._data.days < 31)) {
+                    element.color = 'yellow';
+                    text += "- Umur kendaraan anda akan melewati batas<br>";
+                } else if (duration._data.years > 10) {
+                    element.color = 'red';
+                    text += "- Umur kendaraan telah melewati batas<br>";
+                }
+                element.title = text;
+            }
+            $scope.datas.push(element);
         });
+        console.log(x);
     })
     $scope.setFile = (item) => {
         console.log(item);
@@ -331,17 +428,22 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
         })
     }
 }
-function kimsController($scope, helperServices) {
-    $.LoadingOverlay("show");
-    $scope.simpan = () => {
-        if ($scope.model.id) {
-            PengajuanServices.put($scope.model).then(x => {
-                $.LoadingOverlay("hide");
-            })
-        } else {
-            PengajuanServices.post($scope.model).then(x => {
-                $.LoadingOverlay("hide");
-            })
-        }
-    }
+function kimsController($scope, helperServices, CompanyServices) {
+    $scope.datas = [];
+    CompanyServices.getAllKim().then(res => {
+        res.forEach(element => {
+            var text = "";
+            if (element.ageOfKIM.months == 0 && element.ageOfKIM.days > 0) {
+                element.color = 'yellow';
+                text += "KIM Anda akan segera expire dalam " + element.ageOfKIM.days + " hari lagi<br>";
+            } else if (element.ageOfKIM.months <= 0 && element.ageOfKIM.days <= 0) {
+                element.color = 'red';
+                text += "KIM telah expire";
+            }
+            element.title = text;
+        });
+        console.log(res);
+        $scope.datas = res;
+        $.LoadingOverlay("hide");
+    })
 }

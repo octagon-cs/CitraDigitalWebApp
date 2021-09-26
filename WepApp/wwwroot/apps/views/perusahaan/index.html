@@ -50,13 +50,17 @@
                         class="app-menu__label">Perusahaan</span></a>
             </li>
             <li><a class="app-menu__item" ui-sref="kendaraan"><i class="app-menu__icon fa fa-car"></i><span
-                        class="app-menu__label">Kendaraan</span></a></li>
+                        class="app-menu__label">Kendaraan</span>
+                        <i ng-if="warningkendaraan>0" class="treeview-indicator"><span class="badge badge-warning">{{warningkendaraan}}</span></i>
+                    </a></li>
             <li><a class="app-menu__item" ui-sref="pengajuan"><i class="app-menu__icon fa fa-file-text-o"></i><span
                         class="app-menu__label">Pengajuan Truk</span></a></li>
             <!-- <li><a class="app-menu__item" ui-sref="pejabat"><i class="app-menu__icon fa fa-users"></i><span
                         class="app-menu__label">Pejabat</span></a></li> -->
-            <!-- <li><a class="app-menu__item" ui-sref="kims"><i class="app-menu__icon fa fa-id-card-o"></i><span
-                        class="app-menu__label">KIM</span></a></li> -->
+            <li><a class="app-menu__item" ui-sref="kims"><i class="app-menu__icon fa fa-id-card-o"></i><span
+                        class="app-menu__label">KIM</span>
+                        <i ng-if="warningkim>0" class="treeview-indicator"><span class="badge badge-warning">{{warningkim}}</span></i>
+                    </a></li>
             <!-- <li><a class="app-menu__item" ui-sref="histori"><i class="app-menu__icon fa fa-history"></i><span
                         class="app-menu__label">Histori Truck</span></a></li> -->
         </ul>
@@ -98,6 +102,7 @@
     <script type="text/javascript" src="./assets/js/plugins/chart.js"></script>
     <script src="./assets/plugins/select2/js/select2.full.min.js"></script>
     <script src="./assets/js/plugins/pace.min.js"></script>
+    
     
 </body>
 

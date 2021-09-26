@@ -22,7 +22,8 @@ angular.module("app", [
     "ui.select2",
     "ngLocale",
     "ui.utils.masks",
-    "720kb.datepicker"
+    "720kb.datepicker",
+    "tooltips"
 
 
 ])

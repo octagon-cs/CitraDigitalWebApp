@@ -28,7 +28,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="item in datas">
+                                        <tr ng-repeat="item in datas" title="{{item.title}}" title-direction="top" fixed-position="true" ng-class="{'kuning': item.color=='yellow', 'merah': item.color=='red'}">
                                             <td>{{$index+1}}</td>
                                             <td>{{item.plateNumber}}</td>
                                             <td>{{item.driverName}}</td>
@@ -267,7 +267,7 @@
                                             <label for="ktpdrive" class="col-sm-4 col-form-label">KTP</label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control"
-                                                       ng-model="model.driverIDCard.number" id="ktpdrive" required
+                                                       ng-model="model.driverIDCard.number" id="ktpdrive" minlength="16" maxlength="16" required
                                                        placeholder="Nomor KTP">
                                             </div>
                                         </div>
@@ -398,7 +398,7 @@ model.fileDriverPhoto ?
                                             <label for="ktpkernet" class="col-sm-4 col-form-label">KTP</label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control"
-                                                       ng-model="model.assdriverIDCard.number" id="ktpkernet" required
+                                                       ng-model="model.assdriverIDCard.number" id="ktpkernet" minlength="16" maxlength="16" required
                                                        placeholder="Nomor KTP Kernet">
                                             </div>
                                         </div>
@@ -558,3 +558,14 @@ model.fileAssDriverPhoto ?
         </div>
     </div>
 </div>
+
+<style>
+    .kuning{
+        background-color: yellow;
+    }
+    .merah{
+        color: white;
+        background-color: rgba(221, 15, 15, 0.801);
+    }
+
+</style>

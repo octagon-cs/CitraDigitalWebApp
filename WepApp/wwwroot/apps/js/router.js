@@ -182,7 +182,7 @@ angular.module("app.router", ["ui.router"])
             .state("kims", {
                 url: '/kims',
                 parent: 'perusahaan',
-                controller: "perusahaanKimsController",
+                controller: "kimsController",
                 templateUrl: 'apps/views/perusahaan/kims.html'
             })
 

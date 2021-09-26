@@ -19,11 +19,16 @@
     "angular-local-storage": "^0.7.1",
     "angular-route": "1.7.8",
     "angularjs-datepicker": "^2.1.23",
+    "angularjs-tooltips": "^1.0.5",
     "bootstrap-datepicker": "1.9.0",
     "datatables.net-bs4": "^1.10.19",
     "font-awesome": "^4.7.0",
     "gasparesganga-jquery-loading-overlay": "^2.1.7",
+    "moment": "^2.29.1",
+    "moment-precise-range-plugin": "^1.3.0",
     "swangular": "^1.4.3",
     "xlsx": "^0.17.1"
+  },
+  "devDependencies": {
   }
 }

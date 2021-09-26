@@ -2,11 +2,11 @@
     <li class="breadcrumb-item active">Dashboard</li>
 </ol>
 <div class="container-fluid">
-    <div class="card mb-4">
+    <div class="card mb-4" ng-if="!showDetail">
         <div class="card-header">
             <div class="d-flex justify-content-between">
                 <div>
-                    <i class="fa fa-table mr-1"></i> Daftar User
+                    <i class="fa fa-table mr-1"></i> KIM
                 </div>
             </div>
         </div>
@@ -16,22 +16,24 @@
                     <thead>
                         <tr>
                             <th scope="col">No</th>
-                            <th scope="col">Username</th>
-                            <th scope="col">Nama</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Sebagai</th>
+                            <th scope="col">Nomor Kim</th>
+                            <th scope="col">Perusahaan</th>
+                            <th scope="col">No. Polisi</th>
+                            <th scope="col">Supir</th>
+                            <th scope="col">Kernet</th>
+                            <th scope="col">Produk</th>
                         </tr>
                     </thead>
                     <!-- <?php foreach ($kategorikbli as $key => $value) : ?> -->
                     <tbody>
-                        <tr ng-repeat="item in datas">
-                            <th scope="row">
-                                {{$index+1}}
-                            </th>
-                            <td>{{item.userName}}</td>
-                            <td>{{item.firstName}} {{item.lastName}}</td>
-                            <td>{{item.email}}</td>
-                            <td>{{item.userRoles[0].role.name}}</td>
+                        <tr ng-repeat="item in datas"  title="{{item.title}}" title-direction="top" fixed-position="true" ng-class="{'kuning': item.color=='yellow', 'merah': item.color=='red'}">
+                            <th scope="row">{{$index+1}}</th>
+                            <td>{{item.kimNumber}}</td>
+                            <td>{{item.truck.company.name}}</td>
+                            <td>{{item.truck.plateNumber}}</td>
+                            <td>{{item.truck.driverName}}</td>
+                            <td>{{item.truck.assdriverName}}</td>
+                            <td>{{item.truck.truckType}}</td>
                         </tr>
                     </tbody>
                     <!-- <?php endforeach; ?> -->
@@ -39,4 +41,128 @@
             </div>
         </div>
     </div>
+    <div class="card mb-4" ng-show="showDetail">
+        <div class="card-header">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <i class="fa fa-table mr-1"></i> Pengajuan Truck
+                </div>
+                <div>
+                    <button type="button" class="btn btn-secondary btn-sm" ng-click="kembali()"><i class="fa pulseWarningIns"></i><i
+                            class="fa fa-sign-in fa-lg fa-fw"></i> Kembali</button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="card-line">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <i class="fa fa-table mr-1"></i> Item Truk
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover ; text-justify" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Berkas Truk</th>
+                                <th>Berkas Supir</th>
+                                <th>Berkas Kernet</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <ol>
+                                        <li><a href="{{url+showDetail.truck.vehicleRegistration.document}}"
+                                                target="_blank">File
+                                                STNK</a>
+                                        <li><a href="{{url+showDetail.truck.keurDLLAJR.document}}" target="_blank">File
+                                                KIR</a>
+                                    </ol>
+                                </td>
+                                <td>
+                                    <ol>
+                                        <li><a href="{{url+showDetail.truck.driverIDCard.document}}" target="_blank">KTP</a>
+                                        <li><a href="{{url+showDetail.truck.driverLicense.document}}" target="_blank">SIM</a>
+                                        <li><a href="{{url+showDetail.truck.driverPhoto}}" target="_blank">Photo</a>
+                                    </ol>
+                                </td>
+                                <td>
+                                    <ol>
+                                        <li><a href="{{url+showDetail.truck.assdriverIDCard.document}}"
+                                                target="_blank">KTP</a>
+                                        <li><a href="{{url+showDetail.truck.assdriverLicense.document}}"
+                                                target="_blank">SIM</a>
+                                        <li><a href="{{url+showDetail.truck.assdriverPhoto}}"
+                                                target="_blank">Photo</a>
+                                    </ol>
+                                </td>
+                                <td>{{item.attackStatus}}</td>
+                                <td>{{item.status}}</td>
+                                <td>
+                                    <div class="d-flex justify-content-center">
+                                        <a class="btn btn-danger btn-sm" ng-click="deleteItem(item)"><i
+                                                class="fa fa-trash-o"></i></a>
+                                        <a class="btn btn-info btn-sm" ng-click="detailPemeriksaan(item)"><i
+                                                class="fa fa-eye"></i></a>
+                                        <a class="btn btn-primary btn-sm" ng-click="pengajuan(item)"><i
+                                                class="fa fa-floppy-o"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr ng-repeat="item in model.items" ng-if="!model.id">
+                                <td>{{$index+1}}</td>
+                                <td>{{item.truck.plateNumber}}</td>
+                                <td>{{item.truck.driverName}}</td>
+                                <td>{{item.truck.assdriverName}}</td>
+                                <td>
+                                    <ol>
+                                        <li><a href="{{url+showDetail.truck.vehicleRegistration.document}}"
+                                                target="_blank">File
+                                                STNK</a>
+                                        <li><a href="{{url+showDetail.truck.keurDLLAJR.document}}" target="_blank">File
+                                                KIR</a>
+                                    </ol>
+                                </td>
+                                <td>
+                                    <ol>
+                                        <li><a href="{{url+showDetail.truck.driverIDCard.document}}" target="_blank">KTP</a>
+                                        <li><a href="{{url+showDetail.truck.driverLicense.document}}" target="_blank">SIM</a>
+                                        <li><a href="{{url+showDetail.truck.driverPhoto}}" target="_blank">Photo</a>
+                                    </ol>
+                                </td>
+                                <td>
+                                    <ol>
+                                        <li><a href="{{url+showDetail.truck.assdriverIDCard.document}}"
+                                                target="_blank">KTP</a>
+                                        <li><a href="{{url+showDetail.truck.assdriverLicense.document}}"
+                                                target="_blank">SIM</a>
+                                        <li><a href="{{url+showDetail.truck.assdriverPhoto}}"
+                                                target="_blank">Photo</a>
+                                    </ol>
+                                </td>
+                                <td>{{item.truck.attackStatus}}</td>
+                                <td>
+                                    <a class="btn btn-danger btn-sm" ng-click="deleteItem(item)"><i
+                                            class="fa fa-trash-o"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <!-- <?php endforeach; ?> -->
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+    .kuning{
+        background-color: yellow;
+    }
+    .merah{
+        background-color: red;
+    }
+</style>

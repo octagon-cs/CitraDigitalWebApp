@@ -25,7 +25,6 @@ namespace WebApp.Models
         public string DriverName { get; set; }
         public DateTime? DriverDateOfBirth { get; set; }
         public DateTime? AssDriverDateOfBirth { get; set; }
-        public int TahunPembuatan { get; set; }
 
         [NotMapped]
         public DataDocument DriverIDCard { get; set; }

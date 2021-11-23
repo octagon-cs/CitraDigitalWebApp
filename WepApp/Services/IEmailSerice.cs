@@ -18,11 +18,12 @@ namespace WebApp.Services
 
     public class EmailService : IEmailService
     {
-        private readonly MailSettings _mailSettings;
-        public EmailService(IOptions<MailSettings> mailSettings)
+         public EmailService(IConfiguration configuration)
         {
-            _mailSettings = mailSettings.Value;
+            Configuration = configuration;
         }
+
+        public IConfiguration Configuration { get; }
 
         public Task<bool> SendEmail(MailRequest mailRequest)
         {

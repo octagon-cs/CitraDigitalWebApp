@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Net;
@@ -11,6 +12,7 @@ namespace WebApp.Services
     {
         Task<bool> SendEmail(MailRequest mail);
     }
+
 
 
     public class EmailService : IEmailService

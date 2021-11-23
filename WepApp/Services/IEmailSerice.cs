@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
 
 namespace WebApp.Services
 {
@@ -13,7 +11,6 @@ namespace WebApp.Services
     {
         Task<bool> SendEmail(MailRequest mail);
     }
-
 
 
     public class EmailService : IEmailService

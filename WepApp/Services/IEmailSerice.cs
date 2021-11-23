@@ -28,47 +28,25 @@ namespace WebApp.Services
         {
           try
           {
-                string to = mailRequest.ToEmail;
-                string from = _mailSettings.Mail;
-               // MailMessage message = new MailMessage(addressFrom, addressTo);
-                MailMessage message = new MailMessage(from, to);
-                message.Subject = mailRequest.Subject;
 
-              //  var builder = new BodyBuilder();
-                if (mailRequest.Attachments != null)
-                {
-                    byte[] fileBytes;
-                    foreach (var file in mailRequest.Attachments)
-                    {
-                        if (file.Length > 0)
-                        {
-                            using (var ms = new MemoryStream())
-                            {
-                                file.CopyTo(ms);
-                                fileBytes = ms.ToArray();
-                            message.Attachments.Add(new Attachment(ms, file.FileName, file.ContentType));
-                            }
-                        }
-                    }
-                }
-                message.Body = mailRequest.Body;
+              string email = mailRequest.ToEmail;
+              string subject =mailRequest.Subject;
+              string htmlMessage =mailRequest.Body;
+                IConfigurationSection emailConfiguration =
+                 Configuration.GetSection("MailSettings");
+                var from = emailConfiguration["Mail"].ToString();
+                MailMessage message = new MailMessage(from, email);
+                message.Subject = subject;
+                message.Body = htmlMessage;
                 message.IsBodyHtml = true;
-                message.From = new MailAddress(_mailSettings.Mail, _mailSettings.DisplayName);
-                SmtpClient smtp = new SmtpClient(_mailSettings.Host,_mailSettings.Port);
-                smtp.Credentials = new NetworkCredential(_mailSettings.Mail, _mailSettings.Password);
-                smtp.EnableSsl = true; 
-                smtp.UseDefaultCredentials = false;
-                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
 
-                //try
-                //{
-                //    smtp.Send(message);
-                //}
-                //catch (Exception ex)
-                //{
-                //    Console.WriteLine("Exception caught in CreateTestMessage2(): {0}",
-                //        ex.ToString());
-                //}
+                message.From = new MailAddress(from, emailConfiguration["DisplayName"]);
+                SmtpClient smtp = new SmtpClient(emailConfiguration["HOST"], Convert.ToInt32(emailConfiguration["Port"]));
+                smtp.Credentials = new NetworkCredential(from, emailConfiguration["Password"]);
+                smtp.EnableSsl = true;
+                smtp.Send(message);
+
+
 
                 return Task.FromResult(true);
           }

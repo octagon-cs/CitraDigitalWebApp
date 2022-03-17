@@ -51,8 +51,10 @@ function adminDaftarUserController($scope, DaftarUserServices, helperServices, m
     $scope.model = {};
     $scope.Title = 'Daftar User';
     $scope.simpan = true;
+    $.LoadingOverlay("show");
     DaftarUserServices.get().then(x => {
         $scope.datas = x;
+        $.LoadingOverlay("hide");
     });
     $scope.edit = (item) => {
         $scope.model = angular.copy(item);
@@ -84,6 +86,7 @@ function adminDaftarUserController($scope, DaftarUserServices, helperServices, m
 }
 
 function adminlistpemeriksaanController($scope, ListPemeriksaanServices, message) {
+    $.LoadingOverlay("show");
     $scope.Title = 'List Pemeriksaan';
     $scope.datas = [];
     $scope.model = {};
@@ -99,6 +102,7 @@ function adminlistpemeriksaanController($scope, ListPemeriksaanServices, message
             });
         });
         $scope.datas = x;
+        $.LoadingOverlay("hide");
     })
     $scope.simpan = () => {
         $.LoadingOverlay("show");
@@ -155,9 +159,11 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
     $scope.breadcrumb = 'Berkas Pengajuan';
     $scope.detailbreadcrumb;
     $scope.stnk = {};
+    $scope.tera = {};
     $scope.keur = {};
     $scope.sim = {};
     $scope.kir = {};
+    $.LoadingOverlay("show");
     PersetujuanKimServices.get().then(x => {
         x.forEach(element => {
             if (element.persetujuans != null && element.persetujuans.length > 0) {
@@ -171,6 +177,7 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
         });
         // $scope.datas = x.filter(x=>x.status != "Complete");
 
+        $.LoadingOverlay("hide");
         ListPemeriksaanServices.get().then(res => {
             if ($stateParams.id) {
                 $scope.model = $scope.datas.find(x => x.id == $stateParams.id);
@@ -191,15 +198,17 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
                         $scope.keur = item;
                     else if (element.name == 'SIM')
                         $scope.sim = item;
-                    else if (element.name == 'SURAT TERA METROLOGI')
-                        $scope.kir = item;
+                    else if (element.name == 'Surat Tera Metrologi')
+                        $scope.tera = item;
 
                 });
                 // console.log($scope.stnk);
                 // console.log($scope.keur);
                 // console.log($scope.sim);
                 // console.log($scope.kir);
-                console.log($scope.model);
+                // console.log($scope.model);
+                $.LoadingOverlay("hide");
+                $.LoadingOverlay("hide");
             }
         })
     })
@@ -242,6 +251,7 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
         $scope.setAssPhotoDriver = "";
         $scope.setKeurdllajr = "";
         $scope.setStnk = "";
+        $scope.setTera = "";
         if (set == 'KTP') {
             $scope.ktpDriver = $sce.trustAsResourceUrl(helperServices.url + $scope.model.truck.driverIDCard.document);
             $scope.setKtpDriver = $scope.model.truck.driverIDCard.document.split('.');
@@ -282,6 +292,12 @@ function adminBerkasPengajuanController($scope, PersetujuanKimServices, message,
             $scope.setStnk = $scope.setStnk[1];
             $("#detailKtp").modal("show");
         }
+        if (set == 'TERA') {
+            $scope.tera = $sce.trustAsResourceUrl(helperServices.url + $scope.model.truck.tera.document);
+            $scope.setTera = $scope.model.truck.tera.document.split('.');
+            $scope.setTera = $scope.setTera[1];
+            $("#detailKtp").modal("show");
+        }
     }
     $scope.validate = (set) => {
         if (set == 'SIM') {
@@ -307,7 +323,9 @@ function adminpersetujuankimController($scope, PersetujuanKimServices, message) 
     $scope.datas = [];
     $scope.model = {};
     $scope.Title = 'Persetujuan KIM';
+    $.LoadingOverlay("show");
     PersetujuanKimServices.get().then(x => {
+        $.LoadingOverlay("hide");
         x.forEach(element => {
             var lastApproval = element.persetujuans[element.persetujuans.length - 1];
             if (element.nextApprove == "Administrator" && lastApproval.approvedBy == "Manager") {
@@ -315,7 +333,7 @@ function adminpersetujuankimController($scope, PersetujuanKimServices, message) 
             }
         });
         // $scope.datas = x;
-        console.log(x);
+        // console.log(x);
     })
     $scope.setDataKim = (item) => {
         $scope.model.id = 0;
@@ -347,6 +365,7 @@ function adminkim($scope) {
 }
 
 function adminKimController($scope, adminKimsServices, message, helperServices) {
+    $.LoadingOverlay("show");
     $scope.url = helperServices.url;
     $scope.datas = [];
     $scope.model = {};
@@ -354,6 +373,7 @@ function adminKimController($scope, adminKimsServices, message, helperServices) 
     adminKimsServices.get().then(res => {
         $scope.datas = res;
         console.log($scope.datas);
+        $.LoadingOverlay("hide");
     })
     $scope.print = (item) => {
         item.beginDate = new Date(item.beginDate);

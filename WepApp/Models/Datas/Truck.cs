@@ -29,6 +29,9 @@ namespace WebApp.Models
         [NotMapped]
         public DataDocument DriverIDCard { get; set; }
 
+         [NotMapped]
+        public DataDocument Tera { get; set; }
+
 
         [NotMapped]
         public Age DriverAge => new Age(DriverDateOfBirth);
@@ -133,6 +136,7 @@ namespace WebApp.Models
 
         [NotMapped]
         public DataDocument VehicleRegistration { get; set; }
+      
         [JsonIgnore]
         [Column("VehicleRegistration")]
         public string _VehicleRegistration
@@ -144,6 +148,20 @@ namespace WebApp.Models
             set
             {
                 VehicleRegistration = value == null ? null : JsonConvert.DeserializeObject<DataDocument>(value);
+            }
+        }
+
+        [JsonIgnore]
+        [Column("Tera")]
+        public string _tera
+        {
+            get
+            {
+                return Tera == null ? string.Empty : JsonConvert.SerializeObject(Tera);
+            }
+            set
+            {
+                Tera = value == null ? null : JsonConvert.DeserializeObject<DataDocument>(value);
             }
         }
 
@@ -211,6 +229,9 @@ namespace WebApp.Models
 
         [NotMapped]
         public FileData FileKeurDLLAJR { get; set; }
+
+         [NotMapped]
+        public FileData FileTera { get; set; }
        
     }
 
@@ -237,10 +258,8 @@ namespace WebApp.Models
         string TruckType { get; set; }
         string TruckPhoto { get; set; }
         string DriverName { get; set; }
-
+        DataDocument Tera {get;set;}
         DataDocument DriverIDCard { get; set; }
-
-
         DataDocument DriverLicense { get; set; }
 
 

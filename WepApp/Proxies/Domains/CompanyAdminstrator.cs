@@ -281,6 +281,7 @@ namespace WebApp.Proxy.Domains
                 truckExists.PlateNumber = truck.PlateNumber;
                 truckExists.Merk = truck.Merk;
                 truckExists.TruckType = truck.TruckType;
+                truckExists.Tera = truck.Tera;
 
                 var saved = await context.SaveChangesAsync();
                 if (saved > 0)
@@ -329,6 +330,11 @@ namespace WebApp.Proxy.Domains
             var tasktruckPhoto = Helpers.FileHelper.SaveTruckFile(truck.FileKeurDLLAJR, Helpers.PathType.Photo, truck.TruckPhoto);
             tasks.Add(Tuple.Create(9, tasktruckPhoto));
 
+            var taskTera = Helpers.FileHelper.SaveTruckFile(truck.FileTera, Helpers.PathType.Document, truck.Tera==null?string.Empty: truck.Tera.Document);
+            tasks.Add(Tuple.Create(10, taskTera));
+
+
+
             var resultTask = await Task.WhenAll(tasks.Select(x => x.Item2).ToArray());
             foreach (var item in tasks)
             {
@@ -363,6 +369,9 @@ namespace WebApp.Proxy.Domains
                             break;
                         case 9:
                             truck.TruckPhoto = filename;
+                            break;
+                            case 10:
+                            truck.Tera.Document = filename;
                             break;
 
                     }

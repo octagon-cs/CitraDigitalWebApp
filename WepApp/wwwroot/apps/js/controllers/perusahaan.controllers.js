@@ -147,9 +147,11 @@ function profilePerusahaanController($scope, helperServices, message, AuthServic
     $scope.statusProfile = false;
     $scope.test;
     $scope.model = {};
+    $.LoadingOverlay("show");
     ProfilePerusahaanServices.get().then(x => {
         $scope.statusProfile = true;
         $scope.model = x;
+        $.LoadingOverlay("hide");
     }, err => {
         $scope.statusProfile = false;
     })
@@ -192,6 +194,7 @@ function profilePerusahaanController($scope, helperServices, message, AuthServic
 
 
 function kendaraanController($scope, KendaraanServices, helperServices, message) {
+    $.LoadingOverlay("show");
     $scope.url = helperServices.url;
     $scope.datas = [];
     $scope.model = {};
@@ -233,7 +236,8 @@ function kendaraanController($scope, KendaraanServices, helperServices, message)
             }
             $scope.datas.push(element);
         });
-        console.log(x);
+        // console.log(x);
+        $.LoadingOverlay("hide");
     })
     $scope.setFile = (item) => {
         console.log(item);
@@ -243,7 +247,7 @@ function kendaraanController($scope, KendaraanServices, helperServices, message)
             $.LoadingOverlay("show");
             KendaraanServices.put($scope.model).then(x => {
                 $.LoadingOverlay("hide");
-                message.dialogmessage("Data berhasil di tambahkan", "OK").then(x => {
+                message.dialogmessage("Data berhasil diubah", "OK").then(x => {
                     $('#myTab li:first-child a').tab('show')
                     document.location.reload();
                 });
@@ -259,8 +263,8 @@ function kendaraanController($scope, KendaraanServices, helperServices, message)
         } else {
             $.LoadingOverlay("show");
             KendaraanServices.post($scope.model).then(x => {
+                $.LoadingOverlay("hide");
                 message.dialogmessage("Data berhasil di tambahkan").then(x => {
-                    $.LoadingOverlay("hide");
                     $('#myTab li:first-child a').tab('show')
                     document.location.reload()
                 });
@@ -290,6 +294,8 @@ function kendaraanController($scope, KendaraanServices, helperServices, message)
         $scope.model.assdriverIDCard.hingga = new Date($scope.model.assdriverIDCard.hingga);
         $scope.model.driverIDCard.berlaku = new Date($scope.model.driverIDCard.berlaku);
         $scope.model.driverIDCard.hingga = new Date($scope.model.driverIDCard.hingga);
+        $scope.model.tera.berlaku = new Date($scope.model.tera.berlaku);
+        $scope.model.tera.hingga = new Date($scope.model.tera.hingga);
         $scope.model.carCreated = $scope.model.carCreated.toString();
         console.log($scope.model);
     }
@@ -302,10 +308,11 @@ function kendaraanController($scope, KendaraanServices, helperServices, message)
 
 function pengajuanController($scope, PengajuanServices, message) {
     $scope.datas = [];
-
+    $.LoadingOverlay("show");
     PengajuanServices.get().then(x => {
         $scope.datas = x;
-        console.log(x);
+        // console.log(x);
+        $.LoadingOverlay("hide");
     })
     $scope.deleteItem = (item) => {
         PengajuanServices.deleted(item).then(result => {
@@ -430,6 +437,7 @@ function tambahPengajuanController($scope, KendaraanServices, helperServices, Pe
 }
 function kimsController($scope, helperServices, CompanyServices) {
     $scope.datas = [];
+    
     CompanyServices.getAllKim().then(res => {
         res.forEach(element => {
             var text = "";

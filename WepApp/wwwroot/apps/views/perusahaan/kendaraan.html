@@ -28,7 +28,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="item in datas" title="{{item.title}}" title-direction="top" fixed-position="true" ng-class="{'kuning': item.color=='yellow', 'merah': item.color=='red'}">
+                                        <tr ng-repeat="item in datas" title="{{item.title}}" title-direction="top"
+                                            fixed-position="true"
+                                            ng-class="{'kuning': item.color=='yellow', 'merah': item.color=='red'}">
                                             <td>{{$index+1}}</td>
                                             <td>{{item.plateNumber}}</td>
                                             <td>{{item.driverName}}</td>
@@ -45,6 +47,10 @@
                                                             ng-show="item.keurDLLAJR.document">File
                                                             KIR</a><label ng-show="!item.keurDLLAJR.document">File
                                                             KIR</label></li>
+                                                    <li><a href="{{url+item.tera.document}}" target="_blank"
+                                                            ng-show="item.tera.document">File Tera</a><label
+                                                            ng-show="!item.tera.document">File
+                                                            Tera</label></li>
                                                 </ol>
                                             </td>
                                             <td>
@@ -70,17 +76,21 @@
                                                 <ol>
                                                     <li><a href="{{url+item.assdriverIDCard.document}}" target="_blank"
                                                             ng-show="item.assdriverIDCard.document">KTP</a>
-                                                            <label ng-show="!item.assdriverIDCard.document">KTP</label></li>
+                                                        <label ng-show="!item.assdriverIDCard.document">KTP</label>
+                                                    </li>
                                                     <li><a href="{{url+item.assdriverLicense.document}}" target="_blank"
                                                             ng-show="item.assdriverLicense.document">SIM</a>
-                                                            <label ng-show="!item.assdriverLicense.document">SIM</label></li>
+                                                        <label ng-show="!item.assdriverLicense.document">SIM</label>
+                                                    </li>
                                                     <li><a href="{{url+item.assdriverPhoto}}" target="_blank"
                                                             ng-show="item.assdriverPhoto">Photo</a>
-                                                            <label ng-show="!item.assdriverPhoto">Photo</label></li>
+                                                        <label ng-show="!item.assdriverPhoto">Photo</label>
+                                                    </li>
                                                 </ol>
                                             </td>
                                             <td>
-                                                <a class="btn btn-primary btn-sm" ng-click="showKims(item.kims)" ng-show="item.kims.length>0"><i class="fa fa-id-card-o"></i></a>
+                                                <a class="btn btn-primary btn-sm" ng-click="showKims(item.kims)"
+                                                    ng-show="item.kims.length>0"><i class="fa fa-id-card-o"></i></a>
                                             </td>
                                             <td>
                                                 <a class="btn btn-warning btn-sm" ng-click="edit(item)"><i
@@ -125,8 +135,23 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="vehicleRegistration"
-                                                class="col-sm-4 col-form-label">STNK</label>
+                                            <label for="trucktype" class="col-sm-4 col-form-label">Jenis
+                                                Muatan</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" ng-model="model.truckType"
+                                                    id="trucktype" required placeholder="Jenis Muatan">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="kapasitas" class="col-sm-4 col-form-label">Kapasitas</label>
+                                            <div class="col-sm-8">
+                                                <input type="number" class="form-control" ng-model="model.capacity"
+                                                    id="kapasitas" required placeholder="Kapasitas">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="vehicleRegistration" class="col-sm-4 col-form-label">No
+                                                STNK</label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control"
                                                     ng-model="model.vehicleRegistration.number" id="vehicleRegistration"
@@ -135,7 +160,7 @@
                                         </div>
                                         <div class="form-group row">
                                             <label for="Masaberlaku" class="col-sm-4 col-form-label">Masa
-                                                Berlaku</label>
+                                                Berlaku STNK</label>
                                             <div class="col-sm-8">
                                                 <div class="row">
                                                     <div class="col-sm-5">
@@ -168,25 +193,52 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group row">
-                                            <label for="trucktype" class="col-sm-4 col-form-label">Jenis
-                                                Muatan</label>
+                                            <label for="tera" class="col-sm-4 col-form-label">No TERA</label>
                                             <div class="col-sm-8">
-                                                <input type="text" class="form-control" ng-model="model.truckType"
-                                                    id="trucktype" required placeholder="Jenis Muatan">
+                                                <input type="text" class="form-control" ng-model="model.tera.number"
+                                                    id="tera" required placeholder="Nomor STNK">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="kapasitas" class="col-sm-4 col-form-label">Kapasitas</label>
+                                            <label for="MasaberlakuTera" class="col-sm-4 col-form-label">Masa
+                                                Berlaku Tera</label>
                                             <div class="col-sm-8">
-                                                <input type="number" class="form-control" ng-model="model.capacity"
-                                                    id="kapasitas" required placeholder="Kapasitas">
+                                                <div class="row">
+                                                    <div class="col-sm-5">
+                                                        <input type="date" class="form-control"
+                                                            ng-model="model.tera.berlaku" id="mulai" required
+                                                            placeholder="Mulai Berlaku">
+                                                    </div>
+                                                    <label for="sampai"
+                                                        class="col-sm-2 col-form-label text-center">s/d</label>
+                                                    <div class="col-sm-5">
+                                                        <input type="date" class="form-control"
+                                                            ng-model="model.tera.hingga" id="sampai" required
+                                                            placeholder="Selesai Berlaku">
+                                                    </div>
+
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="kir" class="col-sm-4 col-form-label">KIR</label>
+                                            <label for="fileTera" class="col-sm-4 col-form-label">File Tera</label>
+                                            <div class="col-sm-8">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input"
+                                                        ng-model="model.fileTera" id="fileTera" base-sixty-four-input>
+                                                    <label class="custom-file-label"
+                                                        for="customFileSTNK">{{model.fileTera ?
+                                                        model.fileTera.filename: 'Pilih File
+                                                        STNK'}}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="kir" class="col-sm-4 col-form-label">No KIR</label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control"
                                                     ng-model="model.keurDLLAJR.number" id="kir" required
@@ -195,7 +247,7 @@
                                         </div>
                                         <div class="form-group row">
                                             <label for="kirmulai" class="col-sm-4 col-form-label">Masa
-                                                Berlaku</label>
+                                                Berlaku KIR</label>
                                             <div class="col-sm-8">
                                                 <div class="row">
                                                     <div class="col-sm-5">
@@ -252,23 +304,23 @@
                                             <label for="namadrive" class="col-sm-4 col-form-label">Nama</label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control" ng-model="model.driverName"
-                                                       id="namadrive" required placeholder="Nama Supir">
+                                                    id="namadrive" required placeholder="Nama Supir">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="namadrive" class="col-sm-4 col-form-label">Tanggal Lahir</label>
                                             <div class="col-sm-8">
                                                 <input type="date" class="form-control"
-                                                       ng-model="model.driverDateOfBirth" id="driverbird"
-                                                       required placeholder="Tanggal Lahir">
+                                                    ng-model="model.driverDateOfBirth" id="driverbird" required
+                                                    placeholder="Tanggal Lahir">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="ktpdrive" class="col-sm-4 col-form-label">KTP</label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control"
-                                                       ng-model="model.driverIDCard.number" id="ktpdrive" minlength="16" maxlength="16" required
-                                                       placeholder="Nomor KTP">
+                                                    ng-model="model.driverIDCard.number" id="ktpdrive" minlength="16"
+                                                    maxlength="16" required placeholder="Nomor KTP">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -280,15 +332,15 @@
                                                 <div class="row">
                                                     <div class="col-sm-5">
                                                         <input type="date" class="form-control"
-                                                               ng-model="model.driverIDCard.berlaku" id="mulaiktpdrive"
-                                                               required placeholder="Berlaku Dari">
+                                                            ng-model="model.driverIDCard.berlaku" id="mulaiktpdrive"
+                                                            required placeholder="Berlaku Dari">
                                                     </div>
                                                     <label for="sampaiktpdrive"
-                                                           class="col-sm-2 col-form-label text-center">s/d</label>
+                                                        class="col-sm-2 col-form-label text-center">s/d</label>
                                                     <div class="col-sm-5">
                                                         <input type="date" class="form-control"
-                                                               ng-model="model.driverIDCard.hingga" id="sampaiktpdrive"
-                                                               required placeholder="Berlaku Dari">
+                                                            ng-model="model.driverIDCard.hingga" id="sampaiktpdrive"
+                                                            required placeholder="Berlaku Dari">
                                                     </div>
                                                 </div>
                                             </div>
@@ -298,12 +350,11 @@
                                             <div class="col-sm-8">
                                                 <div class="custom-file">
                                                     <input type="file" class="custom-file-input"
-                                                           ng-model="model.fileDriverId" id="filektpdrive"
-                                                           base-sixty-four-input>
-                                                    <label class="custom-file-label"
-                                                           for="filektpdrive">
+                                                        ng-model="model.fileDriverId" id="filektpdrive"
+                                                        base-sixty-four-input>
+                                                    <label class="custom-file-label" for="filektpdrive">
                                                         {{
-model.fileDriverId ?
+                                                        model.fileDriverId ?
                                                         model.fileDriverId.filename: 'Pilih KTP'
                                                         }}
                                                     </label>
@@ -315,12 +366,11 @@ model.fileDriverId ?
                                             <div class="col-sm-8">
                                                 <div class="custom-file">
                                                     <input type="file" class="custom-file-input"
-                                                           ng-model="model.fileDriverPhoto" id="customFilePhoto"
-                                                           base-sixty-four-input>
-                                                    <label class="custom-file-label"
-                                                           for="customFilePhoto">
+                                                        ng-model="model.fileDriverPhoto" id="customFilePhoto"
+                                                        base-sixty-four-input>
+                                                    <label class="custom-file-label" for="customFilePhoto">
                                                         {{
-model.fileDriverPhoto ?
+                                                        model.fileDriverPhoto ?
                                                         model.fileDriverPhoto.filename: 'Pilih Photo'
                                                         }}
                                                     </label>
@@ -383,23 +433,24 @@ model.fileDriverPhoto ?
                                             <label for="namakernet" class="col-sm-4 col-form-label">Nama</label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control" ng-model="model.assdriverName"
-                                                       id="namakernet" required placeholder="Nama Kernet">
+                                                    id="namakernet" required placeholder="Nama Kernet">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="namadrive" class="col-sm-4 col-form-label">Tanggal Lahir</label>
                                             <div class="col-sm-8">
                                                 <input type="date" class="form-control"
-                                                       ng-model="model.assDriverDateOfBirth" id="assdriverbird"
-                                                       required placeholder="Berlaku Dari">
+                                                    ng-model="model.assDriverDateOfBirth" id="assdriverbird" required
+                                                    placeholder="Berlaku Dari">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="ktpkernet" class="col-sm-4 col-form-label">KTP</label>
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control"
-                                                       ng-model="model.assdriverIDCard.number" id="ktpkernet" minlength="16" maxlength="16" required
-                                                       placeholder="Nomor KTP Kernet">
+                                                    ng-model="model.assdriverIDCard.number" id="ktpkernet"
+                                                    minlength="16" maxlength="16" required
+                                                    placeholder="Nomor KTP Kernet">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -411,15 +462,15 @@ model.fileDriverPhoto ?
                                                 <div class="row">
                                                     <div class="col-sm-5">
                                                         <input type="date" class="form-control"
-                                                               ng-model="model.assdriverIDCard.berlaku" id="mulaiktpkernet"
-                                                               required placeholder="Berlaku Dari">
+                                                            ng-model="model.assdriverIDCard.berlaku" id="mulaiktpkernet"
+                                                            required placeholder="Berlaku Dari">
                                                     </div>
                                                     <label for="selesaiktpkernet"
-                                                           class="col-sm-2 col-form-label text-center">s/d</label>
+                                                        class="col-sm-2 col-form-label text-center">s/d</label>
                                                     <div class="col-sm-5">
                                                         <input type="date" class="form-control"
-                                                               ng-model="model.assdriverIDCard.hingga"
-                                                               id="selesaiktpkernet" required placeholder="Berlaku Dari">
+                                                            ng-model="model.assdriverIDCard.hingga"
+                                                            id="selesaiktpkernet" required placeholder="Berlaku Dari">
                                                     </div>
                                                 </div>
                                             </div>
@@ -429,12 +480,11 @@ model.fileDriverPhoto ?
                                             <div class="col-sm-8">
                                                 <div class="custom-file">
                                                     <input type="file" class="custom-file-input"
-                                                           ng-model="model.fileAssDriverId" id="filektpkernet"
-                                                           base-sixty-four-input>
-                                                    <label class="custom-file-label"
-                                                           for="filektpkernet">
+                                                        ng-model="model.fileAssDriverId" id="filektpkernet"
+                                                        base-sixty-four-input>
+                                                    <label class="custom-file-label" for="filektpkernet">
                                                         {{
-model.fileAssDriverId ?
+                                                        model.fileAssDriverId ?
                                                         model.fileAssDriverId.filename: 'Pilih KTP'
                                                         }}
                                                     </label>
@@ -449,12 +499,11 @@ model.fileAssDriverId ?
                                             <div class="col-sm-8">
                                                 <div class="custom-file">
                                                     <input type="file" class="custom-file-input"
-                                                           ng-model="model.fileAssDriverPhoto" id="customFilePhotoKernet"
-                                                           base-sixty-four-input>
-                                                    <label class="custom-file-label"
-                                                           for="customFilePhotoKernet">
+                                                        ng-model="model.fileAssDriverPhoto" id="customFilePhotoKernet"
+                                                        base-sixty-four-input>
+                                                    <label class="custom-file-label" for="customFilePhotoKernet">
                                                         {{
-model.fileAssDriverPhoto ?
+                                                        model.fileAssDriverPhoto ?
                                                         model.fileAssDriverPhoto.filename: 'Pilih Photo'
                                                         }}
                                                     </label>
@@ -545,8 +594,10 @@ model.fileAssDriverPhoto ?
                             <tr ng-repeat="item in kims">
                                 <td>{{$index+1}}</td>
                                 <td>{{item.kimNumber}}</td>
-                                <td>{{item.beginDate | date:'d MMMM y'}} <strong>s/d</strong> {{item.endDate | date:'d MMMM y'}}</td>
-                                <td ng-style="{color: item.expired=='None' ? 'green': 'red'}"><strong>{{item.expired=='None'?'Active':'expired'}}</strong></td>
+                                <td>{{item.beginDate | date:'d MMMM y'}} <strong>s/d</strong> {{item.endDate | date:'d
+                                    MMMM y'}}</td>
+                                <td ng-style="{color: item.expired=='None' ? 'green': 'red'}">
+                                    <strong>{{item.expired=='None'?'Active':'expired'}}</strong></td>
                             </tr>
                         </tbody>
                     </table>
@@ -560,12 +611,12 @@ model.fileAssDriverPhoto ?
 </div>
 
 <style>
-    .kuning{
+    .kuning {
         background-color: yellow;
     }
-    .merah{
+
+    .merah {
         color: white;
         background-color: rgba(221, 15, 15, 0.801);
     }
-
 </style>

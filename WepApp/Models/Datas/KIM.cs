@@ -28,7 +28,7 @@ namespace WebApp.Models
         }
 
         [NotMapped]
-        public Age AgeOfKIM => new Age(DateTime.Now, this.EndDate);
+        public Age AgeOfKIM => new Age(this.BeginDate, DateTime.Now);
 
 
     }

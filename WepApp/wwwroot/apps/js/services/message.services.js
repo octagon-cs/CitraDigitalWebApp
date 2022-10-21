@@ -6,7 +6,7 @@ function MessageServices(swangular, $q) {
   function info(params) {
     swangular.swal({
       title: "Sukses",
-      text: params,
+      text: params.data ? params.data : params,
       type: "info"
     });
   }
@@ -14,7 +14,7 @@ function MessageServices(swangular, $q) {
   function error(params) {
     swangular.swal({
       title: "Error",
-      text: params,
+      text: params.data ? params.data : params,
       type: "error"
     });
   }
@@ -22,7 +22,7 @@ function MessageServices(swangular, $q) {
   function warning(params) {
     swangular.swal({
       title: "Sukses",
-      text: params,
+      text: params.data ? params.data : params,
       type: "warning"
     });
   }

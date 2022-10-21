@@ -33,7 +33,7 @@ namespace WebApp.Controllers
 
                 var user = await administrator.CreateUser(baseUrl, roleName, model);
                 if (user == null)
-                    return BadRequest(new { message = "Username or password is incorrect" });
+                    return BadRequest(new { message = "Gagal Tambah User !" });
                 return Ok(user);
             }
             catch (System.Exception ex)
@@ -99,7 +99,7 @@ namespace WebApp.Controllers
                 administrator = UserProxy.GetAdministratorProxy(user, _userService);
                 var model = await administrator.CreateNewKIM(id, kim);
                 if (model == null)
-                    return BadRequest(new { message = "Username or password is incorrect" });
+                    return BadRequest(new { message = "Gagal Buat KIM" });
                 return Ok(model);
             }
             catch (System.Exception ex)
@@ -114,10 +114,10 @@ namespace WebApp.Controllers
         {
             try
             {
-                var user = await administrator.GetAllKIM();
-                if (user == null)
-                    return BadRequest(new { message = "Username or password is incorrect" });
-                return Ok(user);
+                var kims = await administrator.GetAllKIM();
+                if (kims == null)
+                    return NotFound(new { message = "Data Kim Tidak Ditemukan !" });
+                return Ok(kims);
             }
             catch (System.Exception ex)
             {

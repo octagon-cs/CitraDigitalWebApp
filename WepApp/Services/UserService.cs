@@ -50,6 +50,11 @@ namespace WebApp.Services
                 var role = context.Roles.Where(x => x.Name == roleName).FirstOrDefault();
                 user.UserRoles.Add(new UserRole { Role = role });
                 user.Status = false;
+
+                var exsitsUser = context.Users.FirstOrDefault(x => x.Email.ToLower() == user.Email);
+                if (exsitsUser != null)
+                    throw new SystemException("Username/Email Sudah Ada/Digunakan  !");
+
                 context.Users.Add(user);
                 await context.SaveChangesAsync();
                 var token = EmailHelper.GenerateJwtToken(user, _appSettings);

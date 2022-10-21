@@ -66,6 +66,7 @@ function DaftarUserServices($http, $q, StorageService, $state, helperServices, A
                     def.resolve(res.data);
                 },
                 (err) => {
+
                     def.reject(err);
                     message.error(err);
                 }
@@ -86,6 +87,7 @@ function DaftarUserServices($http, $q, StorageService, $state, helperServices, A
                 def.resolve(res.data);
             },
             (err) => {
+                $.LoadingOverlay("hide");
                 def.reject(err);
                 message.error(err);
             }

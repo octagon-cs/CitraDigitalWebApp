@@ -21,10 +21,10 @@ jobs:
       run: dotnet restore "WepApp/WepApp.csproj"
 
     - name: Build app
-      run: dotnet build "/CitraDigitalWebApp/WepApp/WepApp.csproj" -c Release --no-restore
+      run: dotnet build "WepApp/WepApp.csproj" -c Release --no-restore
 
     - name: Publish App
-      run: dotnet publish "/CitraDigitalWebApp/WepApp/WepApp.csproj" -c Release -o ./pertamina
+      run: dotnet publish "WepApp/WepApp.csproj" -c Release -o ./pertamina
 
 
 

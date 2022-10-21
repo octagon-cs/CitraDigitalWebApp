@@ -18,10 +18,10 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore Dependencies
-      run: dotnet restore "../CitraDigitalWebApp/WepApp/WepApp.csproj"
+      run: dotnet restore "CitraDigitalWebApp/WepApp/WepApp.csproj"
 
     - name: Build app
-      run: dotnet build "/CitraDigitalWebApp/WepApp/WepApp.csproj" -c Release --no-restore
+      run: dotnet build "CitraDigitalWebApp/WepApp/WepApp.csproj" -c Release --no-restore
 
     - name: Publish App
       run: dotnet publish "CitraDigitalWebApp/WepApp/WepApp.csproj" -c Release -o ./pertamina
